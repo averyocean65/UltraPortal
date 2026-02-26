@@ -8,7 +8,9 @@ You need to create a file in the project root directory called `ULTRAKILLPATH.us
 ```
 <Project>
   <PropertyGroup>
-    <ULTRAKILLPath>INSERT THE PATH TO THE DIRECTORY CONTAINING ULTRAKILL.exe, example: D:/Games/ULTRAKILL/</ULTRAKILLPath>
+    <ULTRAKILLPath>INSERT THE PATH TO THE DIRECTORY CONTAINING ULTRAKILL.exe/</ULTRAKILLPath>
   </PropertyGroup>
 </Project>
 ```
+
+Keep in mind that the path needs to be to the directory that contains your ULTRAKILL executable file. For example `D:/Steam/steamapps/common/ULTRAKILL`
