@@ -1,5 +1,6 @@
-﻿using System;
-using BepInEx;
+﻿using BepInEx;
+using ULTRAKILL.Portal;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace UltraPortal {
@@ -11,8 +12,37 @@ namespace UltraPortal {
             public const string Version = "0.0.1";
         }
 
+        private bool isInLevel = false;
+
         private void Awake() {
             SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void Update() {
+            if (!isInLevel) {
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.P)) {
+                Transform mainCam = Camera.main.transform;
+
+                if (Physics.Raycast(mainCam.position, mainCam.forward, out var hit,  100, LayerMask.NameToLayer("Default"))) {
+                    SpawnMirror(hit.point, hit.normal);
+                }
+            }
+        }
+
+        private void SpawnMirror(Vector3 position, Vector3 forward) {
+            HudMessageReceiver.Instance.SendHudMessage($"Spawning portal at {position}, facing {forward}");
+            
+            GameObject mirrorObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            mirrorObject.transform.position = position;
+            mirrorObject.transform.forward = forward;
+            
+            Portal portal = mirrorObject.AddComponent<Portal>();
+
+            portal.mirror = true;
+            portal.supportInfiniteRecursion = false;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
@@ -31,6 +61,9 @@ namespace UltraPortal {
                 Logger.LogError("Scene is not compatible!");
                 return;
             }
+
+            // scene test complete
+            isInLevel = true;
         }
     }
 }
