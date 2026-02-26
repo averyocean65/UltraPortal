@@ -1,4 +1,7 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
+using BepInEx.Logging;
+using GameConsole.pcon;
 using ULTRAKILL.Portal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,43 +9,19 @@ using UnityEngine.SceneManagement;
 namespace UltraPortal {
     [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin {
+        
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
             public const string Version = "0.0.1";
         }
-
-        private bool isInLevel = false;
+        
+        public static ManualLogSource LogSource { get; private set; }
+        
 
         private void Awake() {
             SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        private void Update() {
-            if (!isInLevel) {
-                return;
-            }
-
-            if (Input.GetKeyDown(KeyCode.P)) {
-                Transform mainCam = Camera.main.transform;
-
-                if (Physics.Raycast(mainCam.position, mainCam.forward, out var hit,  100, LayerMask.NameToLayer("Default"))) {
-                    SpawnMirror(hit.point, hit.normal);
-                }
-            }
-        }
-
-        private void SpawnMirror(Vector3 position, Vector3 forward) {
-            HudMessageReceiver.Instance.SendHudMessage($"Spawning portal at {position}, facing {forward}");
-            
-            GameObject mirrorObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            mirrorObject.transform.position = position;
-            mirrorObject.transform.forward = forward;
-            
-            Portal portal = mirrorObject.AddComponent<Portal>();
-
-            portal.mirror = true;
-            portal.supportInfiniteRecursion = false;
+            LogSource = Logger;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
@@ -56,14 +35,12 @@ namespace UltraPortal {
                 }
                 
                 HudMessageReceiver.Instance.SendHudMessage($"Loaded {SceneHelper.CurrentScene} [index: {SceneHelper.CurrentLevelNumber}]");
+                GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
+                spawner.AddComponent<PortalSpawner>();
             }
             catch {
                 Logger.LogError("Scene is not compatible!");
-                return;
             }
-
-            // scene test complete
-            isInLevel = true;
         }
     }
 }
