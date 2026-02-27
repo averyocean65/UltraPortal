@@ -1,18 +1,17 @@
-using System;
 using BepInEx.Logging;
-using Gravity;
+using JetBrains.Annotations;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
 
+using static UltraPortal.Constants;
+
 namespace UltraPortal {
 	public class PortalSpawner : MonoBehaviour {
-		private static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "Outdoors", "OutdoorsBaked");
-		private static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 		private static ManualLogSource Logger => Plugin.LogSource;
 
-		private GameObject entry;
-		private GameObject exit;
+		private PortalGunExit entry;
+		private PortalGunExit exit;
 		private GameObject portalObject;
 		
 		private bool PerformPlayerRaycast(out RaycastHit hit) {
@@ -21,25 +20,34 @@ namespace UltraPortal {
 		}
 
 		private void Start() {
-			entry = new GameObject("Entry") {
+			GameObject entryObject = new GameObject("Entry") {
 				transform = {
 					parent = transform
 				}
 			};
+			entry = entryObject.AddComponent<PortalGunExit>();
 
-			exit = new GameObject("Exit") {
+			GameObject exitObject = new GameObject("Exit") {
 				transform = {
 					parent = transform
 				}
 			};
-
+			exit = exitObject.AddComponent<PortalGunExit>();
+			
+			entry.link = exit;
+			exit.link = entry;
+			
 			InitPortals();
 		}
 
-		private void SetTransformToLook(Transform affected) {
+		private void SetTransformToLook(Transform affected, [CanBeNull] PortalGunExit pgExit) {
 			if (PerformPlayerRaycast(out var hit)) {
-				affected.position = hit.point + (hit.normal.normalized * 0.7f);
+				affected.position = hit.point + (hit.normal.normalized * 0.05f);
 				affected.forward = -hit.normal;
+
+				if (pgExit) {
+					pgExit.UpdateColliders();
+				}
 			}
 		}
 
@@ -50,11 +58,11 @@ namespace UltraPortal {
 			}
 
 			if (Input.GetKeyDown(KeyCode.I)) {
-				SetTransformToLook(entry.transform);
+				SetTransformToLook(entry.transform, entry);
 			}
 			
 			if (Input.GetKeyDown(KeyCode.U)) {
-				SetTransformToLook(exit.transform);
+				SetTransformToLook(exit.transform, exit);
 			}
 		}
 
@@ -79,10 +87,10 @@ namespace UltraPortal {
 			portal.consumeAudio = false;
 			portal.disableRange = 0;
 			portal.enableOverrideFog = false;
-			portal.enterOffset = 0.5f;
+			portal.enterOffset = 1.5f;
 			portal.entry = entry.transform;
 			portal.exit = exit.transform;
-			portal.exitOffset = 0.5f;
+			portal.exitOffset = 1.5f;
 			portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			portal.fakeVPMatrix = Matrix4x4.zero;
 			portal.mirror = false;
