@@ -1,3 +1,4 @@
+using System;
 using BepInEx.Logging;
 using JetBrains.Annotations;
 using ULTRAKILL.Portal;
@@ -10,72 +11,44 @@ namespace UltraPortal {
 	public class PortalSpawner : MonoBehaviour {
 		private static ManualLogSource Logger => Plugin.LogSource;
 
-		private PortalGunExit entry;
-		private PortalGunExit exit;
+		private Portal portal;
 		private GameObject portalObject;
-		
-		private bool PerformPlayerRaycast(out RaycastHit hit) {
-			Transform mainCam = Camera.main.transform;
-			return Physics.Raycast(mainCam.position, mainCam.forward, out hit, 500f, EnvironmentLayer);
-		}
+		private Vector2 portalSize = new Vector2(4, 6);
+
+		private DynamicPortalExit portalEntry;
+		private DynamicPortalExit portalExit;
 
 		private void Start() {
-			GameObject entryObject = new GameObject("Entry") {
+			GameObject portalEntryObject = new GameObject {
+				name = "Entry",
 				transform = {
 					parent = transform
 				}
 			};
-			entry = entryObject.AddComponent<PortalGunExit>();
-
-			GameObject exitObject = new GameObject("Exit") {
-				transform = {
-					parent = transform
-				}
-			};
-			exit = exitObject.AddComponent<PortalGunExit>();
+			portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
+			portalEntry.side = PortalSide.Enter;
 			
-			entry.link = exit;
-			exit.link = entry;
+			GameObject portalExitObject = new GameObject {
+				name = "Entry",
+				transform = {
+					parent = transform
+				}
+			};
+			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
+			portalExit.side = PortalSide.Exit;
 			
 			InitPortals();
-		}
-
-		private void SetTransformToLook(Transform affected, [CanBeNull] PortalGunExit pgExit) {
-			if (PerformPlayerRaycast(out var hit)) {
-				affected.position = hit.point + (hit.normal.normalized * 0.05f);
-				affected.forward = -hit.normal;
-
-				if (pgExit) {
-					pgExit.UpdateColliders();
-				}
-			}
-		}
-
-		private void Update() {
-			if (Input.GetKeyDown(KeyCode.T)) {
-				portalObject.SetActive(!portalObject.activeSelf);
-				HudMessageReceiver.Instance.SendHudMessage($"Toggled on?: {portalObject.activeSelf}");
-			}
-
-			if (Input.GetKeyDown(KeyCode.I)) {
-				SetTransformToLook(entry.transform, entry);
-			}
-			
-			if (Input.GetKeyDown(KeyCode.U)) {
-				SetTransformToLook(exit.transform, exit);
-			}
 		}
 
 		private void InitPortals() {
 			portalObject = new GameObject("Portal") {
 				transform = {
 					parent = transform
-				}
+				},
+				layer = PortalLayer
 			};
-			
-			portalObject.layer = PortalLayer;
 
-			Portal portal = portalObject.AddComponent<Portal>();
+			portal = portalObject.AddComponent<Portal>();
 			
 			portal.additionalSampleThreshold = 0;
 			portal.allowCameraTraversals = true;
@@ -88,16 +61,43 @@ namespace UltraPortal {
 			portal.disableRange = 0;
 			portal.enableOverrideFog = false;
 			portal.enterOffset = 1.5f;
-			portal.entry = entry.transform;
-			portal.exit = exit.transform;
+			portal.entry = portalEntry.transform;
+			portal.exit = portalExit.transform;
 			portal.exitOffset = 1.5f;
 			portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			portal.fakeVPMatrix = Matrix4x4.zero;
 			portal.mirror = false;
 			portal.shape = new PlaneShape {
-				width = 4,
-				height = 6
+				width = portalSize.x,
+				height = portalSize.y
 			};
+		}
+
+		private void SpawnPortal(DynamicPortalExit exit) {
+			bool success = Physics.Raycast(MainCamera.transform.position,
+				MainCamera.transform.forward,
+				out var hit,
+				20f,
+				EnvironmentLayer,
+				QueryTriggerInteraction.Ignore);
+
+			if (!success) {
+				HudMessageReceiver.Instance.SendHudMessage("Failed to spawn portal end!");
+				return;
+			}
+
+			HudMessageReceiver.Instance.SendHudMessage("Spawning portal end!");
+			exit.Initialize(portal, exit.side, portalSize, hit);
+		}
+
+		private void Update() {
+			if (Input.GetKeyDown(KeyCode.U)) {
+				SpawnPortal(portalEntry);
+			}
+			
+			if (Input.GetKeyDown(KeyCode.I)) {
+				SpawnPortal(portalExit);
+			}
 		}
 	}
 }

@@ -67,8 +67,8 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Constants.cs" />
+        <Compile Include="DynamicPortalExit.cs" />
         <Compile Include="Plugin.cs" />
-        <Compile Include="PortalGunExit.cs" />
         <Compile Include="PortalSpawner.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
