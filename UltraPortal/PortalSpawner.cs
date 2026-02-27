@@ -1,3 +1,4 @@
+using System;
 using BepInEx.Logging;
 using Gravity;
 using ULTRAKILL.Portal;
@@ -9,30 +10,64 @@ namespace UltraPortal {
 		private static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "Outdoors", "OutdoorsBaked");
 		private static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 		private static ManualLogSource Logger => Plugin.LogSource;
+
+		private GameObject entry;
+		private GameObject exit;
+		private GameObject portalObject;
 		
-		private void Update() {
-			if (Input.GetKeyDown(KeyCode.T)) {
-				Transform mainCam = Camera.main.transform;
-                
-				if (Physics.Raycast(mainCam.position, mainCam.forward, out var hit,  100, EnvironmentLayer)) {
-					SpawnMirror(hit.point, -hit.normal);
+		private bool PerformPlayerRaycast(out RaycastHit hit) {
+			Transform mainCam = Camera.main.transform;
+			return Physics.Raycast(mainCam.position, mainCam.forward, out hit, 500f, EnvironmentLayer);
+		}
+
+		private void Start() {
+			entry = new GameObject("Entry") {
+				transform = {
+					parent = transform
 				}
-				else {
-					HudMessageReceiver.Instance.SendHudMessage($"Failed to find suitable portal location!");
+			};
+
+			exit = new GameObject("Exit") {
+				transform = {
+					parent = transform
 				}
+			};
+
+			InitPortals();
+		}
+
+		private void SetTransformToLook(Transform affected) {
+			if (PerformPlayerRaycast(out var hit)) {
+				affected.position = hit.point + (hit.normal.normalized * 0.7f);
+				affected.forward = -hit.normal;
 			}
 		}
 
-		private void SpawnMirror(Vector3 position, Vector3 forward) {
-			HudMessageReceiver.Instance.SendHudMessage($"Spawning portal at {position}, facing {forward}");
+		private void Update() {
+			if (Input.GetKeyDown(KeyCode.T)) {
+				portalObject.SetActive(!portalObject.activeSelf);
+				HudMessageReceiver.Instance.SendHudMessage($"Toggled on?: {portalObject.activeSelf}");
+			}
 
-			GameObject mirrorObject = new GameObject("Custom Portal Spawn");
+			if (Input.GetKeyDown(KeyCode.I)) {
+				SetTransformToLook(entry.transform);
+			}
+			
+			if (Input.GetKeyDown(KeyCode.U)) {
+				SetTransformToLook(exit.transform);
+			}
+		}
 
-			mirrorObject.layer = PortalLayer;
-			mirrorObject.transform.position = position - (forward * 0.001f);
-			mirrorObject.transform.forward = forward;
+		private void InitPortals() {
+			portalObject = new GameObject("Portal") {
+				transform = {
+					parent = transform
+				}
+			};
+			
+			portalObject.layer = PortalLayer;
 
-			Portal portal = mirrorObject.AddComponent<Portal>();
+			Portal portal = portalObject.AddComponent<Portal>();
 			
 			portal.additionalSampleThreshold = 0;
 			portal.allowCameraTraversals = true;
@@ -44,15 +79,15 @@ namespace UltraPortal {
 			portal.consumeAudio = false;
 			portal.disableRange = 0;
 			portal.enableOverrideFog = false;
-			portal.enterOffset = 1.5f;
-			portal.entry = portal.transform;
-			portal.exit = portal.transform;
-			portal.exitOffset = 1.5f;
+			portal.enterOffset = 0.5f;
+			portal.entry = entry.transform;
+			portal.exit = exit.transform;
+			portal.exitOffset = 0.5f;
 			portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			portal.fakeVPMatrix = Matrix4x4.zero;
-			portal.mirror = true;
+			portal.mirror = false;
 			portal.shape = new PlaneShape {
-				width = 6,
+				width = 4,
 				height = 6
 			};
 		}
