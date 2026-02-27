@@ -7,6 +7,27 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public class DynamicPortalExit : MonoBehaviour {
+		public static bool PlayerNearEntry;
+		public static bool PlayerNearExit;
+
+		public bool IsPlayerNear {
+			get {
+				if (side == PortalSide.Enter) {
+					return PlayerNearEntry;
+				}
+
+				return PlayerNearExit;
+			}
+			set {
+				if (side == PortalSide.Enter) {
+					PlayerNearEntry = value;
+					return;
+				}
+
+				PlayerNearExit = value;
+			}
+		}
+		
 		// PORTAL
 		public Portal hostPortal;
 		public PortalSide side;
@@ -83,8 +104,10 @@ namespace UltraPortal {
 
 		private void Update() {
 			float distance = Vector3.Distance(PortalCenter, MainCamera.transform.position);
+			IsPlayerNear = distance < 5;
+			
 			foreach (Collider c in _colliders) {
-				c.gameObject.SetActive(distance >= 5);
+				c.enabled = !PlayerNearEntry && !PlayerNearExit;
 			}
 		}
 	}
