@@ -105,7 +105,7 @@ namespace UltraPortal {
 
 			transform.forward = -hit.normal;
 			transform.position = hit.point + hit.normal.normalized * 0.01f;
-
+			
 			hostPortal = portal;
 			side = portalSide;
 

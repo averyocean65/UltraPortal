@@ -1,9 +1,6 @@
-﻿using System;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using Configgy;
-using GameConsole.pcon;
-using ULTRAKILL.Portal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,16 +32,11 @@ namespace UltraPortal {
             }
 
             try {
-                if (SceneHelper.CurrentLevelNumber < 1) {
-                    return;
-                }
-                
-                HudMessageReceiver.Instance.SendHudMessage($"Loaded {SceneHelper.CurrentScene} [index: {SceneHelper.CurrentLevelNumber}]");
                 GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
                 spawner.AddComponent<PortalSpawner>();
             }
             catch {
-                Logger.LogError("Scene is not compatible!");
+                Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");
             }
         }
     }

@@ -1,4 +1,5 @@
 using BepInEx.Logging;
+using Gravity;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace UltraPortal {
 			portalEntry.side = PortalSide.Enter;
 			
 			GameObject portalExitObject = new GameObject {
-				name = "Entry",
+				name = "Exit",
 				transform = {
 					parent = transform
 				}
@@ -76,7 +77,7 @@ namespace UltraPortal {
 			bool success = Physics.Raycast(MainCamera.transform.position,
 				MainCamera.transform.forward,
 				out var hit,
-				20f,
+				float.PositiveInfinity,
 				EnvironmentLayer,
 				QueryTriggerInteraction.Ignore);
 

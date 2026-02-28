@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UltraPortal {
     public static class Constants {
-        public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "Outdoors", "OutdoorsBaked");
+        public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "PlayerOnly", "Outdoors", "OutdoorsBaked");
         public static LayerMask PortalPassableLayer => LayerMask.GetMask("Projectile", "Default", "IgnoreRaycast");
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 
