@@ -1,10 +1,9 @@
-using System;
 using BepInEx.Logging;
-using JetBrains.Annotations;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
 
+using static UltraPortal.ModConfig;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
@@ -91,11 +90,15 @@ namespace UltraPortal {
 		}
 
 		private void Update() {
-			if (Input.GetKeyDown(KeyCode.U)) {
+			if (!NewMovement.Instance.activated) {
+				return;
+			}
+			
+			if (Input.GetKeyDown(SpawnEntryKeybind)) {
 				SpawnPortal(portalEntry);
 			}
 			
-			if (Input.GetKeyDown(KeyCode.I)) {
+			if (Input.GetKeyDown(SpawnExitKeybind)) {
 				SpawnPortal(portalExit);
 			}
 		}

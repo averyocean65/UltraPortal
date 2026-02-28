@@ -1,6 +1,7 @@
 ﻿using System;
 using BepInEx;
 using BepInEx.Logging;
+using Configgy;
 using GameConsole.pcon;
 using ULTRAKILL.Portal;
 using UnityEngine;
@@ -9,6 +10,7 @@ using UnityEngine.SceneManagement;
 namespace UltraPortal {
     [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin {
+        private ConfigBuilder config;
         
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
@@ -22,6 +24,9 @@ namespace UltraPortal {
         private void Awake() {
             SceneManager.sceneLoaded += OnSceneLoaded;
             LogSource = Logger;
+
+            config = new ConfigBuilder("com.ultraportal", "ULTRAPORTAL");
+            config.BuildAll();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {

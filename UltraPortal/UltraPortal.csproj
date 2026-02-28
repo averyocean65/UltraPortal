@@ -54,6 +54,9 @@
         <Reference Include="UnityEngine.PhysicsModule">
             <HintPath>$(ManagedDir)/UnityEngine.PhysicsModule.dll</HintPath>
         </Reference>
+        <Reference Include="Configgy">
+            <HintPath>$(BepInExPlugins)/Configgy.dll</HintPath>
+        </Reference>
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
@@ -68,6 +71,7 @@
     <ItemGroup>
         <Compile Include="Constants.cs" />
         <Compile Include="DynamicPortalExit.cs" />
+        <Compile Include="ModConfig.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="PortalSpawner.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
