@@ -153,6 +153,9 @@ namespace UltraPortal {
 		private void ToggleColliders(bool value, Collider other) {
 			Plugin.LogSource.LogInfo($"{Enum.GetName(typeof(PortalSide), side)}: setting portals enabled to {value}");
 			foreach (Collider c in _colliders) {
+				if (!c) {
+					continue;
+				}
 				Physics.IgnoreCollision(c, other, value);
 			}
 		}
