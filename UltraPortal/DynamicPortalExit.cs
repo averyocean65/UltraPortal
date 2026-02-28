@@ -10,7 +10,7 @@ namespace UltraPortal {
 		public static bool PlayerNearEntry;
 		public static bool PlayerNearExit;
 
-		private static Action<PortalSide, Collider, bool> ToggleColliderAction; 
+		private static Action<PortalSide, Collider, bool> _toggleColliderAction; 
 		
 		public bool IsEntityNear {
 			get {
@@ -50,7 +50,9 @@ namespace UltraPortal {
 		private List<Collider> _colliders = new List<Collider>();
 
 		private void Awake() {
-			ToggleColliderAction += (portalSide, collider, toggle) => {
+			gameObject.layer = PortalLayer;
+			
+			_toggleColliderAction += (portalSide, collider, toggle) => {
 				ToggleColliders(toggle, collider);
 			};
 		}
@@ -117,7 +119,7 @@ namespace UltraPortal {
 			portalTrigger = gameObject.AddComponent<BoxCollider>();
 			portalTrigger.isTrigger = true;
 			portalTrigger.center = PortalCenter;
-			portalTrigger.size = Vector3.one * portalSize.magnitude;
+			portalTrigger.size = new Vector3(portalSize.x, portalSize.y, portalSize.x);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -126,14 +128,14 @@ namespace UltraPortal {
 			}
 			
 			if (!other.attachedRigidbody) {
-				if (IsInLayerMask(other.gameObject, EnvironmentLayer)) {
+				if (!other.isTrigger) {
 					_colliders.Add(other);
 				}
 				
 				return;
 			}
 
-			ToggleColliderAction.Invoke(side, other, true);
+			_toggleColliderAction.Invoke(side, other, true);
 		}
 
 		private void OnTriggerExit(Collider other) {
@@ -145,10 +147,11 @@ namespace UltraPortal {
 				return;
 			}
 
-			ToggleColliderAction.Invoke(side, other, false);
+			_toggleColliderAction.Invoke(side, other, false);
 		}
 
 		private void ToggleColliders(bool value, Collider other) {
+			Plugin.LogSource.LogInfo($"{Enum.GetName(typeof(PortalSide), side)}: setting portals enabled to {value}");
 			foreach (Collider c in _colliders) {
 				Physics.IgnoreCollision(c, other, value);
 			}
