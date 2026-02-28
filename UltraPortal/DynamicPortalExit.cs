@@ -10,7 +10,9 @@ namespace UltraPortal {
 		public static bool PlayerNearEntry;
 		public static bool PlayerNearExit;
 
-		public bool IsPlayerNear {
+		private static Action<PortalSide, Collider, bool> ToggleColliderAction; 
+		
+		public bool IsEntityNear {
 			get {
 				if (side == PortalSide.Enter) {
 					return PlayerNearEntry;
@@ -32,6 +34,9 @@ namespace UltraPortal {
 		public Portal hostPortal;
 		public PortalSide side;
 
+		// COLLIDERS
+		private BoxCollider portalTrigger;
+		
 		public Vector3 PortalCenter {
 			get {
 				if (side == PortalSide.Enter) {
@@ -43,6 +48,13 @@ namespace UltraPortal {
 		}
 
 		private List<Collider> _colliders = new List<Collider>();
+
+		private void Awake() {
+			ToggleColliderAction += (portalSide, collider, toggle) => {
+				ToggleColliders(toggle, collider);
+			};
+		}
+
 
 		private void GetNearbyCollider(Vector3 position) {
 			bool success = Physics.Raycast(position + transform.forward,
@@ -100,14 +112,45 @@ namespace UltraPortal {
 			}
 			
 			GetNearbyCollider(portalSize);
+			
+			// Spawn the portal trigger
+			portalTrigger = gameObject.AddComponent<BoxCollider>();
+			portalTrigger.isTrigger = true;
+			portalTrigger.center = PortalCenter;
+			portalTrigger.size = Vector3.one * portalSize.magnitude;
 		}
 
-		private void Update() {
-			float distance = Vector3.Distance(PortalCenter, MainCamera.transform.position);
-			IsPlayerNear = distance < 5;
+		private void OnTriggerEnter(Collider other) {
+			if (_colliders.Contains(other)) {
+				return;
+			}
 			
+			if (!other.attachedRigidbody) {
+				if (IsInLayerMask(other.gameObject, EnvironmentLayer)) {
+					_colliders.Add(other);
+				}
+				
+				return;
+			}
+
+			ToggleColliderAction.Invoke(side, other, true);
+		}
+
+		private void OnTriggerExit(Collider other) {
+			if (_colliders.Contains(other)) {
+				return;
+			}
+
+			if (!other.attachedRigidbody) {
+				return;
+			}
+
+			ToggleColliderAction.Invoke(side, other, false);
+		}
+
+		private void ToggleColliders(bool value, Collider other) {
 			foreach (Collider c in _colliders) {
-				c.enabled = !PlayerNearEntry && !PlayerNearExit;
+				Physics.IgnoreCollision(c, other, value);
 			}
 		}
 	}
