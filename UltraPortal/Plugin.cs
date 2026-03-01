@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.IO;
+using BepInEx;
 using BepInEx.Logging;
 using Configgy;
 using UnityEngine;
@@ -19,11 +20,18 @@ namespace UltraPortal {
         
 
         private void Awake() {
-            SceneManager.sceneLoaded += OnSceneLoaded;
             LogSource = Logger;
 
             config = new ConfigBuilder("com.ultraportal", "ULTRAPORTAL");
             config.BuildAll();
+
+            if (!Directory.Exists(Constants.AssetPaths.BundlePath)) {
+                Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {Constants.AssetPaths.BundlePath}");
+                Destroy(this);
+                return;
+            }
+            
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {

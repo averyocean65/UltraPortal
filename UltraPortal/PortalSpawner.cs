@@ -19,21 +19,23 @@ namespace UltraPortal {
 		private DynamicPortalExit portalExit;
 
 		private void Start() {
-			GameObject portalEntryObject = new GameObject {
-				name = "Entry",
-				transform = {
-					parent = transform
-				}
-			};
+			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
+			GameObject portalPrefab = portals.LoadAsset<GameObject>("Portal Exit");
+
+			if (!portalPrefab) {
+				Logger.LogError("Failed to load portal prefab!");
+				return;
+			}
+			
+			GameObject portalEntryObject =
+				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity, transform);
+			portalEntryObject.name = "Entry";
 			portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
 			portalEntry.side = PortalSide.Enter;
 			
-			GameObject portalExitObject = new GameObject {
-				name = "Exit",
-				transform = {
-					parent = transform
-				}
-			};
+			GameObject portalExitObject =
+				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity, transform);
+			portalExitObject.name = "Exit";
 			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
 			portalExit.side = PortalSide.Exit;
 			

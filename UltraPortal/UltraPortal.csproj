@@ -54,6 +54,12 @@
         <Reference Include="UnityEngine.PhysicsModule">
             <HintPath>$(ManagedDir)/UnityEngine.PhysicsModule.dll</HintPath>
         </Reference>
+        <Reference Include="Unity.Addressables">
+            <HintPath>$(ManagedDir)/Unity.Addressables.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule">
+            <HintPath>$(ManagedDir)/UnityEngine.AssetBundleModule.dll</HintPath>
+        </Reference>
         <Reference Include="Configgy">
             <HintPath>$(BepInExPlugins)/Configgy.dll</HintPath>
         </Reference>
@@ -69,6 +75,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="AssetBundleHelpers.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DynamicPortalExit.cs" />
         <Compile Include="ModConfig.cs" />

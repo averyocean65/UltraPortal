@@ -8,7 +8,7 @@ namespace UltraPortal {
         public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "PlayerOnly", "Outdoors", "OutdoorsBaked");
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 
-        private static Camera _mainCamera = null;
+        private static Camera _mainCamera;
 
         public static Camera MainCamera {
             get {
@@ -21,9 +21,10 @@ namespace UltraPortal {
         }
 
         public static class AssetPaths {
-            public static string BundlePath => Path.Combine(Environment.CurrentDirectory, "ULTRAPORTAL", "Bundles");
+            public static string AssemblyPath => Assembly.GetExecutingAssembly().Location;
+            public static string AssemblyFolderPath => Path.GetDirectoryName(AssemblyPath);
+            public static string BundlePath => Path.Combine(AssemblyFolderPath, "Bundles");
             public static readonly string PortalBundleName = "portals";
-            public static string PortalBundlePath = Path.Combine(BundlePath, PortalBundleName);
         }
     }
 }

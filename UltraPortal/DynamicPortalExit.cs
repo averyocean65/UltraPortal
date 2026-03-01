@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Gravity;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
@@ -31,58 +30,7 @@ namespace UltraPortal {
 				PlayerNearExit = value;
 			}
 		}
-		
-		// PORTAL
-		public Portal hostPortal;
-		public PortalSide side;
-		private bool assistedPortalTravel = false;
-		
-		private GravityVolume PortalGravityVolume {
-			get {
-				if (side == PortalSide.Enter) {
-					return hostPortal.enterGravityVolume;
-				}
 
-				return hostPortal.exitGravityVolume;
-			}
-			set {
-				if (side == PortalSide.Enter) {
-					hostPortal.enterGravityVolume = value;
-					return;
-				}
-
-				hostPortal.exitGravityVolume = value;
-			}
-		}
-		
-		private GravityVolume OtherPortalGravityVolume {
-			get {
-				if (side == PortalSide.Enter) {
-					return hostPortal.exitGravityVolume;
-				}
-
-				return hostPortal.enterGravityVolume;
-			}
-			set {
-				if (side == PortalSide.Enter) {
-					hostPortal.exitGravityVolume = value;
-					return;
-				}
-
-				hostPortal.enterGravityVolume = value;
-			}
-		}
-
-		private Transform OtherPortalSide {
-			get {
-				if (side == PortalSide.Enter) {
-					return hostPortal.exit;
-				}
-
-				return hostPortal.entry;
-			}
-		}
-		
 		private UnityEventPortalTravel PortalTravelEvent {
 			get {
 				if (side == PortalSide.Enter) {
@@ -93,6 +41,21 @@ namespace UltraPortal {
 			}
 		}
 		
+		private UnityEventPortalTravel OtherPortalTravelEvent {
+			get {
+				if (side == PortalSide.Enter) {
+					return hostPortal.onExitTravel;
+				}
+
+				return hostPortal.onEntryTravel;
+			}
+		}
+		
+		// PORTAL
+		public Portal hostPortal;
+		public PortalSide side;
+		private bool assistedPortalTravel = false;
+
 		// COLLIDERS
 		private BoxCollider portalTrigger;
 		
@@ -178,7 +141,7 @@ namespace UltraPortal {
 			transform.position = hit.point + hit.normal.normalized * 0.01f;
 			
 			// Check if portal is facing upwards
-			float dot = Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityDirection());
+			float dot = Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector());
 			assistedPortalTravel = dot > 0.6f;
 			
 			hostPortal = portal;
@@ -191,7 +154,7 @@ namespace UltraPortal {
 			GetNearbyCollider(portalSize);
 			
 			// Spawn the portal trigger
-			portalTrigger = gameObject.AddComponent<BoxCollider>();
+			portalTrigger = gameObject.GetComponent<BoxCollider>();
 			portalTrigger.isTrigger = true;
 			portalTrigger.center = Vector3.zero;
 			portalTrigger.size = new Vector3(portalSize.x, portalSize.y, portalSize.x);
@@ -203,10 +166,15 @@ namespace UltraPortal {
 			}
 			
 			if (!other.attachedRigidbody) {
-				if (!other.isTrigger) {
+				if (!other.isTrigger && !other.CompareTag("Portal Exit")) {
 					_colliders.Add(other);
 				}
 				
+				return;
+			}
+
+			// it is 2AM and I am tired, so I'm just hardcoding this edge-case
+			if (other.name == "Projectile Parry Zone") {
 				return;
 			}
 			
@@ -234,17 +202,16 @@ namespace UltraPortal {
 		}
 
 		private void ToggleColliders(bool value, Collider other) {
-			Plugin.LogSource.LogInfo($"{Enum.GetName(typeof(PortalSide), side)}: setting portals enabled to {value}");
 			foreach (Collider c in _colliders) {
 				if (!c) {
 					continue;
 				}
 
-				if (!assistedPortalTravel) {
+				if (!assistedPortalTravel || !other.CompareTag("Player")) {
 					Physics.IgnoreCollision(c, other, value);
 				}
 				else {
-					c.gameObject.SetActive(!value);
+				 	c.gameObject.SetActive(!value);
 				}
 			}
 		}
