@@ -11,7 +11,9 @@ namespace UltraPortal {
 		public static bool PlayerNearEntry;
 		public static bool PlayerNearExit;
 
-		private static Action<Collider, bool> _toggleColliderAction; 
+		private static float SphereCheckRadius = 0.2f;
+
+		private static Action<PortalSide, Collider, bool> _toggleColliderAction; 
 		
 		public bool IsEntityNear {
 			get {
@@ -55,47 +57,48 @@ namespace UltraPortal {
 		private void Awake() {
 			gameObject.layer = PortalLayer;
 			
-			_toggleColliderAction += (collider, toggle) => {
+			_toggleColliderAction += (portalSide, collider, toggle) => {
+				if (assistedPortalTravel && portalSide != side) {
+					return;
+				}
+				
 				ToggleColliders(toggle, collider);
 			};
 		}
 
-
-		private void GetNearbyCollider(Vector3 position) {
-			bool success = Physics.Raycast(position + transform.forward,
-				-transform.forward,
-				out var hit,
-				1f,
-				EnvironmentLayer,
-				QueryTriggerInteraction.Ignore);
-
-			if (!success) {
+		private void AddCollider(Collider c) {
+			if (!c) {
 				return;
 			}
 
-			if (!hit.collider) {
-				return;
-			}
-
-			if (_colliders.Contains(hit.collider)) {
+			if (c.CompareTag("Portal Exit")) {
 				return;
 			}
 			
-			_colliders.Add(hit.collider);
-			Plugin.LogSource.LogInfo($"Collider found: {hit.collider.name}");
+			_colliders.Add(c);
 		}
 		
 		private void GetNearbyCollider(Vector2 portalSize) {
-			Vector3 offset = (transform.forward.normalized * portalSize) / 2;
-			Vector3 topLeft = PortalCenter + new Vector3(offset.x, offset.y, offset.z);
-			Vector3 topRight = PortalCenter + new Vector3(-offset.x, offset.y, -offset.z);
-			Vector3 bottomLeft = PortalCenter - new Vector3(offset.x, offset.y, offset.z);
-			Vector3 bottomRight = PortalCenter - new Vector3(-offset.x, offset.y, -offset.z);
+			Collider[] sphereCheck = Physics.OverlapSphere(transform.position, SphereCheckRadius, EnvironmentLayer, QueryTriggerInteraction.Ignore);
+			_colliders.AddRange(sphereCheck);
 			
-			GetNearbyCollider(topLeft);
-			GetNearbyCollider(topRight);
-			GetNearbyCollider(bottomLeft);
-			GetNearbyCollider(bottomRight);
+			// Raycast to ensure some slopes (like at the start of 8-2) work
+			// GameObject test = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			// test.transform.position = transform.position + transform.forward * 10f;
+
+			RaycastHit[] sphereCastResults = Physics.SphereCastAll(transform.position, SphereCheckRadius,
+				transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
+			if (sphereCastResults.Length < 1) {
+				return;
+			}
+
+			foreach (RaycastHit hit in sphereCastResults) {
+				if (!hit.collider) {
+					continue;
+				}
+				
+				AddCollider(hit.collider);
+			}
 		}
 
 		public void Initialize(Portal portal, PortalSide portalSide, Vector2 portalSize, RaycastHit hit) {
@@ -127,9 +130,7 @@ namespace UltraPortal {
 			hostPortal = portal;
 			side = portalSide;
 
-			if (hit.collider) {
-				_colliders.Add(hit.collider);
-			}
+			AddCollider(hit.collider);
 			
 			GetNearbyCollider(portalSize);
 			
@@ -146,8 +147,8 @@ namespace UltraPortal {
 			}
 			
 			if (!other.attachedRigidbody) {
-				if (!other.isTrigger && !other.CompareTag("Portal Exit")) {
-					_colliders.Add(other);
+				if (!other.isTrigger) {
+					AddCollider(other);
 				}
 				
 				return;
@@ -158,7 +159,7 @@ namespace UltraPortal {
 				return;
 			}
 			
-			_toggleColliderAction.Invoke(other, true);
+			_toggleColliderAction.Invoke(side, other, true);
 			
 			if (!_currentTravellers.Contains(other)) {
 				_currentTravellers.Add(other);
@@ -174,7 +175,7 @@ namespace UltraPortal {
 				return;
 			}
 
-			_toggleColliderAction.Invoke(other, false);
+			_toggleColliderAction.Invoke(side, other, false);
 
 			if (_currentTravellers.Contains(other)) {
 				_currentTravellers.Remove(other);
