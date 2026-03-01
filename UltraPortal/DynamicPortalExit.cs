@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using ULTRAKILL.Portal;
 using UnityEngine;
@@ -7,6 +6,7 @@ using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
+	// i sincerely apologize for the code inside of this class, i will clean it up someday, i promise.
 	public class DynamicPortalExit : MonoBehaviour {
 		public static bool PlayerNearEntry;
 		public static bool PlayerNearExit;
@@ -28,26 +28,6 @@ namespace UltraPortal {
 				}
 
 				PlayerNearExit = value;
-			}
-		}
-
-		private UnityEventPortalTravel PortalTravelEvent {
-			get {
-				if (side == PortalSide.Enter) {
-					return hostPortal.onEntryTravel;
-				}
-
-				return hostPortal.onExitTravel;
-			}
-		}
-		
-		private UnityEventPortalTravel OtherPortalTravelEvent {
-			get {
-				if (side == PortalSide.Enter) {
-					return hostPortal.onExitTravel;
-				}
-
-				return hostPortal.onEntryTravel;
 			}
 		}
 		

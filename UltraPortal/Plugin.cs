@@ -5,6 +5,8 @@ using Configgy;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using static UltraPortal.Constants;
+
 namespace UltraPortal {
     [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin {
@@ -25,8 +27,8 @@ namespace UltraPortal {
             config = new ConfigBuilder("com.ultraportal", "ULTRAPORTAL");
             config.BuildAll();
 
-            if (!Directory.Exists(Constants.AssetPaths.BundlePath)) {
-                Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {Constants.AssetPaths.BundlePath}");
+            if (!Directory.Exists(AssetPaths.BundlePath)) {
+                Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {AssetPaths.BundlePath}");
                 Destroy(this);
                 return;
             }
