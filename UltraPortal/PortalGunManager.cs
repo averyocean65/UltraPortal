@@ -12,13 +12,14 @@ namespace UltraPortal {
 			GameObject portalGun = Instantiate(portalGunPrefab, Vector3.zero, Quaternion.identity,
 				GunControl.Instance.transform);
 			
-			portalGun.transform.localPosition = Vector3.zero;
-			portalGun.transform.localRotation = Quaternion.identity;
 			portalGun.AddComponent<PortalSpawner>();
+			
+			portalGun.transform.localPosition = new Vector3(0.8358f, -0.6898f, 1.1815f);
+			portalGun.transform.localEulerAngles = new Vector3(0, 263.3673f, 14.1545f);
+			portalGun.transform.localScale = Vector3.one * 1.5f;
 			
 			WeaponPos pos = portalGun.AddComponent<WeaponPos>();
 			WeaponIdentifier identifier = portalGun.AddComponent<WeaponIdentifier>();
-			
 			WeaponIcon icon = portalGun.AddComponent<WeaponIcon>();
 			
 			icon.weaponDescriptor = ScriptableObject.CreateInstance<WeaponDescriptor>();

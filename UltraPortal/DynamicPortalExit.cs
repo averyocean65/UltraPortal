@@ -13,7 +13,7 @@ namespace UltraPortal {
 
 		private static float SphereCheckRadius = 0.2f;
 
-		private static Action<PortalSide, Collider, bool> _toggleColliderAction; 
+		private static Action<PortalSide, Collider, bool> _toggleColliderAction;
 		
 		public bool IsEntityNear {
 			get {
@@ -121,7 +121,7 @@ namespace UltraPortal {
 			_colliders = new List<Collider>();
 
 			transform.forward = -hit.normal;
-			transform.position = hit.point + hit.normal.normalized * 0.01f;
+			transform.position = hit.point + hit.normal.normalized * 0.05f;
 			
 			// Check if portal is facing upwards
 			float dot = Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector());

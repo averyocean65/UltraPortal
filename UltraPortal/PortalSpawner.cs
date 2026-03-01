@@ -1,11 +1,7 @@
-using System;
 using BepInEx.Logging;
-using Gravity;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
-
-using static UltraPortal.ModConfig;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
@@ -14,7 +10,7 @@ namespace UltraPortal {
 
 		private Portal portal;
 		private GameObject portalObject;
-		private Vector2 portalSize = new Vector2(4, 6);
+		private Vector2 portalSize = new Vector2(3.9f, 5.9f);
 
 		private DynamicPortalExit portalEntry;
 		private DynamicPortalExit portalExit;
