@@ -58,9 +58,9 @@ namespace UltraPortal {
 			gameObject.layer = PortalLayer;
 			
 			_toggleColliderAction += (portalSide, collider, toggle) => {
-				if (assistedPortalTravel && portalSide != side) {
-					return;
-				}
+				// if (assistedPortalTravel && portalSide != side) {
+				// 	return;
+				// }
 				
 				ToggleColliders(toggle, collider);
 			};
@@ -136,9 +136,9 @@ namespace UltraPortal {
 			
 			// Spawn the portal trigger
 			portalTrigger = gameObject.GetComponent<BoxCollider>();
-			portalTrigger.isTrigger = true;
-			portalTrigger.center = Vector3.zero;
-			portalTrigger.size = new Vector3(portalSize.x, portalSize.y, portalSize.x);
+			// portalTrigger.isTrigger = true;
+			// portalTrigger.center = Vector3.zero;
+			// portalTrigger.size = new Vector3(portalSize.x, portalSize.y, portalSize.x);
 		}
 
 		private void OnTriggerEnter(Collider other) {
