@@ -26,15 +26,17 @@ namespace UltraPortal {
 				Logger.LogError("Failed to load portal prefab!");
 				return;
 			}
+
+			Vector3 spawnPos = Vector3.down * 100000;
 			
 			GameObject portalEntryObject =
-				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity);
+				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			portalEntryObject.name = "Entry";
 			portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
 			portalEntry.side = PortalSide.Enter;
 			
 			GameObject portalExitObject =
-				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity);
+				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			portalExitObject.name = "Exit";
 			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
 			portalExit.side = PortalSide.Exit;
