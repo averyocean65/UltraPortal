@@ -4,6 +4,9 @@ Adding portals to ULTRAKILL, because why not?
 # Development Setup
 
 ## UltraPortalAssets
+### Credits
+All art assets were created by [Rose Warbug](https://bsky.app/profile/rosewarbug.bsky.social)
+
 ### Requirements
 To use the UltraPortalAssets project, you will need Unity `2022.3.28f1` in order to open the project.
 

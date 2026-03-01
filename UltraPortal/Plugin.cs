@@ -38,13 +38,18 @@ namespace UltraPortal {
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
-            if (loadMode != LoadSceneMode.Single) {
+            if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
                 return;
             }
 
             try {
+                Logger.LogInfo($"Currently playing: {SceneHelper.CurrentScene}");
+                
                 GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
                 spawner.AddComponent<PortalSpawner>();
+
+                AssetBundle weaponsBundle = AssetBundleHelpers.LoadAssetBundle("weapons");
+                Sprite 
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");
