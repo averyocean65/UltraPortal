@@ -80,6 +80,7 @@
         <Compile Include="DynamicPortalExit.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Plugin.cs" />
+        <Compile Include="PortalGunManager.cs" />
         <Compile Include="PortalSpawner.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>

@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using Configgy;
@@ -45,11 +48,11 @@ namespace UltraPortal {
             try {
                 Logger.LogInfo($"Currently playing: {SceneHelper.CurrentScene}");
                 
-                GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
-                spawner.AddComponent<PortalSpawner>();
+                // GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
+                // spawner.AddComponent<PortalSpawner>();
 
-                AssetBundle weaponsBundle = AssetBundleHelpers.LoadAssetBundle("weapons");
-                Sprite 
+                GameObject manager = new GameObject("Portal Gun Manager");
+                manager.AddComponent<PortalGunManager>();
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

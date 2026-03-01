@@ -28,25 +28,36 @@ namespace UltraPortal {
 			}
 			
 			GameObject portalEntryObject =
-				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity, transform);
+				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity);
 			portalEntryObject.name = "Entry";
 			portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
 			portalEntry.side = PortalSide.Enter;
 			
 			GameObject portalExitObject =
-				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity, transform);
+				Instantiate(portalPrefab, Vector3.zero, Quaternion.identity);
 			portalExitObject.name = "Exit";
 			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
 			portalExit.side = PortalSide.Exit;
 			
 			InitPortals();
 		}
+		
+		private void Update() {
+			if (OptionsMenuToManager.Instance.pauseMenu.activeSelf) {
+				return;
+			}
+			
+			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame) {
+				SpawnPortal(portalEntry);
+			}
+			
+			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame) {
+				SpawnPortal(portalExit);
+			}
+		}
 
 		private void InitPortals() {
 			portalObject = new GameObject("Portal") {
-				transform = {
-					parent = transform
-				},
 				layer = PortalLayer
 			};
 
@@ -90,20 +101,6 @@ namespace UltraPortal {
 
 			HudMessageReceiver.Instance.SendHudMessage("Spawning portal end!");
 			exit.Initialize(portal, exit.side, portalSize, hit);
-		}
-
-		private void Update() {
-			if (!NewMovement.Instance.activated) {
-				return;
-			}
-			
-			if (Input.GetKeyDown(SpawnEntryKeybind)) {
-				SpawnPortal(portalEntry);
-			}
-			
-			if (Input.GetKeyDown(SpawnExitKeybind)) {
-				SpawnPortal(portalExit);
-			}
 		}
 	}
 }
