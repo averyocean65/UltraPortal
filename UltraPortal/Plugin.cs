@@ -2,6 +2,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using Configgy;
+using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
