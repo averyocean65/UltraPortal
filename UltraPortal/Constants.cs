@@ -1,9 +1,11 @@
+using System;
+using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace UltraPortal {
     public static class Constants {
         public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "PlayerOnly", "Outdoors", "OutdoorsBaked");
-        public static LayerMask PortalPassableLayer => LayerMask.GetMask("Projectile", "Default", "IgnoreRaycast");
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 
         private static Camera _mainCamera = null;
@@ -17,8 +19,11 @@ namespace UltraPortal {
                 return _mainCamera;
             }
         }
-        
-        public static bool IsInLayerMask(GameObject obj, LayerMask mask) => (mask.value & (1 << obj.layer)) != 0;
-        public static bool IsInLayerMask(int layer, LayerMask mask) => (mask.value & (1 << layer)) != 0;
+
+        public static class AssetPaths {
+            public static string BundlePath => Path.Combine(Environment.CurrentDirectory, "ULTRAPORTAL", "Bundles");
+            public static readonly string PortalBundleName = "portals";
+            public static string PortalBundlePath = Path.Combine(BundlePath, PortalBundleName);
+        }
     }
 }
