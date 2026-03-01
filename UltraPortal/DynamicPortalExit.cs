@@ -192,7 +192,8 @@ namespace UltraPortal {
 					Physics.IgnoreCollision(c, other, value);
 				}
 				else {
-				 	c.gameObject.SetActive(!value);
+				 	//c.gameObject.SetActive(!value);
+				    c.enabled = !value;
 				}
 			}
 		}

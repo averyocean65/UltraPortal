@@ -1,3 +1,4 @@
+using System;
 using BepInEx.Logging;
 using Gravity;
 using ULTRAKILL.Portal;
@@ -43,7 +44,13 @@ namespace UltraPortal {
 			
 			InitPortals();
 		}
-		
+
+		private void OnDestroy() {
+			Destroy(portal.gameObject);
+			Destroy(portalEntry.gameObject);
+			Destroy(portalExit.gameObject);
+		}
+
 		private void Update() {
 			if (OptionsMenuToManager.Instance.pauseMenu.activeSelf) {
 				return;
