@@ -84,10 +84,12 @@
         <Compile Include="AssetBundleHelpers.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DynamicPortalExit.cs" />
+        <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="LevelPatches.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="PortalGunManager.cs" />
+        <Compile Include="Projectiles\PortalProjectileHelper.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Weapons\GunBase.cs" />
         <Compile Include="Weapons\MirrorGun.cs" />

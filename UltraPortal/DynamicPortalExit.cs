@@ -81,7 +81,7 @@ namespace UltraPortal {
 			_colliders.Add(c);
 		}
 		
-		private void GetNearbyCollider(Vector2 portalSize) {
+		private void GetNearbyCollider() {
 			Collider[] sphereCheck = Physics.OverlapSphere(transform.position, SphereCheckRadius, EnvironmentLayer, QueryTriggerInteraction.Ignore);
 			_colliders.AddRange(sphereCheck);
 			
@@ -104,7 +104,7 @@ namespace UltraPortal {
 			}
 		}
 
-		public void Initialize(Portal portal, PortalSide portalSide, Vector2 portalSize, RaycastHit hit) {
+		public void Initialize(Portal portal, PortalSide portalSide, RaycastHit hit) {
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
@@ -136,8 +136,7 @@ namespace UltraPortal {
 			side = portalSide;
 
 			AddCollider(hit.collider);
-			
-			GetNearbyCollider(portalSize);
+			GetNearbyCollider();
 			
 			// Spawn the portal trigger
 			portalTrigger = gameObject.GetComponent<BoxCollider>();

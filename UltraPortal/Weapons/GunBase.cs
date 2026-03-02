@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UltraPortal.Projectiles;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -50,7 +51,7 @@ namespace UltraPortal {
 		}
 
 		protected virtual void Update() {
-			if (OptionsMenuToManager.Instance.pauseMenu.activeSelf) {
+			if (OptionsManager.Instance.paused) {
 				return;
 			}
 			
@@ -76,6 +77,28 @@ namespace UltraPortal {
 				float.PositiveInfinity,
 				EnvironmentLayer,
 				QueryTriggerInteraction.Ignore);
+		}
+
+		protected GameObject SpawnProjectileFromAsset(string assetName, float speed) {
+			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundleName);
+			return SpawnProjectileFromPrefab(weapons.LoadAsset<GameObject>(assetName), speed);
+		}
+		
+		protected GameObject SpawnProjectileFromPrefab(GameObject prefab, float speed) {
+			GameObject spawned = Instantiate(prefab, MainCamera.transform.position + MainCamera.transform.forward,
+				Quaternion.identity);
+			Projectile projectile = spawned.AddComponent<Projectile>();
+			projectile.damage = 0f;
+			projectile.sourceWeapon = gameObject;
+			projectile.friendly = true;
+			projectile.speed = speed;
+			projectile.bulletType = "";
+			projectile.ignoreEnvironment = false;
+			projectile.ignoreExplosions = false;
+			projectile.unparryable = true;
+			projectile.transform.forward = MainCamera.transform.forward;
+
+			return spawned;
 		}
 
 		protected virtual void OnDisable() {

@@ -1,6 +1,7 @@
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Projectiles;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -20,7 +21,7 @@ namespace UltraPortal {
 		
 		protected override void Start() {
 			base.Start();
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(Constants.AssetPaths.PortalBundleName);
+			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
 			GameObject portalPrefab = portals.LoadAsset<GameObject>("Mirror");
 
 			if (!portalPrefab) {
@@ -42,7 +43,11 @@ namespace UltraPortal {
 			_primaryMirror.side = PortalSide.Enter;
 
 			OnPrimaryFire += () => {
-				SpawnMirror();
+				GameObject projectile = SpawnProjectileFromAsset("Projectile A", ModConfig.PortalProjectileSpeed);
+				PortalProjectileHelper helper = projectile.AddComponent<PortalProjectileHelper>();
+				helper.exit = _primaryMirror; 
+				helper.portal = _portal;
+				
 				_animator.Play(PrimaryFireAnimHash);
 			};
 			
@@ -56,7 +61,7 @@ namespace UltraPortal {
 				return;
 			}
 
-			_primaryMirror.Initialize(_portal, PortalSide.Enter, _portalSize, hit);
+			_primaryMirror.Initialize(_portal, PortalSide.Enter, hit);
 		}
 		
 		private void InitMirror() {

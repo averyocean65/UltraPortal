@@ -7,6 +7,7 @@ namespace UltraPortal {
     public static class Constants {
         public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "PlayerOnly", "Outdoors", "OutdoorsBaked");
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
+        public static LayerMask ProjectileLayer => LayerMask.NameToLayer("Projectile");
 
         private static Camera _mainCamera;
 
@@ -25,6 +26,7 @@ namespace UltraPortal {
             public static string AssemblyFolderPath => Path.GetDirectoryName(AssemblyPath);
             public static string BundlePath => Path.Combine(AssemblyFolderPath, "Bundles");
             public static readonly string PortalBundleName = "portals";
+            public static readonly string WeaponBundleName = "weapons";
         }
     }
 }

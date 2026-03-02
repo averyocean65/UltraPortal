@@ -3,6 +3,7 @@ using System.Collections;
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Projectiles;
 using UnityEngine;
 using static UltraPortal.Constants;
 
@@ -25,6 +26,16 @@ namespace UltraPortal {
        
         private Animator animator;
 
+        private void FireProjectile(DynamicPortalExit exit, int animHash, bool altProjectile) {
+	        string projectileAsset = altProjectile ? "Projectile A" : "Projectile B";
+	        GameObject projectile = SpawnProjectileFromAsset(projectileAsset, ModConfig.PortalProjectileSpeed);
+	        PortalProjectileHelper helper = projectile.AddComponent<PortalProjectileHelper>();
+	        helper.exit = exit; 
+	        helper.portal = portal;
+	        
+	        animator.Play(animHash);
+        }
+        
 		protected override void Start() {
 			base.Start();
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
@@ -47,21 +58,21 @@ namespace UltraPortal {
 			portalEntryObject.name = "Entry";
 			portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
 			portalEntry.side = PortalSide.Enter;
+			portalEntry.hostPortal = portal;
 			
 			GameObject portalExitObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			portalExitObject.name = "Exit";
 			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
 			portalExit.side = PortalSide.Exit;
+			portalExit.hostPortal = portal;
 
 			OnPrimaryFire += () => {
-				SpawnPortal(portalEntry);
-				animator.Play(PrimaryFireAnimHash);
+				FireProjectile(portalEntry, PrimaryFireAnimHash, false);
 			};
 			
 			OnSecondaryFire += () => {
-				SpawnPortal(portalExit);
-				animator.Play(SecondaryFireAnimHash);
+				FireProjectile(portalExit, SecondaryFireAnimHash, true);
 			};
 			
 			InitPortals();
@@ -116,7 +127,7 @@ namespace UltraPortal {
 			}
 
 			// HudMessageReceiver.Instance.SendHudMessage("Spawning portal!");
-			exit.Initialize(portal, exit.side, portalSize, hit);
+			exit.Initialize(portal, exit.side, hit);
 		}
 	}
 }

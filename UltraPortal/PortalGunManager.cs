@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using static UltraPortal.Constants;
+
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
 	public class PortalGunManager : MonoBehaviour {
@@ -16,7 +18,7 @@ namespace UltraPortal {
 				return null;
 			}
 			
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle("weapons");
+			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundleName);
 			GameObject prefab = weapons.LoadAsset<GameObject>(assetPrefabPath);
 
 			GameObject gun = Instantiate(prefab, Vector3.zero, Quaternion.identity, GunControl.Instance.transform);
