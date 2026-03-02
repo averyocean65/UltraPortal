@@ -136,9 +136,6 @@ namespace UltraPortal {
 			
 			// Spawn the portal trigger
 			portalTrigger = gameObject.GetComponent<BoxCollider>();
-			// portalTrigger.isTrigger = true;
-			// portalTrigger.center = Vector3.zero;
-			// portalTrigger.size = new Vector3(portalSize.x, portalSize.y, portalSize.x);
 		}
 
 		private void OnTriggerEnter(Collider other) {
