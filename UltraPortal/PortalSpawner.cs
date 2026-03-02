@@ -82,19 +82,14 @@ namespace UltraPortal {
 			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame && canPrimaryFire) {
 				SpawnPortal(portalEntry);
 				spawnedEntry = true;
-				StartCoroutine(IFireCooldown(canPrimaryFire));
+				StartCoroutine(IFireCooldown(true));
 			}
 			
 			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame && canSecondaryFire) {
 				SpawnPortal(portalExit);
                 spawnedExit = true;
-				StartCoroutine(IFireCooldown(canSecondaryFire));
+				StartCoroutine(IFireCooldown(false));
 			}
-
-			if (spawnedEntry && spawnedExit) 
-            {
-                
-            }
 		}
 
 		private void InitPortals() {
