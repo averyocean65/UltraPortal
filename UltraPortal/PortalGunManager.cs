@@ -4,6 +4,8 @@ using UnityEngine;
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
 	public class PortalGunManager : MonoBehaviour {
+		public static bool EquippedPortalGun = false;
+		
 		private void Start() {
 			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle("weapons");
                 
@@ -34,7 +36,8 @@ namespace UltraPortal {
 		}
 
 		private void Update() {
-			if (Input.GetKeyDown(ModConfig.PortalGunKeybind)) {
+			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance) {
+				EquippedPortalGun = true;
 				GunControl.Instance.SwitchWeapon(7);
 			}
 		}

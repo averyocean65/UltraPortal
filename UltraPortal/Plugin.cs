@@ -41,6 +41,8 @@ namespace UltraPortal {
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
+            PortalGunManager.EquippedPortalGun = false;
+            
             if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
                 return;
             }
@@ -50,7 +52,7 @@ namespace UltraPortal {
                 
                 // GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
                 // spawner.AddComponent<PortalSpawner>();
-
+                
                 GameObject manager = new GameObject("Portal Gun Manager");
                 manager.AddComponent<PortalGunManager>();
             }

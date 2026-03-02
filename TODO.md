@@ -3,6 +3,7 @@ What stuff is left to do?
 
 ## Gameplay
 - ~~Velocity boost if rigidbody travels through ground portal too slow.~~
+- Disable score submission if portal gun was equipped.
 
 ### Optional
 - Add more portal gun variants

@@ -84,6 +84,7 @@
         <Compile Include="AssetBundleHelpers.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DynamicPortalExit.cs" />
+        <Compile Include="LevelPatches.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="PortalGunManager.cs" />
