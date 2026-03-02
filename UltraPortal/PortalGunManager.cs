@@ -14,9 +14,9 @@ namespace UltraPortal {
 			
 			portalGun.AddComponent<PortalSpawner>();
 			
-			portalGun.transform.localPosition = new Vector3(0.8358f, -0.6898f, 1.1815f);
+			portalGun.transform.localPosition = new Vector3(0.8236f, -0.7478f, 0.8907f);
 			portalGun.transform.localEulerAngles = new Vector3(0, 263.3673f, 14.1545f);
-			portalGun.transform.localScale = Vector3.one * 1.5f;
+			portalGun.transform.localScale = Vector3.one * 1.2f;
 			
 			WeaponPos pos = portalGun.AddComponent<WeaponPos>();
 			WeaponIdentifier identifier = portalGun.AddComponent<WeaponIdentifier>();

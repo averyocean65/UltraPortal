@@ -53,9 +53,12 @@ namespace UltraPortal {
 
 		private List<Collider> _colliders = new List<Collider>();
 		private List<Collider> _currentTravellers = new List<Collider>();
+		
+		private ParticleSystem _particles;
 
 		private void Awake() {
 			gameObject.layer = PortalLayer;
+			_particles = GetComponentInChildren<ParticleSystem>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle) => {
 				// if (assistedPortalTravel && portalSide != side) {
@@ -119,6 +122,8 @@ namespace UltraPortal {
 			}
 
 			_colliders = new List<Collider>();
+			
+			_particles.Play();
 
 			transform.forward = -hit.normal;
 			transform.position = hit.point + hit.normal.normalized * 0.05f;

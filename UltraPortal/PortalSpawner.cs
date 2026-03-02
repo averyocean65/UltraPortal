@@ -8,6 +8,9 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	public class PortalSpawner : MonoBehaviour {
 		private static ManualLogSource Logger => Plugin.LogSource;
+
+		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
+		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
 		
 		private bool spawnedEntry;
 		private bool spawnedExit;
@@ -21,6 +24,8 @@ namespace UltraPortal {
         
         private bool canPrimaryFire = true;
         private bool canSecondaryFire = true;
+       
+        private Animator animator;
 
         private float fireCooldown = 0.5f;
 
@@ -31,6 +36,11 @@ namespace UltraPortal {
 			if (!portalPrefab) {
 				Logger.LogError("Failed to load portal prefab!");
 				return;
+			}
+
+			animator = GetComponentInChildren<Animator>();
+			if (!animator) {
+				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
 
 			Vector3 spawnPos = Vector3.down * 100000;
@@ -57,11 +67,16 @@ namespace UltraPortal {
 		}
 
 		private IEnumerator IFireCooldown(bool isPrimary) {
+			int hash = isPrimary ? PrimaryFireAnimHash : SecondaryFireAnimHash;
 			if (isPrimary) {
 				canPrimaryFire = false;
 			}
 			else {
 				canSecondaryFire = false;
+			}
+
+			if (animator) {
+				animator.Play(hash);
 			}
 			
 			yield return new WaitForSeconds(fireCooldown);

@@ -18,6 +18,6 @@ What stuff is left to do?
 
 ## Polish
 - SFX for portal gun
-- Trigger firing animations through code
+- ~~Trigger firing animations through code~~
 - Better visuals for portal
-- Particle burst when portal gets spawned
+- ~~Particle burst when portal gets spawned~~

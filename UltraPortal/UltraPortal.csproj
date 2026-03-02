@@ -57,6 +57,12 @@
         <Reference Include="Unity.Addressables">
             <HintPath>$(ManagedDir)/Unity.Addressables.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.AnimationModule">
+            <HintPath>$(ManagedDir)/UnityEngine.AnimationModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.ParticleSystemModule">
+            <HintPath>$(ManagedDir)/UnityEngine.ParticleSystemModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.AssetBundleModule">
             <HintPath>$(ManagedDir)/UnityEngine.AssetBundleModule.dll</HintPath>
         </Reference>
