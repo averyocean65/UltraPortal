@@ -10,10 +10,11 @@ What stuff is left to do?
   - Mirror gun?
   - Different portal sizes?
   - Player-only portals?
+  - SPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE (space core would be happy)
 
 ## Bugfixes
-- Fix rockets/cannonballs not passing through portals
-  - scale up hitbox of "Portal Exit" in Unity
+- ~~Fix rockets/cannonballs not passing through portals~~
+  - ~~scale up hitbox of "Portal Exit" in Unity~~
 - Make portal impassable if other side hasn't been spawned once
 - Patch room disabler to not disable rooms with a portal gun portal
 

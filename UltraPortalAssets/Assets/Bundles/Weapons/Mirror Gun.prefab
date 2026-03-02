@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1091552195915551170}
   m_Layer: 13
-  m_Name: Portal Gun
+  m_Name: Mirror Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ PrefabInstance:
     - target: {fileID: 2693593139753378127, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 38c9cd812a5b11942a981146f6c6aa43, type: 2}
+      objectReference: {fileID: 2100000, guid: 10bb757b00c40cf46a69cf3a47b78667, type: 2}
     - target: {fileID: 2693593139753378127, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 

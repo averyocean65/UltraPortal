@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
@@ -6,7 +7,7 @@ using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class PortalSpawner : MonoBehaviour {
+	public class PortalGun : GunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -21,15 +22,11 @@ namespace UltraPortal {
 
 		private DynamicPortalExit portalEntry;
 		private DynamicPortalExit portalExit;
-        
-        private bool canPrimaryFire = true;
-        private bool canSecondaryFire = true;
        
         private Animator animator;
 
-        private float fireCooldown = 0.5f;
-
-		private void Start() {
+		protected override void Start() {
+			base.Start();
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
 			GameObject portalPrefab = portals.LoadAsset<GameObject>("Portal Exit");
 
@@ -56,6 +53,16 @@ namespace UltraPortal {
 			portalExitObject.name = "Exit";
 			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
 			portalExit.side = PortalSide.Exit;
+
+			OnPrimaryFire += () => {
+				SpawnPortal(portalEntry);
+				animator.Play(PrimaryFireAnimHash);
+			};
+			
+			OnSecondaryFire += () => {
+				SpawnPortal(portalExit);
+				animator.Play(SecondaryFireAnimHash);
+			};
 			
 			InitPortals();
 		}
@@ -64,47 +71,6 @@ namespace UltraPortal {
 			Destroy(portal.gameObject);
 			Destroy(portalEntry.gameObject);
 			Destroy(portalExit.gameObject);
-		}
-
-		private IEnumerator IFireCooldown(bool isPrimary) {
-			int hash = isPrimary ? PrimaryFireAnimHash : SecondaryFireAnimHash;
-			if (isPrimary) {
-				canPrimaryFire = false;
-			}
-			else {
-				canSecondaryFire = false;
-			}
-
-			if (animator) {
-				animator.Play(hash);
-			}
-			
-			yield return new WaitForSeconds(fireCooldown);
-			
-			if (isPrimary) {
-				canPrimaryFire = true;
-			}
-			else {
-				canSecondaryFire = true;
-			}
-		}
-
-		private void Update() {
-			if (OptionsMenuToManager.Instance.pauseMenu.activeSelf) {
-				return;
-			}
-			
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame && canPrimaryFire) {
-				SpawnPortal(portalEntry);
-				spawnedEntry = true;
-				StartCoroutine(IFireCooldown(true));
-			}
-			
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame && canSecondaryFire) {
-				SpawnPortal(portalExit);
-                spawnedExit = true;
-				StartCoroutine(IFireCooldown(false));
-			}
 		}
 
 		private void InitPortals() {
@@ -142,19 +108,14 @@ namespace UltraPortal {
 		}
 
 		private void SpawnPortal(DynamicPortalExit exit) {
-			bool success = Physics.Raycast(MainCamera.transform.position,
-				MainCamera.transform.forward,
-				out var hit,
-				float.PositiveInfinity,
-				EnvironmentLayer,
-				QueryTriggerInteraction.Ignore);
+			PlayerHeadRaycast(out bool success, out var hit);
 
 			if (!success) {
-				HudMessageReceiver.Instance.SendHudMessage("Failed to spawn portal!");
+				HudMessageReceiver.Instance.SendHudMessage("<color=red>Failed to spawn portal!</color>");
 				return;
 			}
 
-			HudMessageReceiver.Instance.SendHudMessage("Spawning portal!");
+			// HudMessageReceiver.Instance.SendHudMessage("Spawning portal!");
 			exit.Initialize(portal, exit.side, portalSize, hit);
 		}
 	}

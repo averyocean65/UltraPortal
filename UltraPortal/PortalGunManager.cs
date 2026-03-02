@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,34 +6,43 @@ namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
 	public class PortalGunManager : MonoBehaviour {
 		public static bool EquippedPortalGun = false;
+
+		private GameObject SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, Vector3 position, Vector3 rotation, Vector3 scale) {
+			if (!type.IsSubclassOf(typeof(GunBase))) {
+				Plugin.LogSource.LogError("Type must be a subclass of GunBase!");
+				return null;
+			}
+			
+			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle("weapons");
+			GameObject prefab = weapons.LoadAsset<GameObject>(assetPrefabPath);
+
+			GameObject gun = Instantiate(prefab, Vector3.zero, Quaternion.identity, GunControl.Instance.transform);
+			gun.transform.localPosition = position;
+			gun.transform.localEulerAngles = rotation;
+			gun.transform.localScale = scale;
+
+			GunBase gb = gun.AddComponent(type) as GunBase;
+			gb.fireCooldown = 0.5f;
+			gb.icon = weapons.LoadAsset<Sprite>("UltraPortalGunIcon");
+			gb.glowIcon = weapons.LoadAsset<Sprite>("UltraPortalGunIconGlow");
+			gb.variant = variant;
+			
+			gun.SetActive(false);
+			return gun;
+		}
 		
 		private void Start() {
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle("weapons");
-                
-			GameObject portalGunPrefab = weapons.LoadAsset<GameObject>("Portal Gun");
+			GameObject portalGun = SpawnPortalGun(typeof(PortalGun), "Portal Gun", WeaponVariant.BlueVariant,
+				new Vector3(0.8236f, -0.7478f, 0.8907f), new Vector3(0, 263.3673f, 14.1545f), Vector3.one * 1.2f);
 			
-			GameObject portalGun = Instantiate(portalGunPrefab, Vector3.zero, Quaternion.identity,
-				GunControl.Instance.transform);
+			GameObject mirrorGun = SpawnPortalGun(typeof(GunBase), "Mirror Gun", WeaponVariant.GreenVariant,
+				new Vector3(0.8236f, -0.7478f, 0.8907f), new Vector3(0, 263.3673f, 14.1545f), Vector3.one * 1.2f);
+
+			if (!portalGun || !mirrorGun) {
+				Plugin.LogSource.LogError($"Portal Gun?: {portalGun}, Mirror Gun?: {mirrorGun}");
+			}
 			
-			portalGun.AddComponent<PortalSpawner>();
-			
-			portalGun.transform.localPosition = new Vector3(0.8236f, -0.7478f, 0.8907f);
-			portalGun.transform.localEulerAngles = new Vector3(0, 263.3673f, 14.1545f);
-			portalGun.transform.localScale = Vector3.one * 1.2f;
-			
-			WeaponPos pos = portalGun.AddComponent<WeaponPos>();
-			WeaponIdentifier identifier = portalGun.AddComponent<WeaponIdentifier>();
-			WeaponIcon icon = portalGun.AddComponent<WeaponIcon>();
-			
-			icon.weaponDescriptor = ScriptableObject.CreateInstance<WeaponDescriptor>();
-			icon.weaponDescriptor.icon = weapons.LoadAsset<Sprite>("UltraPortalGunIcon");
-			icon.weaponDescriptor.glowIcon = weapons.LoadAsset<Sprite>("UltraPortalGunIconGlow");
-			icon.weaponDescriptor.variationColor = WeaponVariant.GoldVariant;
-			
-			identifier.speedMultiplier = 1.0f;
-                
-			portalGun.SetActive(false);
-			GunControl.Instance.slots.Add(new List<GameObject>() { portalGun });
+			GunControl.Instance.slots.Add(new List<GameObject>() { portalGun, mirrorGun });
 		}
 
 		private void Update() {
