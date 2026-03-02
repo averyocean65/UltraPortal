@@ -2,7 +2,7 @@
 What stuff is left to do?
 
 ## Gameplay
-- Velocity boost if rigidbody travels through ground portal too slow.
+- ~~Velocity boost if rigidbody travels through ground portal too slow.~~
 
 ### Optional
 - Add more portal gun variants

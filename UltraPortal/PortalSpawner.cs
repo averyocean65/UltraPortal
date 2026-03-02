@@ -1,3 +1,4 @@
+using System.Collections;
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
@@ -7,6 +8,9 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	public class PortalSpawner : MonoBehaviour {
 		private static ManualLogSource Logger => Plugin.LogSource;
+		
+		private bool spawnedEntry;
+		private bool spawnedExit;
 
 		private Portal portal;
 		private GameObject portalObject;
@@ -14,6 +18,11 @@ namespace UltraPortal {
 
 		private DynamicPortalExit portalEntry;
 		private DynamicPortalExit portalExit;
+        
+        private bool canPrimaryFire = true;
+        private bool canSecondaryFire = true;
+
+        private float fireCooldown = 0.5f;
 
 		private void Start() {
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
@@ -47,18 +56,45 @@ namespace UltraPortal {
 			Destroy(portalExit.gameObject);
 		}
 
+		private IEnumerator IFireCooldown(bool isPrimary) {
+			if (isPrimary) {
+				canPrimaryFire = false;
+			}
+			else {
+				canSecondaryFire = false;
+			}
+			
+			yield return new WaitForSeconds(fireCooldown);
+			
+			if (isPrimary) {
+				canPrimaryFire = true;
+			}
+			else {
+				canSecondaryFire = true;
+			}
+		}
+
 		private void Update() {
 			if (OptionsMenuToManager.Instance.pauseMenu.activeSelf) {
 				return;
 			}
 			
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame) {
+			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame && canPrimaryFire) {
 				SpawnPortal(portalEntry);
+				spawnedEntry = true;
+				StartCoroutine(IFireCooldown(canPrimaryFire));
 			}
 			
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame) {
+			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame && canSecondaryFire) {
 				SpawnPortal(portalExit);
+                spawnedExit = true;
+				StartCoroutine(IFireCooldown(canSecondaryFire));
 			}
+
+			if (spawnedEntry && spawnedExit) 
+            {
+                
+            }
 		}
 
 		private void InitPortals() {
@@ -80,8 +116,12 @@ namespace UltraPortal {
 			portal.enableOverrideFog = false;
 			portal.enterOffset = 1.5f;
 			portal.entry = portalEntry.transform;
+            portal.minimumEntrySideSpeed = 10f;
+            
 			portal.exit = portalExit.transform;
 			portal.exitOffset = 1.5f;
+			portal.minimumExitSideSpeed = 10f;
+			
 			portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			portal.fakeVPMatrix = Matrix4x4.zero;
 			portal.mirror = false;
@@ -100,11 +140,11 @@ namespace UltraPortal {
 				QueryTriggerInteraction.Ignore);
 
 			if (!success) {
-				HudMessageReceiver.Instance.SendHudMessage("Failed to spawn portal end!");
+				HudMessageReceiver.Instance.SendHudMessage("Failed to spawn portal!");
 				return;
 			}
 
-			HudMessageReceiver.Instance.SendHudMessage("Spawning portal end!");
+			HudMessageReceiver.Instance.SendHudMessage("Spawning portal!");
 			exit.Initialize(portal, exit.side, portalSize, hit);
 		}
 	}
