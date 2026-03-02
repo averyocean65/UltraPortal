@@ -5,7 +5,10 @@ using UnityEngine;
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
 	public class PortalGunManager : MonoBehaviour {
+		private const int PortalGunSlot = 7;
+		
 		public static bool EquippedPortalGun = false;
+		private int _currentVariationIndex = -1;
 
 		private GameObject SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, Vector3 position, Vector3 rotation, Vector3 scale) {
 			if (!type.IsSubclassOf(typeof(GunBase))) {
@@ -35,7 +38,7 @@ namespace UltraPortal {
 			GameObject portalGun = SpawnPortalGun(typeof(PortalGun), "Portal Gun", WeaponVariant.BlueVariant,
 				new Vector3(0.8236f, -0.7478f, 0.8907f), new Vector3(0, 263.3673f, 14.1545f), Vector3.one * 1.2f);
 			
-			GameObject mirrorGun = SpawnPortalGun(typeof(GunBase), "Mirror Gun", WeaponVariant.GreenVariant,
+			GameObject mirrorGun = SpawnPortalGun(typeof(MirrorGun), "Mirror Gun", WeaponVariant.GreenVariant,
 				new Vector3(0.8236f, -0.7478f, 0.8907f), new Vector3(0, 263.3673f, 14.1545f), Vector3.one * 1.2f);
 
 			if (!portalGun || !mirrorGun) {
@@ -46,9 +49,14 @@ namespace UltraPortal {
 		}
 
 		private void Update() {
+			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
+				_currentVariationIndex = -1;
+			}
+			
 			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance) {
 				EquippedPortalGun = true;
-				GunControl.Instance.SwitchWeapon(7);
+				GunControl.Instance.SwitchWeapon(PortalGunSlot, targetVariationIndex: _currentVariationIndex + 1, cycleVariation: true);
+				_currentVariationIndex = GunControl.Instance.currentVariationIndex;
 			}
 		}
 	}

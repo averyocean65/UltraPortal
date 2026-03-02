@@ -74,9 +74,9 @@ namespace UltraPortal {
 				return;
 			}
 
-			if (c.CompareTag("Portal Exit")) {
-				return;
-			}
+			// if (c.CompareTag("Portal Exit")) {
+			// 	return;
+			// }
 			
 			_colliders.Add(c);
 		}
