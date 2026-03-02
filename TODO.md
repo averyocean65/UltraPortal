@@ -7,7 +7,7 @@ What stuff is left to do?
 
 ### Optional
 - Add more portal gun variants
-  - Mirror gun?
+  - ~~Mirror gun?~~
   - Different portal sizes?
   - Player-only portals?
   - SPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE (space core would be happy)
