@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using Configgy;
+using HarmonyLib;
 using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +29,10 @@ namespace UltraPortal {
         private void Awake() {
             LogSource = Logger;
 
-            config = new ConfigBuilder("com.ultraportal", "ULTRAPORTAL");
+            Harmony harmony = new Harmony(PluginInfo.Guid);
+            harmony.PatchAll();
+
+            config = new ConfigBuilder(PluginInfo.Guid, PluginInfo.Name);
             config.BuildAll();
 
             if (!Directory.Exists(AssetPaths.BundlePath)) {
