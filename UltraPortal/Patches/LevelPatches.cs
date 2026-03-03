@@ -22,6 +22,14 @@ namespace UltraPortal {
             }
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(FinalCyberRank), nameof(FinalCyberRank.GameOver))]
+        static void GameOverPatch() {
+            if (PortalGunManager.EquippedPortalGun) {
+                StatsManager.Instance.majorUsed = true;
+            }
+        }
+
         // Test if __runOriginal allows you to block the execution of a function.
         
         // [HarmonyPrefix]

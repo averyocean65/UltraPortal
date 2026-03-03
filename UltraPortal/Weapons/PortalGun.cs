@@ -9,6 +9,8 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public class PortalGun : GunBase {
+		private static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
+
 		private static ManualLogSource Logger => Plugin.LogSource;
 
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -51,7 +53,7 @@ namespace UltraPortal {
 				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
 
-			Vector3 spawnPos = Vector3.down * 100000;
+			Vector3 spawnPos = DefaultPortalPosition;
 			
 			GameObject portalEntryObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
@@ -118,16 +120,9 @@ namespace UltraPortal {
 			};
 		}
 
-		private void SpawnPortal(DynamicPortalExit exit) {
-			PlayerHeadRaycast(out bool success, out var hit);
-
-			if (!success) {
-				HudMessageReceiver.Instance.SendHudMessage("<color=red>Failed to spawn portal!</color>");
-				return;
-			}
-
-			// HudMessageReceiver.Instance.SendHudMessage("Spawning portal!");
-			exit.Initialize(portal, exit.side, hit);
+		public void Reset() {
+			portalEntry.transform.position = DefaultPortalPosition;
+			portalExit.transform.position = DefaultPortalPosition;
 		}
 	}
 }
