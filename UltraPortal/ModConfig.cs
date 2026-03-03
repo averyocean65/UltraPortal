@@ -6,7 +6,10 @@ namespace UltraPortal {
 		[Configgable("Keybinds", "Portal Gun Slot")] 
 		public static KeyCode PortalGunKeybind = KeyCode.Alpha7;
 
-		[Configgable("Misc", "Projectile Speed")]
+		[Configgable(displayName: "Projectile Speed")]
 		public static float PortalProjectileSpeed = 90f;
+
+		[Configgable(displayName: "Enabled")]
+		public static bool IsGunEnabled = true;
 	}
 }

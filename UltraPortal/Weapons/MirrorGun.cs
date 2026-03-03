@@ -53,16 +53,6 @@ namespace UltraPortal {
 			
 			InitMirror();
 		}
-
-		private void SpawnMirror() {
-			PlayerHeadRaycast(out bool success, out var hit);
-
-			if (!success) {
-				return;
-			}
-
-			_primaryMirror.Initialize(_portal, PortalSide.Enter, hit);
-		}
 		
 		private void InitMirror() {
 			GameObject mirrorObject = new GameObject("Mirror Head") {

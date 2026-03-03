@@ -54,6 +54,10 @@ namespace UltraPortal {
 			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
 				_currentVariationIndex = -1;
 			}
+
+			if (!ModConfig.IsGunEnabled) {
+				return;
+			}
 			
 			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance) {
 				EquippedPortalGun = true;
