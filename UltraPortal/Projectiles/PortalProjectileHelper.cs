@@ -7,6 +7,16 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal.Projectiles {
 	public class PortalProjectileHelper : MonoBehaviour {
+		private Transform OtherExitTransform {
+			get {
+				if (exit.side == PortalSide.Enter) {
+					return portal.exit;
+				}
+
+				return portal.entry;
+			}
+		}
+		
 		public DynamicPortalExit exit;
 		public Portal portal;
 
@@ -15,13 +25,21 @@ namespace UltraPortal.Projectiles {
 			
 			if (id) {
 				Rigidbody rb = id.gameObject.GetComponent<Rigidbody>();
-				id.transform.position = exit.transform.position - exit.transform.forward;
+				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport
+					? OtherExitTransform
+					: exit.transform;
 
-				float multiplier = exit.assistedPortalTravel
+				DynamicPortalExit desiredExit = ModConfig.UseOtherPortalForProjectileTeleport
+					? desiredExitTransform.GetComponent<DynamicPortalExit>()
+					: exit;
+				
+				id.transform.position = desiredExitTransform.position - desiredExitTransform.forward;
+				
+				float multiplier = desiredExit.assistedPortalTravel
 					? ModConfig.ProjectileEnemyGroundPortalBoostMultiplier
 					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier;
 				
-				rb.velocity = -exit.transform.forward * ModConfig.PortalProjectileSpeed * multiplier;
+				rb.velocity = -desiredExitTransform.forward * ModConfig.PortalProjectileSpeed * multiplier;
 				return;
 			}
 
