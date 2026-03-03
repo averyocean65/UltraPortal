@@ -19,7 +19,7 @@ namespace UltraPortal {
 
 		private Portal portal;
 		private GameObject portalObject;
-		private Vector2 portalSize = new Vector2(3.9f, 5.9f);
+		private Vector2 portalSize = new Vector2(6, 8);
 
 		private DynamicPortalExit portalEntry;
 		private DynamicPortalExit portalExit;
@@ -28,9 +28,9 @@ namespace UltraPortal {
 
         private void FireProjectile(DynamicPortalExit exit, int animHash, bool altProjectile) {
 	        string projectileAsset = altProjectile ? "Projectile A" : "Projectile B";
-	        GameObject projectile = SpawnProjectileFromAsset(projectileAsset, ModConfig.PortalProjectileSpeed);
-	        PortalProjectileHelper helper = projectile.AddComponent<PortalProjectileHelper>();
-	        helper.exit = exit; 
+	        Projectile projectile = SpawnProjectileFromAsset(projectileAsset, ModConfig.PortalProjectileSpeed);
+	        PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
+	        helper.exit = exit;
 	        helper.portal = portal;
 	        
 	        animator.Play(animHash);
@@ -103,11 +103,11 @@ namespace UltraPortal {
 			portal.enableOverrideFog = false;
 			portal.enterOffset = 1.5f;
 			portal.entry = portalEntry.transform;
-            portal.minimumEntrySideSpeed = 10f;
+            portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
             
 			portal.exit = portalExit.transform;
 			portal.exitOffset = 1.5f;
-			portal.minimumExitSideSpeed = 10f;
+			portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
 			
 			portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			portal.fakeVPMatrix = Matrix4x4.zero;

@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace UltraPortal.Extensions {
 	public static class LayerMaskExtensions {
-		// from: https://discussions.unity.com/t/how-do-i-check-what-an-objects-layer-mask-is-in-an-if-statement/888160/4
-		public static bool Contains(this LayerMask val, int layer)
+		// from: https://gist.github.com/unitycoder/cb887da3be89458968101a92cf61720b
+		public static bool Contains(this LayerMask mask, int layer)
 		{
-			return ((val & (1<<layer))>0);
+			return (0 != (mask & (1 << layer)));
 		}
 	}
 }

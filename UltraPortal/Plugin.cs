@@ -59,6 +59,9 @@ namespace UltraPortal {
                 
                 GameObject manager = new GameObject("Portal Gun Manager");
                 manager.AddComponent<PortalGunManager>();
+
+                // NewMovement.Instance.gameObject.AddComponent<LayerPrinter>();
+                // NewMovement.Instance.gameObject.AddComponent<CollisionPrinter>();
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

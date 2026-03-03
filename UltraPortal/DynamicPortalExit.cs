@@ -36,7 +36,7 @@ namespace UltraPortal {
 		// PORTAL
 		public Portal hostPortal;
 		public PortalSide side;
-		private bool assistedPortalTravel = false;
+		public bool assistedPortalTravel { get; private set; } = false;
 
 		// COLLIDERS
 		private BoxCollider portalTrigger;

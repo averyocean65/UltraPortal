@@ -11,5 +11,16 @@ namespace UltraPortal {
 
 		[Configgable(displayName: "Enabled")]
 		public static bool IsGunEnabled = true;
+
+		// note: i do not have a better name for this
+		
+		[Configgable("Advanced/Projectiles")]
+		public static float ProjectileEnemyGroundPortalBoostMultiplier = 0.5f;
+		
+		[Configgable("Advanced/Projectiles")]
+		public static float ProjectileEnemyNormalPortalBoostMultiplier = 2f;
+
+		[Configgable("Advanced/Portals", "Minimum Entry/Exit Speed")]
+		public static float MinimumEntryExitSpeed = 20f;
 	}
 }

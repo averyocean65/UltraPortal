@@ -79,12 +79,12 @@ namespace UltraPortal {
 				QueryTriggerInteraction.Ignore);
 		}
 
-		protected GameObject SpawnProjectileFromAsset(string assetName, float speed) {
+		protected Projectile SpawnProjectileFromAsset(string assetName, float speed) {
 			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundleName);
 			return SpawnProjectileFromPrefab(weapons.LoadAsset<GameObject>(assetName), speed);
 		}
 		
-		protected GameObject SpawnProjectileFromPrefab(GameObject prefab, float speed) {
+		protected Projectile SpawnProjectileFromPrefab(GameObject prefab, float speed) {
 			GameObject spawned = Instantiate(prefab, MainCamera.transform.position + MainCamera.transform.forward,
 				Quaternion.identity);
 			Projectile projectile = spawned.AddComponent<Projectile>();
@@ -98,7 +98,7 @@ namespace UltraPortal {
 			projectile.unparryable = true;
 			projectile.transform.forward = MainCamera.transform.forward;
 
-			return spawned;
+			return projectile;
 		}
 
 		protected virtual void OnDisable() {

@@ -7,6 +7,7 @@ namespace UltraPortal {
     public static class Constants {
         public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "PlayerOnly", "Outdoors", "OutdoorsBaked");
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
+        public static LayerMask EnemyLayer => LayerMask.GetMask("EnemyTrigger", "Limb");
         public static LayerMask ProjectileLayer => LayerMask.NameToLayer("Projectile");
 
         private static Camera _mainCamera;

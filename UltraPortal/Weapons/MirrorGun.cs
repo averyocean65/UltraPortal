@@ -43,8 +43,8 @@ namespace UltraPortal {
 			_primaryMirror.side = PortalSide.Enter;
 
 			OnPrimaryFire += () => {
-				GameObject projectile = SpawnProjectileFromAsset("Projectile A", ModConfig.PortalProjectileSpeed);
-				PortalProjectileHelper helper = projectile.AddComponent<PortalProjectileHelper>();
+				Projectile projectile = SpawnProjectileFromAsset("Projectile A", ModConfig.PortalProjectileSpeed);
+				PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 				helper.exit = _primaryMirror; 
 				helper.portal = _portal;
 				
@@ -73,11 +73,11 @@ namespace UltraPortal {
 			_portal.enableOverrideFog = false;
 			_portal.enterOffset = 1.5f;
 			_portal.entry = _primaryMirror.transform;
-			_portal.minimumEntrySideSpeed = 10f;
+			_portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
             
 			_portal.exit = _primaryMirror.transform;
 			_portal.exitOffset = 1.5f;
-			_portal.minimumExitSideSpeed = 10f;
+			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
 			
 			_portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			_portal.fakeVPMatrix = Matrix4x4.zero;
