@@ -9,7 +9,7 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public class PortalGun : GunBase {
-		private static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
+		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
 
 		private static ManualLogSource Logger => Plugin.LogSource;
 
@@ -121,8 +121,10 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			portalEntry.transform.position = DefaultPortalPosition;
-			portalExit.transform.position = DefaultPortalPosition;
+			if (portalEntry)
+				portalEntry.transform.position = DefaultPortalPosition;
+			if(portalExit)
+				portalExit.transform.position = DefaultPortalPosition;
 		}
 	}
 }

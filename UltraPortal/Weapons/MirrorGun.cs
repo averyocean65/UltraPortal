@@ -88,5 +88,11 @@ namespace UltraPortal {
 				height = _portalSize.y
 			};
 		}
+		
+		public void Reset() {
+			if (!_primaryMirror)
+				return;
+			_primaryMirror.transform.position = PortalGun.DefaultPortalPosition;
+		}
 	}
 }

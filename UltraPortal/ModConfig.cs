@@ -12,7 +12,7 @@ namespace UltraPortal {
 		public static bool UseOtherPortalForProjectileTeleport = true;
 		
 		[Configgable("Advanced/Projectiles", "Projectile Speed")]
-		public static float PortalProjectileSpeed = 90f;
+		public static float PortalProjectileSpeed = 107.5f;
 
 		[Configgable(displayName: "Enabled")]
 		public static bool IsGunEnabled = true;
@@ -25,7 +25,7 @@ namespace UltraPortal {
 		[Configgable("Advanced/Projectiles")]
 		public static float ProjectileEnemyNormalPortalBoostMultiplier = 2f;
 
-		[Configgable("Advanced/Portals", "Minimum Entry/Exit Speed")]
+		[Configgable("Advanced/Portals", "Minimum Entry/Exit Speed (scene reload required)")]
 		public static float MinimumEntryExitSpeed = 20f;
 	}
 }

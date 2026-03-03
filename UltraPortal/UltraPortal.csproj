@@ -90,6 +90,7 @@
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\LevelPatches.cs" />
+        <Compile Include="Patches\PlayerPatches.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="PortalGunManager.cs" />
         <Compile Include="Projectiles\PortalProjectileHelper.cs" />
