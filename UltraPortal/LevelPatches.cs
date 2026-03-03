@@ -9,7 +9,7 @@ namespace UltraPortal {
             Plugin.LogSource.LogInfo("Patching level ending!");
             if (PortalGunManager.EquippedPortalGun) {
                 Plugin.LogSource.LogInfo("Portal gun was used!");
-                __instance.extraInfo.text += "- <color=#4C99E6>PORTAL GUN USED</color>\n";
+                __instance.extraInfo.text += "- <color=#FA0A56>PORTAL GUN USED</color>\n";
             }
         }
     }
