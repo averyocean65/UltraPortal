@@ -169,6 +169,15 @@ namespace UltraPortal {
 				return;
 			}
 			
+			// make sure player can't call _toggleColliderAction from behind portal
+			Vector3 direction = (transform.position - other.transform.position).normalized;
+			float dot = Vector3.Dot(transform.forward, direction);
+			if(dot < 0f) {
+				return;
+			}
+			
+			// HudMessageReceiver.Instance.SendHudMessage($"Dot: {dot}");
+			
 			_toggleColliderAction.Invoke(side, other, true);
 			
 			if (!_currentTravellers.Contains(other)) {
