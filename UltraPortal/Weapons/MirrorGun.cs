@@ -15,7 +15,7 @@ namespace UltraPortal {
 		
 		private Animator _animator;
 
-		private readonly Vector2 _portalSize = new Vector2(9.5f, 11.5f);
+		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _portal;
 		private DynamicPortalExit _primaryMirror;
 		
@@ -40,8 +40,8 @@ namespace UltraPortal {
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			primaryMirrorObject.name = "Mirror Transform";
 			_primaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
-			_primaryMirror.SetPassable(true);
 			_primaryMirror.side = PortalSide.Enter;
+			_primaryMirror.OnInitialized += () => _primaryMirror.SetPassable(true);
 
 			OnPrimaryFire += () => {
 				Projectile projectile = SpawnProjectileFromAsset(AssetPaths.MainPortalProjectile, ModConfig.PortalProjectileSpeed);

@@ -173,13 +173,14 @@ namespace UltraPortal {
 			}
 			
 			// make sure player can't call _toggleColliderAction from behind portal
+			// issue is that objects going through the portals temporarily achieve a negative value, so
+			// this is a big difficult to figure out
 			Vector3 direction = (transform.position - other.transform.position);
 			float dot = Vector3.Dot(transform.forward, direction.normalized);
-			if(dot < 0f && direction.magnitude < 0.1f) {
+			
+			if(dot < -0.5f && !AssistedPortalTravel) {
 				return;
 			}
-			
-			// HudMessageReceiver.Instance.SendHudMessage($"Dot: {dot}");
 			
 			_toggleColliderAction.Invoke(side, other, true);
 			

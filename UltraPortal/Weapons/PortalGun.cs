@@ -68,6 +68,7 @@ namespace UltraPortal {
 			portalEntryObject.name = "Entry";
 			_portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
 			_portalEntry.side = PortalSide.Enter;
+			_portalEntry.OnInitialized += UpdatePortalPassable;
 			_portalEntry.hostPortal = _portal;
 			
 			GameObject portalExitObject =

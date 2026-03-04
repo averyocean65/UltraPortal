@@ -21,11 +21,8 @@ namespace UltraPortal {
                 : ModConfig.SecondaryPortalColor;
 
             // you WILL change your color, i'm not fucking asking.
-            Material mat = new Material(Shader.Find("Unlit/Color"));
-            mat.SetColor("_Color", color);
-            
             foreach (Renderer r in renderers) {
-                r.material = mat;
+                r.material.color = color;
             }
         }
     }
