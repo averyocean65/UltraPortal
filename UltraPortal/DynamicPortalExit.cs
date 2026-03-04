@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ULTRAKILL.Portal;
+using UltraPortal.Colorizers;
 using UnityEngine;
 
 using static UltraPortal.Constants;

@@ -85,6 +85,8 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AssetBundleHelpers.cs" />
+        <Compile Include="Colorizers\PortalColorManager.cs" />
+        <Compile Include="Colorizers\ProjectileColorManager.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DynamicPortalExit.cs" />
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
@@ -92,7 +94,6 @@
         <Compile Include="Patches\LevelPatches.cs" />
         <Compile Include="Patches\PlayerPatches.cs" />
         <Compile Include="Plugin.cs" />
-        <Compile Include="PortalColorManager.cs" />
         <Compile Include="PortalGunManager.cs" />
         <Compile Include="Projectiles\PortalProjectileHelper.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
