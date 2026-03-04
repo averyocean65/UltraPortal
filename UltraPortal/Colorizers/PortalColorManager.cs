@@ -5,6 +5,8 @@ namespace UltraPortal.Colorizers {
     public class PortalColorManager : MonoBehaviour {
         private const string VisualsPath = "Visuals";
         public DynamicPortalExit associated;
+
+        private Renderer[] _renderers;
         
         private void Start() {
             Transform visualsRoot = transform.Find(VisualsPath);
@@ -14,13 +16,19 @@ namespace UltraPortal.Colorizers {
                 enabled = false;
             }
 
-            Renderer[] renderers = visualsRoot.GetComponentsInChildren<Renderer>();
+            _renderers = visualsRoot.GetComponentsInChildren<Renderer>();
+        }
+
+        public void ColorPortal() {
+            if (_renderers.Length < 1) {
+                return;
+            }
+            
             UnityEngine.Color color = associated.side == PortalSide.Enter
                 ? ModConfig.PrimaryPortalColor
                 : ModConfig.SecondaryPortalColor;
-
-            // you WILL change your color, i'm no longer asking.
-            foreach (Renderer r in renderers) {
+            
+            foreach (Renderer r in _renderers) {
                 r.material.color = color;
             }
         }

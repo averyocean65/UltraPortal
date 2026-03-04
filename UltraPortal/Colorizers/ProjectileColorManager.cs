@@ -9,6 +9,8 @@ namespace UltraPortal.Colorizers {
 		private const string GlowParticlesName = "Glow";
 		private const string LightningParticles = "Lightning Particles";
 
+		public bool FirstColorDone;
+		
 		private Color DesiredColor {
 			get {
 				if (side == PortalSide.Enter) {
@@ -61,16 +63,23 @@ namespace UltraPortal.Colorizers {
 			_light = GetComponentInChildren<Light>();
 		}
 
-		private void Start() {
+		public void ColorProjectile() {
+			FirstColorDone = true;
+			
 			_renderer.material.SetColor("_Color", DesiredColor);
 			_renderer.material.SetColor("_EmissionColor", DesiredColor);
-			_light.color = DesiredColor;
 
+			if (_light) {
+				_light.color = DesiredColor;
+			}
+
+			_lightningParticles.Stop();
 			ParticleSystem.MainModule lightningModule = _lightningParticles.main;
 			lightningModule.startColor = new ParticleSystem.MinMaxGradient(DesiredParticleColor,
 				DesiredParticleColor * AltParticleColorMultiplier);
 			_lightningParticles.Play();
 			
+			_glowParticles.Stop();
 			ParticleSystem.MainModule glowModule = _glowParticles.main;
 			glowModule.startColor = new ParticleSystem.MinMaxGradient(DesiredParticleColor * GlowColorMultiplier);
 			_glowParticles.Play();

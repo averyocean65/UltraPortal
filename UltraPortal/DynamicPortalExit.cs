@@ -62,14 +62,15 @@ namespace UltraPortal {
 		private readonly List<Collider> _currentTravellers = new List<Collider>();
 		
 		private ParticleSystem _particles;
+		private PortalColorManager _colorManager;
 
 		private void Awake() {
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
 			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;
 
-			PortalColorManager colorManager = gameObject.AddComponent<PortalColorManager>();
-			colorManager.associated = this;
+			_colorManager = gameObject.AddComponent<PortalColorManager>();
+			_colorManager.associated = this;
 			
 			_toggleColliderAction += (portalSide, collider, toggle) => {
 				// if (assistedPortalTravel && portalSide != side) {
@@ -148,6 +149,8 @@ namespace UltraPortal {
 			if (OnInitialized != null) {
 				OnInitialized.Invoke();
 			}
+			
+			_colorManager.ColorPortal();
 		}
 
 		private void OnTriggerEnter(Collider other) {

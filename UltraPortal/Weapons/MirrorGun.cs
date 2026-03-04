@@ -8,7 +8,7 @@ using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class MirrorGun : GunBase {
+	public class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 		
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -45,25 +45,11 @@ namespace UltraPortal {
 			_primaryMirror.OnInitialized += () => _primaryMirror.SetPassable(true);
 
 			OnPrimaryFire += () => {
-				Projectile projectile = SpawnProjectileFromAsset(AssetPaths.MainPortalProjectile, ModConfig.PortalProjectileSpeed);
-				PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
-				helper.exit = _primaryMirror; 
-				helper.portal = _portal;
-				
+				FireProjectile(_primaryMirror, _portal);
 				_animator.Play(PrimaryFireAnimHash);
 			};
-
-			OnSecondaryFire += () => {
-				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
-				GameObject prefab = weapons.LoadAsset<GameObject>(AssetPaths.Projectile);
-
-				GameObject instance = Instantiate(prefab,
-					MainCamera.transform.position + MainCamera.transform.forward * 5,
-					Quaternion.identity);
-				ProjectileColorManager colors = instance.AddComponent<ProjectileColorManager>();
-				colors.side = PortalSide.Enter;
-			};
 			
+			UpdateLastProjectile(_primaryMirror.side);
 			InitMirror();
 		}
 		
