@@ -15,7 +15,7 @@ What stuff is left to do?
 ## Bugfixes
 - ~~Fix rockets/cannonballs not passing through portals~~
   - ~~scale up hitbox of "Portal Exit" in Unity~~
-- Make portal impassable if other side hasn't been spawned once
+- ~~Make portal impassable if other side hasn't been spawned once~~
 - Patch room disabler to not disable rooms with a portal gun portal
 - Enemies don't fall through portals
 
