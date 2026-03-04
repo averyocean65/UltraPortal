@@ -15,41 +15,49 @@ namespace UltraPortal {
 
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
 		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
-		
-		private bool spawnedEntry;
-		private bool spawnedExit;
 
-		private Portal portal;
-		private GameObject portalObject;
-		private Vector2 portalSize = new Vector2(6, 8);
+		private Portal _portal;
+		private GameObject _portalObject;
+		private readonly Vector2 _portalSize = new Vector2(6, 8);
 
-		private DynamicPortalExit portalEntry;
-		private DynamicPortalExit portalExit;
+		private DynamicPortalExit _portalEntry;
+		private DynamicPortalExit _portalExit;
        
-        private Animator animator;
+        private Animator _animator;
+
+        private bool BothPortalsInit {
+	        get {
+		        if (!_portalEntry || !_portalExit) {
+			        return false;
+		        }
+
+		        return _portalEntry.transform.position.y > DefaultPortalPosition.y &&
+		               _portalExit.transform.position.y > DefaultPortalPosition.y;
+	        }
+        }
 
         private void FireProjectile(DynamicPortalExit exit, int animHash, bool altProjectile) {
-	        string projectileAsset = altProjectile ? "Projectile A" : "Projectile B";
+	        string projectileAsset = altProjectile ? AssetPaths.MainPortalProjectile : AssetPaths.AltPortalProjectile;
 	        Projectile projectile = SpawnProjectileFromAsset(projectileAsset, ModConfig.PortalProjectileSpeed);
 	        PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 	        helper.exit = exit;
-	        helper.portal = portal;
+	        helper.portal = _portal;
 	        
-	        animator.Play(animHash);
+	        _animator.Play(animHash);
         }
         
 		protected override void Start() {
 			base.Start();
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
-			GameObject portalPrefab = portals.LoadAsset<GameObject>("Portal Exit");
+			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
+			GameObject portalPrefab = portals.LoadAsset<GameObject>(AssetPaths.PortalExit);
 
 			if (!portalPrefab) {
 				Logger.LogError("Failed to load portal prefab!");
 				return;
 			}
 
-			animator = GetComponentInChildren<Animator>();
-			if (!animator) {
+			_animator = GetComponentInChildren<Animator>();
+			if (!_animator) {
 				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
 
@@ -58,73 +66,84 @@ namespace UltraPortal {
 			GameObject portalEntryObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			portalEntryObject.name = "Entry";
-			portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
-			portalEntry.side = PortalSide.Enter;
-			portalEntry.hostPortal = portal;
+			_portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
+			_portalEntry.side = PortalSide.Enter;
+			_portalEntry.hostPortal = _portal;
 			
 			GameObject portalExitObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			portalExitObject.name = "Exit";
-			portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
-			portalExit.side = PortalSide.Exit;
-			portalExit.hostPortal = portal;
+			_portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
+			_portalExit.OnInitialized += UpdatePortalPassable;
+			_portalExit.side = PortalSide.Exit;
+			_portalExit.hostPortal = _portal;
 
 			OnPrimaryFire += () => {
-				FireProjectile(portalEntry, PrimaryFireAnimHash, false);
+				FireProjectile(_portalEntry, PrimaryFireAnimHash, false);
 			};
 			
 			OnSecondaryFire += () => {
-				FireProjectile(portalExit, SecondaryFireAnimHash, true);
+				FireProjectile(_portalExit, SecondaryFireAnimHash, true);
 			};
 			
 			InitPortals();
 		}
 
+		private void UpdatePortalPassable() {
+			_portalEntry.SetPassable(BothPortalsInit);
+			_portalExit.SetPassable(BothPortalsInit);
+		}
+
 		private void OnDestroy() {
-			Destroy(portal.gameObject);
-			Destroy(portalEntry.gameObject);
-			Destroy(portalExit.gameObject);
+			Destroy(_portal.gameObject);
+			Destroy(_portalEntry.gameObject);
+			Destroy(_portalExit.gameObject);
 		}
 
 		private void InitPortals() {
-			portalObject = new GameObject("Portal") {
+			_portalObject = new GameObject("Portal") {
 				layer = PortalLayer
 			};
 
-			portal = portalObject.AddComponent<Portal>();
+			_portal = _portalObject.AddComponent<Portal>();
 			
-			portal.additionalSampleThreshold = 0;
-			portal.allowCameraTraversals = true;
-			portal.appearsInRecursions = true;
-			portal.canHearAudio = false;
-			portal.canSeeItself = true;
-			portal.canSeePortalLayer = true;
-			portal.clippingMethod = PortalClippingMethod.Default;
-			portal.consumeAudio = false;
-			portal.disableRange = 0;
-			portal.enableOverrideFog = false;
-			portal.enterOffset = 1.5f;
-			portal.entry = portalEntry.transform;
-            portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
+			_portal.additionalSampleThreshold = 0;
+			_portal.allowCameraTraversals = true;
+			_portal.appearsInRecursions = true;
+			_portal.canHearAudio = false;
+			_portal.canSeeItself = true;
+			_portal.canSeePortalLayer = true;
+			_portal.clippingMethod = PortalClippingMethod.Default;
+			_portal.consumeAudio = false;
+			_portal.disableRange = 0;
+			_portal.enableOverrideFog = false;
+			_portal.enterOffset = 1.5f;
+			_portal.entry = _portalEntry.transform;
+            _portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
             
-			portal.exit = portalExit.transform;
-			portal.exitOffset = 1.5f;
-			portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
+			_portal.exit = _portalExit.transform;
+			_portal.exitOffset = 1.5f;
+			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
 			
-			portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
-			portal.fakeVPMatrix = Matrix4x4.zero;
-			portal.mirror = false;
-			portal.shape = new PlaneShape {
-				width = portalSize.x,
-				height = portalSize.y
+			_portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
+			_portal.fakeVPMatrix = Matrix4x4.zero;
+			_portal.mirror = false;
+			_portal.shape = new PlaneShape {
+				width = _portalSize.x,
+				height = _portalSize.y
 			};
 		}
 
 		public void Reset() {
-			if (portalEntry)
-				portalEntry.transform.position = DefaultPortalPosition;
-			if(portalExit)
-				portalExit.transform.position = DefaultPortalPosition;
+			if (_portalEntry) {
+				_portalEntry.transform.position = DefaultPortalPosition;
+			}
+
+			if (_portalExit) {
+				_portalExit.transform.position = DefaultPortalPosition;
+			}
+
+			UpdatePortalPassable();
 		}
 	}
 }

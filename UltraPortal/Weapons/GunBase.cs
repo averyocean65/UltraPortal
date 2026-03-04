@@ -80,7 +80,7 @@ namespace UltraPortal {
 		}
 
 		protected Projectile SpawnProjectileFromAsset(string assetName, float speed) {
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundleName);
+			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 			return SpawnProjectileFromPrefab(weapons.LoadAsset<GameObject>(assetName), speed);
 		}
 		

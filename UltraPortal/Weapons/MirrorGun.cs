@@ -21,8 +21,8 @@ namespace UltraPortal {
 		
 		protected override void Start() {
 			base.Start();
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundleName);
-			GameObject portalPrefab = portals.LoadAsset<GameObject>("Mirror");
+			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
+			GameObject portalPrefab = portals.LoadAsset<GameObject>(AssetPaths.Mirror);
 
 			if (!portalPrefab) {
 				Logger.LogError("Failed to load mirror prefab!");
@@ -40,10 +40,11 @@ namespace UltraPortal {
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			primaryMirrorObject.name = "Mirror Transform";
 			_primaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
+			_primaryMirror.SetPassable(true);
 			_primaryMirror.side = PortalSide.Enter;
 
 			OnPrimaryFire += () => {
-				Projectile projectile = SpawnProjectileFromAsset("Projectile A", ModConfig.PortalProjectileSpeed);
+				Projectile projectile = SpawnProjectileFromAsset(AssetPaths.MainPortalProjectile, ModConfig.PortalProjectileSpeed);
 				PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 				helper.exit = _primaryMirror; 
 				helper.portal = _portal;

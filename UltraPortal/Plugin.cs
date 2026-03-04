@@ -20,7 +20,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.0.1";
+            public const string Version = "0.1.0";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -54,14 +54,8 @@ namespace UltraPortal {
             try {
                 Logger.LogInfo($"Currently playing: {SceneHelper.CurrentScene}");
                 
-                // GameObject spawner = new GameObject("Custom Portal Spawner (mod)");
-                // spawner.AddComponent<PortalSpawner>();
-                
                 GameObject manager = new GameObject("Portal Gun Manager");
                 manager.AddComponent<PortalGunManager>();
-
-                // NewMovement.Instance.gameObject.AddComponent<LayerPrinter>();
-                // NewMovement.Instance.gameObject.AddComponent<CollisionPrinter>();
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

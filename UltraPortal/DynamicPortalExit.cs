@@ -8,38 +8,44 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	// i sincerely apologize for the code inside of this class, i will clean it up someday, i promise.
 	public class DynamicPortalExit : MonoBehaviour {
-		public static bool PlayerNearEntry;
-		public static bool PlayerNearExit;
+		private static bool _playerNearEntry;
+		private static bool _playerNearExit;
+		
+		private const string ExpectedPassableName = "Passable";
 
-		private static float SphereCheckRadius = 0.2f;
+		private const float SphereCheckRadius = 0.2f;
 
 		private static Action<PortalSide, Collider, bool> _toggleColliderAction;
+
+		public Action OnInitialized;
 		
 		public bool IsEntityNear {
 			get {
 				if (side == PortalSide.Enter) {
-					return PlayerNearEntry;
+					return _playerNearEntry;
 				}
 
-				return PlayerNearExit;
+				return _playerNearExit;
 			}
 			set {
 				if (side == PortalSide.Enter) {
-					PlayerNearEntry = value;
+					_playerNearEntry = value;
 					return;
 				}
 
-				PlayerNearExit = value;
+				_playerNearExit = value;
 			}
 		}
 		
 		// PORTAL
 		public Portal hostPortal;
 		public PortalSide side;
-		public bool assistedPortalTravel { get; private set; } = false;
+		public bool AssistedPortalTravel { get; private set; } = false;
 
 		// COLLIDERS
-		private BoxCollider portalTrigger;
+		private BoxCollider _portalTrigger;
+
+		private GameObject _passableBlockage;
 		
 		public Vector3 PortalCenter {
 			get {
@@ -52,13 +58,14 @@ namespace UltraPortal {
 		}
 
 		private List<Collider> _colliders = new List<Collider>();
-		private List<Collider> _currentTravellers = new List<Collider>();
+		private readonly List<Collider> _currentTravellers = new List<Collider>();
 		
 		private ParticleSystem _particles;
 
 		private void Awake() {
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
+			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;
 			
 			_toggleColliderAction += (portalSide, collider, toggle) => {
 				// if (assistedPortalTravel && portalSide != side) {
@@ -73,10 +80,6 @@ namespace UltraPortal {
 			if (!c) {
 				return;
 			}
-
-			// if (c.CompareTag("Portal Exit")) {
-			// 	return;
-			// }
 			
 			_colliders.Add(c);
 		}
@@ -86,9 +89,6 @@ namespace UltraPortal {
 			_colliders.AddRange(sphereCheck);
 			
 			// Raycast to ensure some slopes (like at the start of 8-2) work
-			// GameObject test = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			// test.transform.position = transform.position + transform.forward * 10f;
-
 			RaycastHit[] sphereCastResults = Physics.SphereCastAll(transform.position, SphereCheckRadius,
 				transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
 			if (sphereCastResults.Length < 1) {
@@ -130,7 +130,7 @@ namespace UltraPortal {
 			
 			// Check if portal is facing upwards
 			float dot = Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector());
-			assistedPortalTravel = dot > 0.6f;
+			AssistedPortalTravel = dot > 0.6f;
 			
 			hostPortal = portal;
 			side = portalSide;
@@ -139,14 +139,23 @@ namespace UltraPortal {
 			GetNearbyCollider();
 			
 			// Spawn the portal trigger
-			portalTrigger = gameObject.GetComponent<BoxCollider>();
+			_portalTrigger = gameObject.GetComponent<BoxCollider>();
+
+			if (OnInitialized != null) {
+				OnInitialized.Invoke();
+			}
 		}
 
 		private void OnTriggerEnter(Collider other) {
+			if (_passableBlockage) {
+				if(_passableBlockage.activeSelf)
+					return;
+			}
+			
 			if (_colliders.Contains(other)) {
 				return;
 			}
-			
+
 			if (!other.attachedRigidbody) {
 				if (!other.isTrigger) {
 					AddCollider(other);
@@ -167,7 +176,22 @@ namespace UltraPortal {
 			}
 		}
 
+		public void SetPassable(bool canPass) {
+			if(!_passableBlockage) {
+				Plugin.LogSource.LogInfo(
+					$"{name} doesn't have a portal blockage defined! Ensure your blockage is called: \"{ExpectedPassableName}\"");
+				return;
+			}
+			
+			_passableBlockage.SetActive(!canPass);
+		}
+
 		private void OnTriggerExit(Collider other) {
+			if (_passableBlockage) {
+				if(_passableBlockage.activeSelf)
+					return;
+			}
+			
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -189,7 +213,7 @@ namespace UltraPortal {
 					continue;
 				}
 
-				if (!assistedPortalTravel || !other.CompareTag("Player")) {
+				if (!AssistedPortalTravel || !other.CompareTag("Player")) {
 					Physics.IgnoreCollision(c, other, value);
 				}
 				else {
