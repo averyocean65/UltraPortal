@@ -1,6 +1,7 @@
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
 
@@ -50,6 +51,17 @@ namespace UltraPortal {
 				helper.portal = _portal;
 				
 				_animator.Play(PrimaryFireAnimHash);
+			};
+
+			OnSecondaryFire += () => {
+				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+				GameObject prefab = weapons.LoadAsset<GameObject>(AssetPaths.Projectile);
+
+				GameObject instance = Instantiate(prefab,
+					MainCamera.transform.position + MainCamera.transform.forward * 5,
+					Quaternion.identity);
+				ProjectileColorManager colors = instance.AddComponent<ProjectileColorManager>();
+				colors.side = PortalSide.Enter;
 			};
 			
 			InitMirror();

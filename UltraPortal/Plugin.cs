@@ -25,7 +25,6 @@ namespace UltraPortal {
         
         public static ManualLogSource LogSource { get; private set; }
         
-
         private void Awake() {
             LogSource = Logger;
 

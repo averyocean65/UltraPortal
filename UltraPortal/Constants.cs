@@ -35,6 +35,7 @@ namespace UltraPortal {
 
             public const string MainPortalProjectile = "Projectile A";
             public const string AltPortalProjectile = "Projectile B";
+            public const string Projectile = "Projectile";
 
             public const string PortalGunIcon = "UltraPortalGunIcon";
             public const string PortalGunIconGlow = "UltraPortalGunIconGlow";
