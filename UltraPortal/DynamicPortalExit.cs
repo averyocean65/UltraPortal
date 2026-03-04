@@ -66,6 +66,9 @@ namespace UltraPortal {
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
 			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;
+
+			PortalColorManager colorManager = gameObject.AddComponent<PortalColorManager>();
+			colorManager.associated = this;
 			
 			_toggleColliderAction += (portalSide, collider, toggle) => {
 				// if (assistedPortalTravel && portalSide != side) {
@@ -170,9 +173,9 @@ namespace UltraPortal {
 			}
 			
 			// make sure player can't call _toggleColliderAction from behind portal
-			Vector3 direction = (transform.position - other.transform.position).normalized;
-			float dot = Vector3.Dot(transform.forward, direction);
-			if(dot < 0f) {
+			Vector3 direction = (transform.position - other.transform.position);
+			float dot = Vector3.Dot(transform.forward, direction.normalized);
+			if(dot < 0f && direction.magnitude < 0.1f) {
 				return;
 			}
 			

@@ -18,7 +18,7 @@ namespace UltraPortal {
 
 		private Portal _portal;
 		private GameObject _portalObject;
-		private readonly Vector2 _portalSize = new Vector2(6, 8);
+		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
 		private DynamicPortalExit _portalEntry;
 		private DynamicPortalExit _portalExit;
