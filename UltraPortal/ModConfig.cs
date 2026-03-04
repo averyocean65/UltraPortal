@@ -12,32 +12,32 @@ namespace UltraPortal {
 		public static bool UseOtherPortalForProjectileTeleport = true;
 
 		[Configgable("Visuals")]
-		public static Color PrimaryPortalColor = new Color(252, 3, 69);
+		public static Color PrimaryPortalColor = new Color(0.9882352941f, 0.0117647059f, 0.2705882353f);
 		
 		[Configgable("Visuals")]
-		public static Color PrimaryPortalParticleColor = new Color(148, 24, 57);
+		public static Color PrimaryPortalParticleColor = new Color(0.5803921569f, 0.0941176471f, 0.2235294118f);
 		
 		[Configgable("Visuals")]
-		public static Color SecondaryPortalColor = new Color(46, 60, 255);
+		public static Color SecondaryPortalColor = new Color(0.1803921569f, 0.2352941176f, 1f);
 		
 		[Configgable("Visuals")]
-		public static Color SecondaryPortalParticleColor = new Color(26, 30, 92);
-		
-		[Configgable("Projectiles/Advanced", "Projectile Speed")]
-		public static float PortalProjectileSpeed = 107.5f;
+		public static Color SecondaryPortalParticleColor = new Color(0.1019607843f, 0.1176470588f, 0.3607843137f);
+
+		[Configgable("Gameplay/Projectiles/Advanced", "Projectile Speed")]
+		public static float PortalProjectileSpeed = 95.0f;
 
 		[Configgable(displayName: "Enabled")]
 		public static bool IsGunEnabled = true;
 
 		// note: i also do not have a better name for these
 		
-		[Configgable("Projectiles/Advanced")]
+		[Configgable("Gameplay/Projectiles/Advanced")]
 		public static float ProjectileEnemyGroundPortalBoostMultiplier = 0.5f;
 		
-		[Configgable("Projectiles/Advanced")]
+		[Configgable("Gameplay/Projectiles/Advanced")]
 		public static float ProjectileEnemyNormalPortalBoostMultiplier = 2f;
 
-		[Configgable("Portals/Advanced", "Minimum Entry/Exit Speed (scene reload required)")]
+		[Configgable("Gameplay/Portals/Advanced", "Minimum Entry/Exit Speed (scene reload required)")]
 		public static float MinimumEntryExitSpeed = 20f;
 	}
 }
