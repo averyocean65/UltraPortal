@@ -1,0 +1,10 @@
+{
+    "name": "UltraPortal",
+    "version_number": "0.1.0",
+    "website_url": "https://github.com/averyocean65/UltraPortal",
+    "description": "Adding portal guns to ULTRAKILL!",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100",
+        "Hydraxous-Configgy-1.0.7"
+    ]
+}
