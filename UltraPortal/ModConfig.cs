@@ -27,7 +27,7 @@ namespace UltraPortal {
 		public static float PortalProjectileSpeed = 95.0f;
 
 		[Configgable(displayName: "Enabled")]
-		public static bool IsGunEnabled = true;
+		public static bool IsEnabled = true;
 
 		// note: i also do not have a better name for these
 		
