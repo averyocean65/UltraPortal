@@ -29,7 +29,8 @@ namespace UltraPortal.Colorizers {
                 : ModConfig.SecondaryPortalColor;
             
             foreach (Renderer r in _renderers) {
-                r.material.color = color;
+                r.material.SetColor("_Color", color);
+                r.material.SetColor("_EmissionColor", color);
             }
         }
     }
