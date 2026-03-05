@@ -88,10 +88,13 @@ namespace UltraPortal {
 				}
 				return;
 			}
-			else {
-				if (PortalGunSlot == -1) {
-					AddToSlots();
-				}
+
+			if (PortalGunSlot == -1) {
+				AddToSlots();
+			}
+
+			if (OptionsManager.Instance.paused) {
+				return;
 			}
 
 			_wasEnabledLastFrame = true;
