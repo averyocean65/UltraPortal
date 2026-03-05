@@ -24,11 +24,19 @@ namespace UltraPortal.Projectiles {
 			EnemyIdentifier id = other.GetComponentInParent<EnemyIdentifier>();
 			
 			if (id) {
+				if (!portal) {
+					return;
+				}
+
+				if (exit.IsBlocked) {
+					return;
+				}
+				
 				Rigidbody rb = id.gameObject.GetComponent<Rigidbody>();
 				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport
 					? OtherExitTransform
 					: exit.transform;
-
+				
 				DynamicPortalExit desiredExit = ModConfig.UseOtherPortalForProjectileTeleport
 					? desiredExitTransform.GetComponent<DynamicPortalExit>()
 					: exit;

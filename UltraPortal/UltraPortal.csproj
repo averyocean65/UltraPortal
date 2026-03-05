@@ -89,6 +89,7 @@
         <Compile Include="Colorizers\ProjectileColorManager.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DynamicPortalExit.cs" />
+        <Compile Include="DynamicPortalTooClose.cs" />
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\LevelPatches.cs" />
