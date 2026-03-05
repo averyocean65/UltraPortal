@@ -7,6 +7,8 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
 	public class PortalGunManager : MonoBehaviour {
+		public static PortalGunManager Instance;
+		
 		private static int PortalGunSlot = -1;
 		
 		public static bool EquippedPortalGun = false;
@@ -14,7 +16,6 @@ namespace UltraPortal {
 
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
-		
 
 		private GunBase SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, Vector3 position, Vector3 rotation, Vector3 scale) {
 			if (!type.IsSubclassOf(typeof(GunBase))) {
@@ -62,6 +63,14 @@ namespace UltraPortal {
 			PortalGunSlot = GunControl.Instance.slots.Count;
 		}
 
+		public void DestroyPortals() {
+			if(_portalGun)
+				_portalGun.Reset();
+					
+			if(_mirrorGun)
+				_mirrorGun.Reset();
+		}
+		
 		private bool _wasEnabledLastFrame = false;
 		private void Update() {
 			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
@@ -72,11 +81,7 @@ namespace UltraPortal {
 				if (_wasEnabledLastFrame) {
 					_wasEnabledLastFrame = false;
 					
-					if(_portalGun)
-						_portalGun.Reset();
-					
-					if(_mirrorGun)
-						_mirrorGun.Reset();
+					DestroyPortals();
 
 					if (GunControl.Instance.currentSlotIndex == PortalGunSlot) {
 						GunControl.Instance.SwitchWeapon(1);
@@ -98,6 +103,10 @@ namespace UltraPortal {
 			}
 
 			_wasEnabledLastFrame = true;
+
+			if (Input.GetKeyDown(ModConfig.DespawnPortalsKeybind)) {
+				DestroyPortals();
+			}
 			
 			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance) {
 				EquippedPortalGun = true;
