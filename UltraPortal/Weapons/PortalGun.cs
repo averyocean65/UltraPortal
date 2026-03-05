@@ -88,14 +88,22 @@ namespace UltraPortal {
 		}
 
 		private void UpdatePortalPassable() {
-			_portalEntry.SetPassable(BothPortalsInit);
-			_portalExit.SetPassable(BothPortalsInit);
+			if(_portalEntry)
+				_portalEntry.SetPassable(BothPortalsInit);
+			
+			if(_portalExit)
+				_portalExit.SetPassable(BothPortalsInit);
 		}
 
 		private void OnDestroy() {
-			Destroy(_portal.gameObject);
-			Destroy(_portalEntry.gameObject);
-			Destroy(_portalExit.gameObject);
+			if(_portal)
+				Destroy(_portal.gameObject);
+			
+			if(_portalEntry)
+				Destroy(_portalEntry.gameObject);
+			
+			if(_portalExit)
+				Destroy(_portalExit.gameObject);
 		}
 
 		private void InitPortals() {
