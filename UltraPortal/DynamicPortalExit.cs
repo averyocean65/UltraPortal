@@ -9,6 +9,8 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	// i sincerely apologize for the code inside of this class, i will clean it up someday, i promise.
 	public class DynamicPortalExit : MonoBehaviour {
+		private const string TooCloseTrigger = "Too Close Trigger";
+		
 		private static bool _playerNearEntry;
 		private static bool _playerNearExit;
 		
@@ -44,7 +46,7 @@ namespace UltraPortal {
 		public bool AssistedPortalTravel { get; private set; } = false;
 
 		// COLLIDERS
-		private BoxCollider _portalTrigger;
+		private DynamicPortalTooClose _tooClose;
 
 		private GameObject _passableBlockage;
 		
@@ -143,8 +145,14 @@ namespace UltraPortal {
 			AddCollider(hit.collider);
 			GetNearbyCollider();
 			
-			// Spawn the portal trigger
-			_portalTrigger = gameObject.GetComponent<BoxCollider>();
+			// Get too close trigger
+			Transform tooCloseTransform = transform.Find(TooCloseTrigger);
+			if (!tooCloseTransform) {
+				Plugin.LogSource.LogError($"Failed to find {TooCloseTrigger} on {name}.");
+				return;
+			}
+
+			_tooClose = tooCloseTransform.gameObject.AddComponent<DynamicPortalTooClose>();
 
 			if (OnInitialized != null) {
 				OnInitialized.Invoke();
@@ -175,17 +183,19 @@ namespace UltraPortal {
 			if (other.name == "Projectile Parry Zone") {
 				return;
 			}
-			
-			// make sure player can't call _toggleColliderAction from behind portal
-			// issue is that objects going through the portals temporarily achieve a negative value, so
-			// this is a big difficult to figure out
-			Vector3 direction = (transform.position - other.transform.position);
-			float dot = Vector3.Dot(transform.forward, direction.normalized);
-			
-			if(dot < -0.5f && !AssistedPortalTravel) {
-				return;
+
+
+			if (_tooClose) {
+				if (!_tooClose.travellers.Contains(other)) {
+					Vector3 direction = (transform.position - other.transform.position);
+					float dot = Vector3.Dot(transform.forward, direction.normalized);
+
+					if (dot < 0.0f && !AssistedPortalTravel) {
+						return;
+					}
+				}
 			}
-			
+
 			_toggleColliderAction.Invoke(side, other, true);
 			
 			if (!_currentTravellers.Contains(other)) {
