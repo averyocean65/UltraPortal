@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UnityEngine;
-
+using UnityEngine.Animations;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
@@ -136,7 +136,7 @@ namespace UltraPortal {
 			transform.position = hit.point + hit.normal.normalized * 0.05f;
 			
 			// Check if portal is facing upwards
-			float dot = Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector());
+			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector()));
 			AssistedPortalTravel = dot > 0.6f;
 			
 			hostPortal = portal;
