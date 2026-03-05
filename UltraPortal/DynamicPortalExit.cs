@@ -60,6 +60,16 @@ namespace UltraPortal {
 			}
 		}
 
+		public bool IsBlocked {
+			get {
+				if (!_passableBlockage) {
+					return false;
+				}
+
+				return _passableBlockage.activeSelf;
+			}
+		}
+
 		private List<Collider> _colliders = new List<Collider>();
 		private readonly List<Collider> _currentTravellers = new List<Collider>();
 		

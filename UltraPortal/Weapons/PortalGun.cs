@@ -26,7 +26,7 @@ namespace UltraPortal {
        
         private Animator _animator;
 
-        private bool BothPortalsInit {
+        public bool BothPortalsInit {
 	        get {
 		        if (!_portalEntry || !_portalExit) {
 			        return false;
