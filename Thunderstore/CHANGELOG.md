@@ -1,10 +1,14 @@
-# ULTRAPORTAL 0.1.2
+# ULTRAPORTAL 0.1.3
 ## Changes
 ### Bugfixes
-- Fixed a bug where dying could softlock you if you had never equipped a portal gun in a level.
-- Fixed portal guns being accessible even if they were disabled through the config menu.
-- Fixed being able to switch to portal guns when game is paused.
-- Fixed a bug where you could teleport enemies through portals that hadn't been summoned yet.
+- (hopefully) Fixed a bug where the player got redirected if they entered a wall portal too slow
+- Enemies now interact better with portals
 
 ### Gameplay
-- Tweaked portals to hopefully improve portal transitions.
+- Tweaked portals to improve portal transitions.
+
+### Config
+- Made distance between portal and surface customizable.
+
+### Known Bugs
+- It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable prematurely.

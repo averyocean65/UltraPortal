@@ -39,5 +39,8 @@ namespace UltraPortal {
 
 		[Configgable("Gameplay/Portals/Advanced", "Minimum Entry/Exit Speed (scene reload required)")]
 		public static float MinimumEntryExitSpeed = 20f;
+		
+		[Configgable("Gameplay/Portals/Advanced", "Portal Wall Offset")]
+		public static float PortalWallOffset = 0.45f;
 	}
 }

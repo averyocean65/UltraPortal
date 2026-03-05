@@ -98,6 +98,8 @@ namespace UltraPortal {
 				return;
 			}
 			
+			Plugin.LogSource.LogInfo($"Adding collider: {c.name}");
+			
 			_colliders.Add(c);
 		}
 		
@@ -143,7 +145,7 @@ namespace UltraPortal {
 			_particles.Play();
 
 			transform.forward = -hit.normal;
-			transform.position = hit.point + hit.normal.normalized * 0.05f;
+			transform.position = hit.point + hit.normal.normalized * ModConfig.PortalWallOffset;
 			
 			// Check if portal is facing upwards
 			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector()));
@@ -195,16 +197,16 @@ namespace UltraPortal {
 			}
 
 
-			if (_tooClose) {
-				if (!_tooClose.travellers.Contains(other)) {
-					Vector3 direction = (transform.position - other.transform.position);
-					float dot = Vector3.Dot(transform.forward, direction.normalized);
-
-					if (dot < 0.0f && !AssistedPortalTravel) {
-						return;
-					}
-				}
-			}
+			// if (_tooClose) {
+			// 	if (!_tooClose.travellers.Contains(other)) {
+			// 		Vector3 direction = (transform.position - other.transform.position);
+			// 		float dot = Vector3.Dot(transform.forward, direction.normalized);
+			//
+			// 		if (dot < 0.0f && !AssistedPortalTravel) {
+			// 			return;
+			// 		}
+			// 	}
+			// }
 
 			_toggleColliderAction.Invoke(side, other, true);
 			
