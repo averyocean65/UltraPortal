@@ -21,9 +21,19 @@ namespace UltraPortal {
         }
 
         public static class AssetPaths {
+            public static bool UseAltBundlePath = false;
             public static string AssemblyPath => Assembly.GetExecutingAssembly().Location;
             public static string AssemblyFolderPath => Path.GetDirectoryName(AssemblyPath);
-            public static string BundlePath => Path.Combine(AssemblyFolderPath, "Bundles");
+
+            public static string BundlePath {
+                get {
+                    if (UseAltBundlePath) {
+                        return AssemblyFolderPath;
+                    }
+
+                    return Path.Combine(AssemblyFolderPath, "Bundles");
+                }
+            }
             public const string  PortalBundle = "portals";
             public const string  WeaponBundle = "weapons";
 

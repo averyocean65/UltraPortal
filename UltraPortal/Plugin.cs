@@ -20,7 +20,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.1.0";
+            public const string Version = "0.1.1";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -35,9 +35,8 @@ namespace UltraPortal {
             config.BuildAll();
 
             if (!Directory.Exists(AssetPaths.BundlePath)) {
-                Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {AssetPaths.BundlePath}");
-                Destroy(this);
-                return;
+                Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {AssetPaths.BundlePath}; Trying other bundle path.");
+                AssetPaths.UseAltBundlePath = true; // why, r2modman, why??
             }
             
             SceneManager.sceneLoaded += OnSceneLoaded;
