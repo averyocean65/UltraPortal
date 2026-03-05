@@ -142,7 +142,8 @@ namespace UltraPortal {
 
 			_colliders = new List<Collider>();
 			
-			_particles.Play();
+			if(ModConfig.ShowPortalSpawnParticles && _particles)
+				_particles.Play();
 
 			transform.forward = -hit.normal;
 			transform.position = hit.point + hit.normal.normalized * ModConfig.PortalWallOffset;

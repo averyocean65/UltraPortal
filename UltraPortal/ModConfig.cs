@@ -5,6 +5,9 @@ namespace UltraPortal {
 	public static class ModConfig {
 		[Configgable("Controls", "Portal Gun Slot")] 
 		public static KeyCode PortalGunKeybind = KeyCode.Alpha7;
+		
+		[Configgable("Controls", "Despawn Portals")]
+		public static KeyCode DespawnPortalsKeybind = KeyCode.T;
 
 		// note: i do not have a better name for this
 		
@@ -22,6 +25,12 @@ namespace UltraPortal {
 		
 		[Configgable("Visuals")]
 		public static Color SecondaryPortalParticleColor = new Color(0.1019607843f, 0.1176470588f, 0.3607843137f);
+
+		[Configgable("Visuals")]
+		public static bool UseEmission = true;
+		
+		[Configgable("Visuals")]
+		public static bool ShowPortalSpawnParticles = true;
 
 		[Configgable("Gameplay/Projectiles/Advanced", "Projectile Speed")]
 		public static float PortalProjectileSpeed = 95.0f;

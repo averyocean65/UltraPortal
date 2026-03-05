@@ -30,7 +30,13 @@ namespace UltraPortal.Colorizers {
             
             foreach (Renderer r in _renderers) {
                 r.material.SetColor("_Color", color);
-                r.material.SetColor("_EmissionColor", color);
+
+                if (ModConfig.UseEmission) {
+                    r.material.SetColor("_EmissionColor", color);
+                }
+                else {
+                    r.material.SetColor("_EmissionColor", Color.black);
+                }
             }
         }
     }
