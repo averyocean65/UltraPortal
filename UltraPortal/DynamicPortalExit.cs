@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ULTRAKILL.Portal;
+using UltraPortal.Colorizers;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -61,14 +62,15 @@ namespace UltraPortal {
 		private readonly List<Collider> _currentTravellers = new List<Collider>();
 		
 		private ParticleSystem _particles;
+		private PortalColorManager _colorManager;
 
 		private void Awake() {
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
 			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;
 
-			PortalColorManager colorManager = gameObject.AddComponent<PortalColorManager>();
-			colorManager.associated = this;
+			_colorManager = gameObject.AddComponent<PortalColorManager>();
+			_colorManager.associated = this;
 			
 			_toggleColliderAction += (portalSide, collider, toggle) => {
 				// if (assistedPortalTravel && portalSide != side) {
@@ -147,6 +149,8 @@ namespace UltraPortal {
 			if (OnInitialized != null) {
 				OnInitialized.Invoke();
 			}
+			
+			_colorManager.ColorPortal();
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -173,13 +177,14 @@ namespace UltraPortal {
 			}
 			
 			// make sure player can't call _toggleColliderAction from behind portal
+			// issue is that objects going through the portals temporarily achieve a negative value, so
+			// this is a big difficult to figure out
 			Vector3 direction = (transform.position - other.transform.position);
 			float dot = Vector3.Dot(transform.forward, direction.normalized);
-			if(dot < 0f && direction.magnitude < 0.1f) {
+			
+			if(dot < -0.5f && !AssistedPortalTravel) {
 				return;
 			}
-			
-			// HudMessageReceiver.Instance.SendHudMessage($"Dot: {dot}");
 			
 			_toggleColliderAction.Invoke(side, other, true);
 			

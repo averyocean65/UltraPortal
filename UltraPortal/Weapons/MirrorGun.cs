@@ -1,13 +1,14 @@
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
 
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class MirrorGun : GunBase {
+	public class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 		
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -15,7 +16,7 @@ namespace UltraPortal {
 		
 		private Animator _animator;
 
-		private readonly Vector2 _portalSize = new Vector2(9.5f, 11.5f);
+		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _portal;
 		private DynamicPortalExit _primaryMirror;
 		
@@ -40,18 +41,15 @@ namespace UltraPortal {
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			primaryMirrorObject.name = "Mirror Transform";
 			_primaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
-			_primaryMirror.SetPassable(true);
 			_primaryMirror.side = PortalSide.Enter;
+			_primaryMirror.OnInitialized += () => _primaryMirror.SetPassable(true);
 
 			OnPrimaryFire += () => {
-				Projectile projectile = SpawnProjectileFromAsset(AssetPaths.MainPortalProjectile, ModConfig.PortalProjectileSpeed);
-				PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
-				helper.exit = _primaryMirror; 
-				helper.portal = _portal;
-				
+				FireProjectile(_primaryMirror, _portal);
 				_animator.Play(PrimaryFireAnimHash);
 			};
 			
+			UpdateLastProjectile(_primaryMirror.side);
 			InitMirror();
 		}
 		

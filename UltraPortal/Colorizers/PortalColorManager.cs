@@ -1,11 +1,12 @@
-using System;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
-namespace UltraPortal {
+namespace UltraPortal.Colorizers {
     public class PortalColorManager : MonoBehaviour {
         private const string VisualsPath = "Visuals";
         public DynamicPortalExit associated;
+
+        private Renderer[] _renderers;
         
         private void Start() {
             Transform visualsRoot = transform.Find(VisualsPath);
@@ -15,17 +16,20 @@ namespace UltraPortal {
                 enabled = false;
             }
 
-            Renderer[] renderers = visualsRoot.GetComponentsInChildren<Renderer>();
-            Color color = associated.side == PortalSide.Enter
+            _renderers = visualsRoot.GetComponentsInChildren<Renderer>();
+        }
+
+        public void ColorPortal() {
+            if (_renderers.Length < 1) {
+                return;
+            }
+            
+            UnityEngine.Color color = associated.side == PortalSide.Enter
                 ? ModConfig.PrimaryPortalColor
                 : ModConfig.SecondaryPortalColor;
-
-            // you WILL change your color, i'm not fucking asking.
-            Material mat = new Material(Shader.Find("Unlit/Color"));
-            mat.SetColor("_Color", color);
             
-            foreach (Renderer r in renderers) {
-                r.material = mat;
+            foreach (Renderer r in _renderers) {
+                r.material.color = color;
             }
         }
     }

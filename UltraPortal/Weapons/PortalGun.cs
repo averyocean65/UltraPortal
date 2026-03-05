@@ -3,19 +3,20 @@ using System.Collections;
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class PortalGun : GunBase {
+	public class PortalGun : PortalGunBase {
 		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
-
+		
 		private static ManualLogSource Logger => Plugin.LogSource;
 
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
 		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
-
+ 
 		private Portal _portal;
 		private GameObject _portalObject;
 		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
@@ -35,19 +36,10 @@ namespace UltraPortal {
 		               _portalExit.transform.position.y > DefaultPortalPosition.y;
 	        }
         }
-
-        private void FireProjectile(DynamicPortalExit exit, int animHash, bool altProjectile) {
-	        string projectileAsset = altProjectile ? AssetPaths.MainPortalProjectile : AssetPaths.AltPortalProjectile;
-	        Projectile projectile = SpawnProjectileFromAsset(projectileAsset, ModConfig.PortalProjectileSpeed);
-	        PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
-	        helper.exit = exit;
-	        helper.portal = _portal;
-	        
-	        _animator.Play(animHash);
-        }
         
 		protected override void Start() {
 			base.Start();
+			
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
 			GameObject portalPrefab = portals.LoadAsset<GameObject>(AssetPaths.PortalExit);
 
@@ -68,6 +60,7 @@ namespace UltraPortal {
 			portalEntryObject.name = "Entry";
 			_portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
 			_portalEntry.side = PortalSide.Enter;
+			_portalEntry.OnInitialized += UpdatePortalPassable;
 			_portalEntry.hostPortal = _portal;
 			
 			GameObject portalExitObject =
@@ -79,11 +72,16 @@ namespace UltraPortal {
 			_portalExit.hostPortal = _portal;
 
 			OnPrimaryFire += () => {
-				FireProjectile(_portalEntry, PrimaryFireAnimHash, false);
+				FireProjectile(_portalEntry, _portal);
+				UpdateLastProjectile(PortalSide.Enter);
+				_animator.Play(PrimaryFireAnimHash);
 			};
 			
 			OnSecondaryFire += () => {
-				FireProjectile(_portalExit, SecondaryFireAnimHash, true);
+				FireProjectile(_portalExit, _portal);
+				UpdateLastProjectile(PortalSide.Exit);
+				_animator.Play(SecondaryFireAnimHash);
+				
 			};
 			
 			InitPortals();
@@ -105,7 +103,7 @@ namespace UltraPortal {
 				layer = PortalLayer
 			};
 
-			_portal = _portalObject.AddComponent<Portal>();
+			_portal = _portalObject.AddComponent<Portal>(); 
 			
 			_portal.additionalSampleThreshold = 0;
 			_portal.allowCameraTraversals = true;
