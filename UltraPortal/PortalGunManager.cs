@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using ULTRAKILL.Portal;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -72,6 +74,8 @@ namespace UltraPortal {
 		private void AddToSlots() {
 			GunControl.Instance.slots.Add(new List<GameObject>() { _portalGun.gameObject, _mirrorGun.gameObject });
 			PortalGunSlot = GunControl.Instance.slots.Count;
+			
+			GunControl.Instance.UpdateWeaponList();
 		}
 
 		public void DestroyPortals() {
@@ -93,33 +97,60 @@ namespace UltraPortal {
 					_wasEnabledLastFrame = false;
 					
 					DestroyPortals();
-
-					if (GunControl.Instance.currentSlotIndex == PortalGunSlot) {
-						GunControl.Instance.SwitchWeapon(1);
-					}
+					int previousSlot = GunControl.Instance.currentSlotIndex;
 					
 					// take out of the slots
 					GunControl.Instance.slots.RemoveAt(PortalGunSlot - 1);
 					PortalGunSlot = -1;
+					GunControl.Instance.UpdateWeaponList();
+					
+					// is there an easier way to do this? probably! but i'm not going to look for it, because this works.
+					// (even if it is held together by hopes and dreams)
+					if (GunControl.Instance.currentSlotIndex == previousSlot) {
+						if (GunControl.Instance.noWeapons) {
+							GunControl.Instance.currentSlotIndex = 1;
+							GunControl.Instance.NoWeapon();
+						}
+						else {
+							for (int i = 0; i < GunControl.Instance.slots.Count; i++)
+							{
+								if (GunControl.Instance.slots[i].Count > 0) {
+									GunControl.Instance.SwitchWeapon(i + 1);
+									return;
+								}
+							}
+
+							GunControl.Instance.stayUnarmed = true;
+						}
+					}
 				}
 				return;
 			}
 
+			bool prevNoWeapons = GunControl.Instance.noWeapons;
 			if (PortalGunSlot == -1) {
 				AddToSlots();
 			}
+			
+			if (!_wasEnabledLastFrame) {
+				if (prevNoWeapons && PortalGunSlot != -1) {
+					GunControl.Instance.SwitchWeapon(PortalGunSlot, 0);
+				}
+			}
+
+			_wasEnabledLastFrame = true;
 
 			if (OptionsManager.Instance.paused) {
 				return;
 			}
 
-			_wasEnabledLastFrame = true;
-
 			if (Input.GetKeyDown(ModConfig.DespawnPortalsKeybind)) {
 				DestroyPortals();
 			}
-			
-			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance) {
+
+			int slotIndex = PortalGunSlot - 1;
+			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance &&
+			    GunControl.Instance.slots[slotIndex].Count > 0 && GunControl.Instance.slots[slotIndex][0]) {
 				EquippedPortalGun = true;
 				GunControl.Instance.SwitchWeapon(PortalGunSlot, targetVariationIndex: _currentVariationIndex + 1, cycleVariation: true);
 				_currentVariationIndex = GunControl.Instance.currentVariationIndex;
