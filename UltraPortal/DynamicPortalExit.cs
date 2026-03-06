@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
+using UltraPortal.Extensions;
 using UnityEngine;
 using UnityEngine.Animations;
 using static UltraPortal.Constants;
@@ -71,7 +73,7 @@ namespace UltraPortal {
 		}
 
 		private List<Collider> _colliders = new List<Collider>();
-		private readonly List<Collider> _currentTravellers = new List<Collider>();
+		private List<Collider> _currentTravellers = new List<Collider>();
 		
 		private ParticleSystem _particles;
 		private PortalColorManager _colorManager;
@@ -179,6 +181,10 @@ namespace UltraPortal {
 				if(_passableBlockage.activeSelf)
 					return;
 			}
+
+			if (_currentTravellers.Contains(other)) {
+				return;
+			}
 			
 			if (_colliders.Contains(other)) {
 				return;
@@ -189,6 +195,11 @@ namespace UltraPortal {
 					AddCollider(other);
 				}
 				
+				return;
+			}
+			
+			if (other.attachedRigidbody.isKinematic ||
+			    other.attachedRigidbody.constraints == RigidbodyConstraints.FreezeAll) {
 				return;
 			}
 
@@ -212,8 +223,24 @@ namespace UltraPortal {
 			_toggleColliderAction.Invoke(side, other, true);
 			
 			if (!_currentTravellers.Contains(other)) {
+				// i know hardcoding is bad, but i can't find anything else to identify environment chunks by.
+				// so until someone finds something noteworthy about these stupid little things, this will stay.
+				if (other.name.Contains("EnvironmentChunk")) {
+					return;
+				}
+				
 				_currentTravellers.Add(other);
 			}
+		}
+
+		public bool ShouldBeDisabled() {
+			// filter
+			_currentTravellers = _currentTravellers.Where(x => x != null && x.gameObject.activeInHierarchy).ToList();
+
+			_currentTravellers.ForEach(c => {
+				Plugin.LogSource.LogInfo($"{name} has traveller: {c.name}");
+			});
+			return _currentTravellers.Count < 1;
 		}
 
 		public void SetPassable(bool canPass) {
@@ -232,6 +259,10 @@ namespace UltraPortal {
 					return;
 			}
 			
+			if (_currentTravellers.Contains(other)) {
+				_currentTravellers.Remove(other);
+			}
+			
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -241,10 +272,6 @@ namespace UltraPortal {
 			}
 
 			_toggleColliderAction.Invoke(side, other, false);
-
-			if (_currentTravellers.Contains(other)) {
-				_currentTravellers.Remove(other);
-			}
 		}
 
 		private void ToggleColliders(bool value, Collider other) {

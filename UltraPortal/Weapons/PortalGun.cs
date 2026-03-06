@@ -87,6 +87,14 @@ namespace UltraPortal {
 			InitPortals();
 		}
 
+		public override bool ShouldBeReset() {
+			if (!_portalEntry || !_portalExit) {
+				return true;
+			}
+
+			return _portalEntry.ShouldBeDisabled() && _portalExit.ShouldBeDisabled();
+		}
+
 		private void UpdatePortalPassable() {
 			if(_portalEntry)
 				_portalEntry.SetPassable(BothPortalsInit);

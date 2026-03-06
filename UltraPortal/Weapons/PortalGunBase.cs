@@ -6,7 +6,7 @@ using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class PortalGunBase : GunBase {
+	public abstract class PortalGunBase : GunBase {
 		// funny typo
 		private const string LastProjectileVisual = "UltraPortalGun/PoralGunRig/RootPortal/Last Projectile";
 
@@ -32,6 +32,8 @@ namespace UltraPortal {
 			LastProjectileColors.side = side;
 			LastProjectileColors.ColorProjectile();
 		}
+
+		public abstract bool ShouldBeReset();
 
 		protected virtual void OnEnable() {
 			if (LastProjectileColors && LastProjectileColors.FirstColorDone) {

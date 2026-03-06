@@ -87,7 +87,15 @@ namespace UltraPortal {
 				height = _portalSize.y
 			};
 		}
-		
+
+		public override bool ShouldBeReset() {
+			if (!_primaryMirror) {
+				return true;
+			}
+
+			return _primaryMirror.ShouldBeDisabled();
+		}
+
 		public void Reset() {
 			if (!_primaryMirror)
 				return;

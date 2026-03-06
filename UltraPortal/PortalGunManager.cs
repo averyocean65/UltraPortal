@@ -79,11 +79,32 @@ namespace UltraPortal {
 		}
 
 		public void DestroyPortals() {
-			if(_portalGun)
-				_portalGun.Reset();
-					
-			if(_mirrorGun)
-				_mirrorGun.Reset();
+			void Error(string weaponName) {
+				HudMessageReceiver.Instance.SendHudMessage($"<color=#FF0000>Cannot disable portals for {weaponName}!</color>");
+			}
+			
+			bool portalGunShouldReset = true;
+			bool mirrorGunShouldReset = true;
+			
+			if (_portalGun) {
+				portalGunShouldReset = _portalGun.ShouldBeReset();
+				if (portalGunShouldReset) {
+					_portalGun.Reset();
+				}
+				else {
+					Error("Portal Gun");
+				}
+			}
+
+			if (_mirrorGun) {
+				mirrorGunShouldReset = _mirrorGun.ShouldBeReset();
+				if (mirrorGunShouldReset) {
+					_mirrorGun.Reset();
+				}
+				else {
+					Error("Mirror Gun");
+				}
+			}
 		}
 		
 		private bool _wasEnabledLastFrame = false;
