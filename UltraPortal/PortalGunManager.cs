@@ -47,18 +47,18 @@ namespace UltraPortal {
 		}
 		
 		private void Start() {
-			GunPosition defaultPos = new GunPosition(new Vector3(0.8236f, -0.7478f, 0.8907f),
-				new Vector3(0, 263.3673f, 14.1545f),
+			GunPosition middlePos = new GunPosition(new Vector3(0, -0.8478f, 0.8907f), new Vector3(0, 270, 0),
 				Vector3.one * 1.2f);
 			
-			// TODO: figure out valeus
-			GunPosition middlePos = new GunPosition(Vector3.zero, Vector3.zero, defaultPos.Scale);
+			GunPosition defaultPos = new GunPosition(middlePos.Position - new Vector3(0.8236f, -0.7478f, 0),
+				middlePos.Rotation - new Vector3(0, 263.3673f, 14.1545f),
+				Vector3.one);
 
 			_portalGun = SpawnPortalGun(typeof(PortalGun), AssetPaths.PortalGun, WeaponVariant.BlueVariant, defaultPos,
-				defaultPos) as PortalGun;
+				middlePos) as PortalGun;
 
 			_mirrorGun = SpawnPortalGun(typeof(MirrorGun), AssetPaths.MirrorGun, WeaponVariant.GreenVariant,
-				defaultPos, defaultPos) as MirrorGun;
+				defaultPos, middlePos) as MirrorGun;
 
 			if (!_portalGun || !_mirrorGun) {
 				Plugin.LogSource.LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}");
