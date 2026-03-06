@@ -38,6 +38,7 @@ namespace UltraPortal {
 			gb.variant = variant;
 
 			gb.WeaponPos = gun.AddComponent<WeaponPos>();
+			
 			gb.WeaponPos.middlePos = middlePos.Position;
 			gb.WeaponPos.middleRot = middlePos.Rotation;
 			gb.WeaponPos.middleScale = middlePos.Scale;
@@ -49,10 +50,10 @@ namespace UltraPortal {
 		private void Start() {
 			GunPosition middlePos = new GunPosition(new Vector3(0, -0.8478f, 0.8907f), new Vector3(0, 270, 0),
 				Vector3.one * 1.2f);
-			
-			GunPosition defaultPos = new GunPosition(middlePos.Position - new Vector3(0.8236f, -0.7478f, 0),
-				middlePos.Rotation - new Vector3(0, 263.3673f, 14.1545f),
-				Vector3.one);
+
+			GunPosition defaultPos = new GunPosition(new Vector3(0.8236f, -0.7478f, 0.8907f),
+				new Vector3(0, 263.3673f, 14.1545f),
+				Vector3.one * 1.2f);
 
 			_portalGun = SpawnPortalGun(typeof(PortalGun), AssetPaths.PortalGun, WeaponVariant.BlueVariant, defaultPos,
 				middlePos) as PortalGun;
