@@ -19,12 +19,20 @@ namespace UltraPortal {
 		public Sprite icon;
 		public Sprite glowIcon;
 
-		protected WeaponPos WeaponPos;
-		protected WeaponIcon WeaponIcon;
-		protected WeaponIdentifier WeaponIdentifier;
+		public WeaponPos WeaponPos;
+		public WeaponIcon WeaponIcon;
+		public WeaponIdentifier WeaponIdentifier;
+
+		private void Awake() {
+			if (!WeaponPos) {
+				WeaponPos = gameObject.AddComponent<WeaponPos>();
+				WeaponPos.middlePos = new Vector3(transform.localPosition.x, 0, transform.localPosition.z);
+				WeaponPos.middleRot = Vector3.zero;
+				WeaponPos.middleScale = transform.localScale;
+			}
+		}
 
 		protected virtual void Start() {
-			WeaponPos = gameObject.AddComponent<WeaponPos>();
 			WeaponIdentifier = gameObject.AddComponent<WeaponIdentifier>();
 			WeaponIdentifier.speedMultiplier = 1.0f;
 			

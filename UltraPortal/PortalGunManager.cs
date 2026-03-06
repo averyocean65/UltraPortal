@@ -17,7 +17,7 @@ namespace UltraPortal {
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
 
-		private GunBase SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, Vector3 position, Vector3 rotation, Vector3 scale) {
+		private GunBase SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, GunPosition defaultPos, GunPosition middlePos) {
 			if (!type.IsSubclassOf(typeof(GunBase))) {
 				Plugin.LogSource.LogError("Type must be a subclass of GunBase!");
 				return null;
@@ -27,28 +27,38 @@ namespace UltraPortal {
 			GameObject prefab = weapons.LoadAsset<GameObject>(assetPrefabPath);
 
 			GameObject gun = Instantiate(prefab, Vector3.zero, Quaternion.identity, GunControl.Instance.transform);
-			gun.transform.localPosition = position;
-			gun.transform.localEulerAngles = rotation;
-			gun.transform.localScale = scale;
-
+			gun.transform.localPosition = defaultPos.Position;
+			gun.transform.localEulerAngles = defaultPos.Rotation;
+			gun.transform.localScale = defaultPos.Scale;
+			
 			GunBase gb = gun.AddComponent(type) as GunBase;
 			gb.fireCooldown = 0.5f;
 			gb.icon = weapons.LoadAsset<Sprite>(AssetPaths.PortalGunIcon);
 			gb.glowIcon = weapons.LoadAsset<Sprite>(AssetPaths.PortalGunIconGlow);
 			gb.variant = variant;
+
+			gb.WeaponPos = gun.AddComponent<WeaponPos>();
+			gb.WeaponPos.middlePos = middlePos.Position;
+			gb.WeaponPos.middleRot = middlePos.Rotation;
+			gb.WeaponPos.middleScale = middlePos.Scale;
 			
 			gun.SetActive(false);
 			return gb;
 		}
 		
 		private void Start() {
-			_portalGun = SpawnPortalGun(typeof(PortalGun), AssetPaths.PortalGun, WeaponVariant.BlueVariant,
-				new Vector3(0.8236f, -0.7478f, 0.8907f), new Vector3(0, 263.3673f, 14.1545f),
-				Vector3.one * 1.2f) as PortalGun;
+			GunPosition defaultPos = new GunPosition(new Vector3(0.8236f, -0.7478f, 0.8907f),
+				new Vector3(0, 263.3673f, 14.1545f),
+				Vector3.one * 1.2f);
+			
+			// TODO: figure out valeus
+			GunPosition middlePos = new GunPosition(Vector3.zero, Vector3.zero, defaultPos.Scale);
+
+			_portalGun = SpawnPortalGun(typeof(PortalGun), AssetPaths.PortalGun, WeaponVariant.BlueVariant, defaultPos,
+				defaultPos) as PortalGun;
 
 			_mirrorGun = SpawnPortalGun(typeof(MirrorGun), AssetPaths.MirrorGun, WeaponVariant.GreenVariant,
-				new Vector3(0.8236f, -0.7478f, 0.8907f), new Vector3(0, 263.3673f, 14.1545f),
-				Vector3.one * 1.2f) as MirrorGun;
+				defaultPos, defaultPos) as MirrorGun;
 
 			if (!_portalGun || !_mirrorGun) {
 				Plugin.LogSource.LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}");
