@@ -1,6 +1,6 @@
 {
     "name": "UltraPortal",
-    "version_number": "0.1.5",
+    "version_number": "0.1.6",
     "website_url": "https://github.com/averyocean65/UltraPortal",
     "description": "Adding portal guns to ULTRAKILL!",
     "dependencies": [
