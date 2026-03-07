@@ -18,4 +18,4 @@
 - Added config to set *+SAFETY HAZARD* style color
 
 ## Known Bugs
-- It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable prematurely.
+- It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.
