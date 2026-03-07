@@ -4,6 +4,7 @@
 - Fixed the portal guns not displaying properly in middle position ([see issue](https://github.com/averyocean65/UltraPortal/issues/6))
 - Fixed various edge-cases when equipping/unequipping the portal gun with no other weapons selected.
 - Fixed clipping issues with disabling portals whilst a player was inside them.
+- Decreased chance of collisions not working properly after disabling portals.
 
 ### Gameplay
 - Made portals explode if it has travelers inside of it when it gets despawned.
