@@ -38,6 +38,9 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Projectiles/Advanced", "Projectile Speed")]
 		public static float PortalProjectileSpeed = 95.0f;
 
+		[Configgable("Gameplay/Explosions")]
+		public static bool AreExplosionsUltraboosters = false;
+
 		[Configgable(displayName: "Enabled")]
 		public static bool IsEnabled = true;
 

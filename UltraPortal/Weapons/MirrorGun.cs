@@ -8,7 +8,7 @@ using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class MirrorGun : PortalGunBase {
+	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 		
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -18,7 +18,7 @@ namespace UltraPortal {
 
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _portal;
-		private DynamicPortalExit _primaryMirror;
+		public DynamicPortalExit PrimaryMirror { get; private set; }
 		
 		protected override void Start() {
 			base.Start();
@@ -40,38 +40,16 @@ namespace UltraPortal {
 			GameObject primaryMirrorObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
 			primaryMirrorObject.name = "Mirror Transform";
-			_primaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
-			_primaryMirror.side = PortalSide.Enter;
-			_primaryMirror.OnInitialized += () => _primaryMirror.SetPassable(true);
+			PrimaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
+			PrimaryMirror.side = PortalSide.Enter;
+			PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
 
 			OnPrimaryFire += () => {
-				FireProjectile(_primaryMirror, _portal);
+				FireProjectile(PrimaryMirror, _portal);
 				_animator.Play(PrimaryFireAnimHash);
 			};
-
-			OnSecondaryFire += () => {
-				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
-				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
-				
-				Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
-				
-				GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
-				float maxSize = 10f;
-
-				ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
-				colors.ColorExplosion();
-				
-				Explosion explosion = explosionObject.AddComponent<Explosion>();
-				explosion.sourceWeapon = gameObject;
-				explosion.hitterWeapon = "portalgun";
-				explosion.damage = 50;
-				explosion.speed = 7.5f;
-				explosion.maxSize = maxSize;
-				
-				explosion.harmless = false;
-			};
 			
-			UpdateLastProjectile(_primaryMirror.side);
+			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
 		}
 		
@@ -93,10 +71,10 @@ namespace UltraPortal {
 			_portal.disableRange = 0;
 			_portal.enableOverrideFog = false;
 			_portal.enterOffset = 1.5f;
-			_portal.entry = _primaryMirror.transform;
+			_portal.entry = PrimaryMirror.transform;
 			_portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
             
-			_portal.exit = _primaryMirror.transform;
+			_portal.exit = PrimaryMirror.transform;
 			_portal.exitOffset = 1.5f;
 			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
 			
@@ -111,17 +89,17 @@ namespace UltraPortal {
 		}
 
 		public override bool ShouldBeReset() {
-			if (!_primaryMirror) {
+			if (!PrimaryMirror) {
 				return true;
 			}
 
-			return _primaryMirror.ShouldBeDisabled();
+			return PrimaryMirror.ShouldBeDisabled();
 		}
 
 		public void Reset() {
-			if (!_primaryMirror)
+			if (!PrimaryMirror)
 				return;
-			_primaryMirror.transform.position = PortalGun.DefaultPortalPosition;
+			PrimaryMirror.transform.position = PortalGun.DefaultPortalPosition;
 		}
 	}
 }

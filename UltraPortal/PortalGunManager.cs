@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ULTRAKILL.Portal;
+using UltraPortal.Colorizers;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -78,9 +79,48 @@ namespace UltraPortal {
 			GunControl.Instance.UpdateWeaponList();
 		}
 
+		private void Explode() {
+			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
+				
+			Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
+				
+			GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
+			float maxSize = 10f;
+
+			ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
+			colors.ColorExplosion();
+				
+			Explosion explosion = explosionObject.AddComponent<Explosion>();
+			explosion.sourceWeapon = gameObject;
+			explosion.hitterWeapon = "portalgun";
+			explosion.damage = 50;
+			explosion.speed = 7.5f;
+			explosion.maxSize = maxSize;
+				
+			explosion.harmless = false;
+		}
+
 		public void DestroyPortals() {
-			void Error(string weaponName) {
-				HudMessageReceiver.Instance.SendHudMessage($"<color=#FF0000>Cannot disable portals for {weaponName}!</color>");
+			void Explode(Vector3 position) {
+				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
+				
+				GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
+				float maxSize = 15f;
+
+				ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
+				colors.ColorExplosion();
+				
+				Explosion explosion = explosionObject.AddComponent<Explosion>();
+				explosion.sourceWeapon = gameObject;
+				explosion.hitterWeapon = "portalgun";
+				explosion.damage = 25;
+				explosion.speed = 15f;
+				explosion.maxSize = maxSize;
+				
+				explosion.harmless = false;
+				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters;
 			}
 			
 			bool portalGunShouldReset = true;
@@ -88,22 +128,21 @@ namespace UltraPortal {
 			
 			if (_portalGun) {
 				portalGunShouldReset = _portalGun.ShouldBeReset();
-				if (portalGunShouldReset) {
-					_portalGun.Reset();
+				if (!portalGunShouldReset) {
+					Explode(_portalGun.PortalEntry.PortalCenter);
+					Explode(_portalGun.PortalExit.PortalCenter);
 				}
-				else {
-					Error("Portal Gun");
-				}
+				
+				_portalGun.Reset();
 			}
 
 			if (_mirrorGun) {
 				mirrorGunShouldReset = _mirrorGun.ShouldBeReset();
-				if (mirrorGunShouldReset) {
-					_mirrorGun.Reset();
+				if (!mirrorGunShouldReset) {
+					Explode(_mirrorGun.PrimaryMirror.PortalCenter);
 				}
-				else {
-					Error("Mirror Gun");
-				}
+				
+				_mirrorGun.Reset();
 			}
 		}
 		
