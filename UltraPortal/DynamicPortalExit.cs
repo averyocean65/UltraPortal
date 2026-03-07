@@ -80,6 +80,8 @@ namespace UltraPortal {
 		private ParticleSystem _particles;
 		private PortalColorManager _colorManager;
 
+		private KeepActive _keepActive;
+
 		private void Awake() {
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
@@ -89,6 +91,18 @@ namespace UltraPortal {
 			_colorManager.associated = this;
 
 			CalculateAssistance();
+
+			GameObject keepActive = new GameObject($"{name} Keep Active");
+			_keepActive = keepActive.AddComponent<KeepActive>();
+			
+			// Get too close trigger
+			Transform tooCloseTransform = transform.Find(TooCloseTrigger);
+			if (!tooCloseTransform) {
+				Plugin.LogSource.LogError($"Failed to find {TooCloseTrigger} on {name}.");
+				return;
+			}
+
+			_tooClose = tooCloseTransform.gameObject.AddComponent<DynamicPortalTooClose>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				// if (assistedPortalTravel && portalSide != side) {
@@ -166,21 +180,13 @@ namespace UltraPortal {
 
 			AddCollider(hit.collider);
 			GetNearbyCollider();
-			
-			// Get too close trigger
-			Transform tooCloseTransform = transform.Find(TooCloseTrigger);
-			if (!tooCloseTransform) {
-				Plugin.LogSource.LogError($"Failed to find {TooCloseTrigger} on {name}.");
-				return;
-			}
-
-			_tooClose = tooCloseTransform.gameObject.AddComponent<DynamicPortalTooClose>();
 
 			if (OnInitialized != null) {
 				OnInitialized.Invoke();
 			}
 			
 			_colorManager.ColorPortal();
+			_keepActive.target = gameObject;
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -249,6 +255,8 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
+			Destroy(_keepActive.gameObject);
+			
 			if (!hostGun || !hostPortal) {
 				return;
 			}
@@ -325,6 +333,10 @@ namespace UltraPortal {
 		}
 
 		private void ToggleColliders(bool value, Collider other, bool requiredAssistance) {
+			if (_colliders == null || !other) {
+				return;
+			}
+			
 			foreach (Collider c in _colliders) {
 				if (!c) {
 					continue;

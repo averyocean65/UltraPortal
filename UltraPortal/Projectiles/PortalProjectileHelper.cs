@@ -69,7 +69,10 @@ namespace UltraPortal.Projectiles {
 					return;
 				}
 
+				exit.transform.parent = null;
+				exit.transform.localScale = Vector3.one;
 				exit.transform.parent = hit.transform;
+				
 				exit.Initialize(portal, exit.side, hit);
 			}
 		}

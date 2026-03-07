@@ -5,6 +5,7 @@
 - Fixed various edge-cases when equipping/unequipping the portal gun with no other weapons selected.
 - Fixed clipping issues with disabling portals whilst a player was inside them.
 - Decreased chance of collisions not working properly after disabling portals.
+- Fixed rooms despawning when a portal is inside them
 
 ### Gameplay
 - Made portals explode if it has travelers inside of it when it gets despawned.
