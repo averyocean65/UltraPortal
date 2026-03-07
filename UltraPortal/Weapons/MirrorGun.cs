@@ -21,7 +21,7 @@ namespace UltraPortal {
 		public DynamicPortalExit PrimaryMirror { get; private set; }
 
 		public void SpawnPrimaryMirror(bool reinit = false) {
-			PrimaryMirror = SpawnPortal("Primary Mirror", PortalSide.Enter, _portal);
+			PrimaryMirror = SpawnPortal("Primary Mirror", PortalSide.Enter, _portal, AssetPaths.Mirror);
 			if (PrimaryMirror) {
 				PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
 			}
