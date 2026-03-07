@@ -95,7 +95,7 @@ namespace UltraPortal {
 				
 			Explosion explosion = explosionObject.AddComponent<Explosion>();
 			explosion.sourceWeapon = gameObject;
-			explosion.hitterWeapon = "portalgun";
+			explosion.hitterWeapon = PortalExplosionWeapon;
 			explosion.damage = 50;
 			explosion.speed = 7.5f;
 			explosion.maxSize = maxSize;
@@ -103,7 +103,7 @@ namespace UltraPortal {
 			explosion.harmless = false;
 		}
 
-		public void DestroyPortals() {
+		public void DestroyPortals(bool isMirrorGun) {
 			void Explode(Vector3 position) {
 				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
@@ -123,28 +123,30 @@ namespace UltraPortal {
 				explosion.damage = 25;
 				explosion.speed = 15f;
 				explosion.maxSize = maxSize;
-
 				
 				explosion.harmless = false;
 				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters;
 			}
 			
-			bool portalGunShouldReset = true;
-			bool mirrorGunShouldReset = true;
-			
-			if (_portalGun) {
-				portalGunShouldReset = _portalGun.ShouldBeReset();
-				if (!portalGunShouldReset) {
-					Explode(_portalGun.PortalEntry.PortalCenter);
-					Explode(_portalGun.PortalExit.PortalCenter);
+			bool gunShouldReset = true;
+
+			if (!isMirrorGun) {
+				if (_portalGun) {
+					gunShouldReset = _portalGun.ShouldBeReset();
+					if (!gunShouldReset) {
+						Explode(_portalGun.PortalEntry.PortalCenter);
+						Explode(_portalGun.PortalExit.PortalCenter);
+					}
+
+					_portalGun.Reset();
 				}
-				
-				_portalGun.Reset();
+
+				return;
 			}
 
 			if (_mirrorGun) {
-				mirrorGunShouldReset = _mirrorGun.ShouldBeReset();
-				if (!mirrorGunShouldReset) {
+				gunShouldReset = _mirrorGun.ShouldBeReset();
+				if (!gunShouldReset) {
 					Explode(_mirrorGun.PrimaryMirror.PortalCenter);
 				}
 				
@@ -162,7 +164,8 @@ namespace UltraPortal {
 				if (_wasEnabledLastFrame) {
 					_wasEnabledLastFrame = false;
 					
-					DestroyPortals();
+					DestroyPortals(false);
+					DestroyPortals(true);
 					int previousSlot = GunControl.Instance.currentSlotIndex;
 					
 					// take out of the slots
@@ -210,8 +213,12 @@ namespace UltraPortal {
 				return;
 			}
 
-			if (Input.GetKeyDown(ModConfig.DespawnPortalsKeybind)) {
-				DestroyPortals();
+			if (_portalGun.WantsToReset) {
+				DestroyPortals(false);
+			}
+			
+			if (_mirrorGun.WantsToReset) {
+				DestroyPortals(true);
 			}
 
 			int slotIndex = PortalGunSlot - 1;

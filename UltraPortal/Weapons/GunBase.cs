@@ -56,11 +56,7 @@ namespace UltraPortal {
 			SetCanFire(isPrimary, true);
 		}
 
-		protected virtual void Update() {
-			if (OptionsManager.Instance.paused) {
-				return;
-			}
-			
+		protected virtual void HandleFiring() {
 			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame && CanPrimaryFire) {
 				if(OnPrimaryFire != null)
 					OnPrimaryFire.Invoke();

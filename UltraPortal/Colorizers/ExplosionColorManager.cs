@@ -17,7 +17,7 @@ namespace UltraPortal.Colorizers {
 
 		public void ColorExplosion() {
 			if (_renderer) {
-				float factor = 0.5f; // 2^-1
+				float factor = Mathf.Pow(2, ModConfig.ExplosionEmissionIntensity);
 				_renderer.material.SetColor("_EmissionColor", ModConfig.ExplosionColor * factor);
 			}
 			else {
