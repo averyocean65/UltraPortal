@@ -8,7 +8,7 @@ using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class MirrorGun : PortalGunBase {
+	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 		
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -18,7 +18,19 @@ namespace UltraPortal {
 
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _portal;
-		private DynamicPortalExit _primaryMirror;
+		public DynamicPortalExit PrimaryMirror { get; private set; }
+
+		public void SpawnPrimaryMirror(bool reinit = false) {
+			PrimaryMirror = SpawnPortal("Primary Mirror", PortalSide.Enter, _portal, AssetPaths.Mirror);
+			if (PrimaryMirror) {
+				PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
+			}
+			
+			if (reinit) {
+				InitMirror();
+			}
+		}
+		
 		
 		protected override void Start() {
 			base.Start();
@@ -34,22 +46,15 @@ namespace UltraPortal {
 			if (!_animator) {
 				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
-
-			Vector3 spawnPos = Vector3.down * 100000;
 			
-			GameObject primaryMirrorObject =
-				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
-			primaryMirrorObject.name = "Mirror Transform";
-			_primaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
-			_primaryMirror.side = PortalSide.Enter;
-			_primaryMirror.OnInitialized += () => _primaryMirror.SetPassable(true);
-
+			SpawnPrimaryMirror();
+			
 			OnPrimaryFire += () => {
-				FireProjectile(_primaryMirror, _portal);
+				FireProjectile(PrimaryMirror, _portal);
 				_animator.Play(PrimaryFireAnimHash);
 			};
 			
-			UpdateLastProjectile(_primaryMirror.side);
+			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
 		}
 		
@@ -71,10 +76,10 @@ namespace UltraPortal {
 			_portal.disableRange = 0;
 			_portal.enableOverrideFog = false;
 			_portal.enterOffset = 1.5f;
-			_portal.entry = _primaryMirror.transform;
+			_portal.entry = PrimaryMirror.transform;
 			_portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
             
-			_portal.exit = _primaryMirror.transform;
+			_portal.exit = PrimaryMirror.transform;
 			_portal.exitOffset = 1.5f;
 			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
 			
@@ -87,11 +92,21 @@ namespace UltraPortal {
 				height = _portalSize.y
 			};
 		}
-		
+
+		public override bool ShouldBeReset() {
+			if (!PrimaryMirror) {
+				return true;
+			}
+
+			return PrimaryMirror.ShouldBeDisabled();
+		}
+
 		public void Reset() {
-			if (!_primaryMirror)
+			if (!PrimaryMirror)
 				return;
-			_primaryMirror.transform.position = PortalGun.DefaultPortalPosition;
+			
+			PrimaryMirror.Reset();
+			PrimaryMirror.transform.position = PortalGun.DefaultPortalPosition;
 		}
 	}
 }

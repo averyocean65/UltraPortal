@@ -19,12 +19,18 @@ namespace UltraPortal {
 		public Sprite icon;
 		public Sprite glowIcon;
 
-		protected WeaponPos WeaponPos;
-		protected WeaponIcon WeaponIcon;
-		protected WeaponIdentifier WeaponIdentifier;
+		public WeaponPos WeaponPos;
+		public WeaponIcon WeaponIcon;
+		public WeaponIdentifier WeaponIdentifier;
 
 		protected virtual void Start() {
-			WeaponPos = gameObject.AddComponent<WeaponPos>();
+			if (!WeaponPos) {
+				WeaponPos = gameObject.AddComponent<WeaponPos>();
+				WeaponPos.middlePos = new Vector3(transform.localPosition.x, 0, transform.localPosition.z);
+				WeaponPos.middleRot = Vector3.zero;
+				WeaponPos.middleScale = transform.localScale;
+			}
+			
 			WeaponIdentifier = gameObject.AddComponent<WeaponIdentifier>();
 			WeaponIdentifier.speedMultiplier = 1.0f;
 			
@@ -50,11 +56,7 @@ namespace UltraPortal {
 			SetCanFire(isPrimary, true);
 		}
 
-		protected virtual void Update() {
-			if (OptionsManager.Instance.paused) {
-				return;
-			}
-			
+		protected virtual void HandleFiring() {
 			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.WasPerformedThisFrame && CanPrimaryFire) {
 				if(OnPrimaryFire != null)
 					OnPrimaryFire.Invoke();
@@ -85,8 +87,10 @@ namespace UltraPortal {
 		}
 		
 		protected Projectile SpawnProjectileFromPrefab(GameObject prefab, float speed) {
-			GameObject spawned = Instantiate(prefab, MainCamera.transform.position + MainCamera.transform.forward,
+			GameObject spawned = Instantiate(prefab, MainCamera.transform.position,
 				Quaternion.identity);
+			spawned.transform.forward = MainCamera.transform.forward;
+			
 			Projectile projectile = spawned.AddComponent<Projectile>();
 			projectile.damage = 0f;
 			projectile.sourceWeapon = gameObject;
@@ -96,7 +100,6 @@ namespace UltraPortal {
 			projectile.ignoreEnvironment = false;
 			projectile.ignoreExplosions = false;
 			projectile.unparryable = true;
-			projectile.transform.forward = MainCamera.transform.forward;
 
 			return projectile;
 		}

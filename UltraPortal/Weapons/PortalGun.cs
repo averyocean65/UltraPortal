@@ -1,17 +1,11 @@
-using System;
-using System.Collections;
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
-using UltraPortal.Colorizers;
-using UltraPortal.Projectiles;
 using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
-	public class PortalGun : PortalGunBase {
-		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
-		
+	public sealed class PortalGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -21,64 +15,65 @@ namespace UltraPortal {
 		private GameObject _portalObject;
 		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
-		private DynamicPortalExit _portalEntry;
-		private DynamicPortalExit _portalExit;
+		public DynamicPortalExit PortalEntry { get; private set; }
+		public DynamicPortalExit PortalExit { get; private set; }
        
         private Animator _animator;
 
         public bool BothPortalsInit {
 	        get {
-		        if (!_portalEntry || !_portalExit) {
+		        if (!PortalEntry || !PortalExit) {
 			        return false;
 		        }
 
-		        return _portalEntry.transform.position.y > DefaultPortalPosition.y &&
-		               _portalExit.transform.position.y > DefaultPortalPosition.y;
+		        return PortalEntry.transform.position.y > DefaultPortalPosition.y &&
+		               PortalExit.transform.position.y > DefaultPortalPosition.y;
+	        }
+        }
+
+        public void SpawnEntry(bool reinit = false) {
+	        PortalEntry = SpawnPortal("Entry", PortalSide.Enter, _portal);
+	        if (PortalEntry) {
+		        PortalEntry.OnInitialized += UpdatePortalPassable;
+	        }
+
+	        if (reinit) {
+		        InitPortals();
+		        UpdatePortalPassable();
+	        }
+        }
+
+        public void SpawnExit(bool reinit = false) {
+	        PortalExit = SpawnPortal("Exit", PortalSide.Exit, _portal);
+	        if (PortalExit) {
+		        PortalExit.OnInitialized += UpdatePortalPassable;
+	        }
+	        
+	        if (reinit) {
+		        InitPortals();
+		        UpdatePortalPassable();
 	        }
         }
         
 		protected override void Start() {
 			base.Start();
-			
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
-			GameObject portalPrefab = portals.LoadAsset<GameObject>(AssetPaths.PortalExit);
-
-			if (!portalPrefab) {
-				Logger.LogError("Failed to load portal prefab!");
-				return;
-			}
 
 			_animator = GetComponentInChildren<Animator>();
 			if (!_animator) {
 				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
-
-			Vector3 spawnPos = DefaultPortalPosition;
 			
-			GameObject portalEntryObject =
-				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
-			portalEntryObject.name = "Entry";
-			_portalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
-			_portalEntry.side = PortalSide.Enter;
-			_portalEntry.OnInitialized += UpdatePortalPassable;
-			_portalEntry.hostPortal = _portal;
-			
-			GameObject portalExitObject =
-				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
-			portalExitObject.name = "Exit";
-			_portalExit = portalExitObject.AddComponent<DynamicPortalExit>();
-			_portalExit.OnInitialized += UpdatePortalPassable;
-			_portalExit.side = PortalSide.Exit;
-			_portalExit.hostPortal = _portal;
+			SpawnEntry();
+			SpawnExit();
 
 			OnPrimaryFire += () => {
-				FireProjectile(_portalEntry, _portal);
+				FireProjectile(PortalEntry, _portal);
 				UpdateLastProjectile(PortalSide.Enter);
 				_animator.Play(PrimaryFireAnimHash);
 			};
 			
 			OnSecondaryFire += () => {
-				FireProjectile(_portalExit, _portal);
+				FireProjectile(PortalExit, _portal);
 				UpdateLastProjectile(PortalSide.Exit);
 				_animator.Play(SecondaryFireAnimHash);
 				
@@ -87,23 +82,34 @@ namespace UltraPortal {
 			InitPortals();
 		}
 
+		public override bool ShouldBeReset() {
+			if (!PortalEntry || !PortalExit) {
+				return true;
+			}
+
+			return PortalEntry.ShouldBeDisabled() && PortalExit.ShouldBeDisabled();
+		}
+
 		private void UpdatePortalPassable() {
-			if(_portalEntry)
-				_portalEntry.SetPassable(BothPortalsInit);
+			if(PortalEntry)
+				PortalEntry.SetPassable(BothPortalsInit);
 			
-			if(_portalExit)
-				_portalExit.SetPassable(BothPortalsInit);
+			if(PortalExit)
+				PortalExit.SetPassable(BothPortalsInit);
 		}
 
 		private void OnDestroy() {
-			if(_portal)
+			if (_portal) {
 				Destroy(_portal.gameObject);
-			
-			if(_portalEntry)
-				Destroy(_portalEntry.gameObject);
-			
-			if(_portalExit)
-				Destroy(_portalExit.gameObject);
+			}
+
+			if (PortalEntry) {
+				Destroy(PortalEntry.gameObject);
+			}
+
+			if (PortalExit) {
+				Destroy(PortalExit.gameObject);
+			}
 		}
 
 		private void InitPortals() {
@@ -124,10 +130,10 @@ namespace UltraPortal {
 			_portal.disableRange = 0;
 			_portal.enableOverrideFog = false;
 			_portal.enterOffset = 1.5f;
-			_portal.entry = _portalEntry.transform;
+			_portal.entry = PortalEntry.transform;
             _portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
             
-			_portal.exit = _portalExit.transform;
+			_portal.exit = PortalExit.transform;
 			_portal.exitOffset = 1.5f;
 			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
 			
@@ -141,12 +147,14 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			if (_portalEntry) {
-				_portalEntry.transform.position = DefaultPortalPosition;
+			if (PortalEntry) {
+				PortalEntry.Reset();
+				PortalEntry.transform.position = DefaultPortalPosition;
 			}
 
-			if (_portalExit) {
-				_portalExit.transform.position = DefaultPortalPosition;
+			if (PortalExit) {
+				PortalExit.Reset();
+				PortalExit.transform.position = DefaultPortalPosition;
 			}
 
 			UpdatePortalPassable();
