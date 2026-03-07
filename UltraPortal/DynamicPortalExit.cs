@@ -238,7 +238,6 @@ namespace UltraPortal {
 
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
 					_currentTravellers.Add(attachedCollider);
-					return;
 				}
 				
 				_currentTravellers.Add(other);
