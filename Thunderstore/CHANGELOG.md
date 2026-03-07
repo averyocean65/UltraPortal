@@ -9,6 +9,8 @@
 ### Gameplay
 - Made portals explode if it has travelers inside of it when it gets despawned.
 - Added new style bonus *+SAFETY HAZARD*
+- Changed input method to close portals
+  - Portals can now be closed by pressing your primary and alternative fire at once whilst holding a portal gun.
 
 ### Config
 - Added config to change portal explosion color
