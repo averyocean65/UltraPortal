@@ -27,6 +27,9 @@ namespace UltraPortal {
 		public static Color SecondaryPortalParticleColor = new Color(0.1019607843f, 0.1176470588f, 0.3607843137f);
 
 		[Configgable("Visuals")]
+		public static Color ExplosionColor = new Color(1, 0.5865f, 0);
+		
+		[Configgable("Visuals")]
 		public static bool UseEmission = true;
 		
 		[Configgable("Visuals")]

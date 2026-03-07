@@ -48,6 +48,28 @@ namespace UltraPortal {
 				FireProjectile(_primaryMirror, _portal);
 				_animator.Play(PrimaryFireAnimHash);
 			};
+
+			OnSecondaryFire += () => {
+				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
+				
+				Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
+				
+				GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
+				float maxSize = 10f;
+
+				ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
+				colors.ColorExplosion();
+				
+				Explosion explosion = explosionObject.AddComponent<Explosion>();
+				explosion.sourceWeapon = gameObject;
+				explosion.hitterWeapon = "portalgun";
+				explosion.damage = 50;
+				explosion.speed = 7.5f;
+				explosion.maxSize = maxSize;
+				
+				explosion.harmless = false;
+			};
 			
 			UpdateLastProjectile(_primaryMirror.side);
 			InitMirror();

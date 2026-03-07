@@ -85,6 +85,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AssetBundleHelpers.cs" />
+        <Compile Include="Colorizers\ExplosionColorManager.cs" />
         <Compile Include="Colorizers\PortalColorManager.cs" />
         <Compile Include="Colorizers\ProjectileColorManager.cs" />
         <Compile Include="Constants.cs" />

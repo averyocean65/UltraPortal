@@ -48,6 +48,8 @@ namespace UltraPortal {
 
             public const string PortalGunIcon = "UltraPortalGunIcon";
             public const string PortalGunIconGlow = "UltraPortalGunIconGlow";
+
+            public const string Explosion = "Explosion";
         }
     }
 }
