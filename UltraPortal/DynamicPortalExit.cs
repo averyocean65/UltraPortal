@@ -177,11 +177,6 @@ namespace UltraPortal {
 		}
 
 		private void OnTriggerEnter(Collider other) {
-			if (_passableBlockage) {
-				if(_passableBlockage.activeSelf)
-					return;
-			}
-
 			if (_currentTravellers.Contains(other)) {
 				return;
 			}
@@ -221,8 +216,6 @@ namespace UltraPortal {
 			// 	}
 			// }
 
-			_toggleColliderAction.Invoke(side, other, true);
-			
 			if (!_currentTravellers.Contains(other)) {
 				// i know hardcoding is bad, but i can't find anything else to identify environment chunks by.
 				// so until someone finds something noteworthy about these stupid little things, this will stay.
@@ -237,6 +230,13 @@ namespace UltraPortal {
 				
 				_currentTravellers.Add(other);
 			}
+			
+			if (_passableBlockage) {
+				if(_passableBlockage.activeSelf)
+					return;
+			}
+			
+			_toggleColliderAction.Invoke(side, other, true);
 		}
 
 		public bool ShouldBeDisabled() {
@@ -260,11 +260,6 @@ namespace UltraPortal {
 		}
 
 		private void OnTriggerExit(Collider other) {
-			if (_passableBlockage) {
-				if(_passableBlockage.activeSelf)
-					return;
-			}
-			
 			if (_currentTravellers.Contains(other)) {
 				_currentTravellers.Remove(other);
 			}
@@ -276,7 +271,12 @@ namespace UltraPortal {
 			if (!other.attachedRigidbody) {
 				return;
 			}
-
+			
+			if (_passableBlockage) {
+				if(_passableBlockage.activeSelf)
+					return;
+			}
+			
 			_toggleColliderAction.Invoke(side, other, false);
 		}
 
