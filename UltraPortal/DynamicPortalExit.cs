@@ -240,6 +240,12 @@ namespace UltraPortal {
 		}
 
 		public bool ShouldBeDisabled() {
+			if (_passableBlockage) {
+				if (_passableBlockage.activeInHierarchy) {
+					return true;
+				}
+			}
+			
 			// filter
 			_currentTravellers = _currentTravellers.Where(x => x != null && x.gameObject.activeInHierarchy).ToList();
 

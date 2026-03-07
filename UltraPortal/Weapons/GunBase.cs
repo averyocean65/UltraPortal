@@ -87,8 +87,10 @@ namespace UltraPortal {
 		}
 		
 		protected Projectile SpawnProjectileFromPrefab(GameObject prefab, float speed) {
-			GameObject spawned = Instantiate(prefab, MainCamera.transform.position + MainCamera.transform.forward,
+			GameObject spawned = Instantiate(prefab, MainCamera.transform.position,
 				Quaternion.identity);
+			spawned.transform.forward = MainCamera.transform.forward;
+			
 			Projectile projectile = spawned.AddComponent<Projectile>();
 			projectile.damage = 0f;
 			projectile.sourceWeapon = gameObject;
@@ -98,7 +100,6 @@ namespace UltraPortal {
 			projectile.ignoreEnvironment = false;
 			projectile.ignoreExplosions = false;
 			projectile.unparryable = true;
-			projectile.transform.forward = MainCamera.transform.forward;
 
 			return projectile;
 		}
