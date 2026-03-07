@@ -88,6 +88,10 @@ namespace UltraPortal {
 				return true;
 			}
 
+			if (!BothPortalsInit) {
+				return true;
+			}
+
 			return PortalEntry.ShouldBeDisabled() && PortalExit.ShouldBeDisabled();
 		}
 
