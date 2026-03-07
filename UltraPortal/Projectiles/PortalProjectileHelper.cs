@@ -69,6 +69,7 @@ namespace UltraPortal.Projectiles {
 					return;
 				}
 
+				exit.transform.parent = hit.transform;
 				exit.Initialize(portal, exit.side, hit);
 			}
 		}

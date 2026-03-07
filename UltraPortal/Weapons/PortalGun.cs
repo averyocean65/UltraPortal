@@ -6,8 +6,6 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public sealed class PortalGun : PortalGunBase {
-		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
-		
 		private static ManualLogSource Logger => Plugin.LogSource;
 
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
@@ -32,40 +30,41 @@ namespace UltraPortal {
 		               PortalExit.transform.position.y > DefaultPortalPosition.y;
 	        }
         }
+
+        public void SpawnEntry(bool reinit = false) {
+	        PortalEntry = SpawnPortal("Entry", PortalSide.Enter, _portal);
+	        if (PortalEntry) {
+		        PortalEntry.OnInitialized += UpdatePortalPassable;
+	        }
+
+	        if (reinit) {
+		        InitPortals();
+		        UpdatePortalPassable();
+	        }
+        }
+
+        public void SpawnExit(bool reinit = false) {
+	        PortalExit = SpawnPortal("Exit", PortalSide.Exit, _portal);
+	        if (PortalExit) {
+		        PortalExit.OnInitialized += UpdatePortalPassable;
+	        }
+	        
+	        if (reinit) {
+		        InitPortals();
+		        UpdatePortalPassable();
+	        }
+        }
         
 		protected override void Start() {
 			base.Start();
-			
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
-			GameObject portalPrefab = portals.LoadAsset<GameObject>(AssetPaths.PortalExit);
-
-			if (!portalPrefab) {
-				Logger.LogError("Failed to load portal prefab!");
-				return;
-			}
 
 			_animator = GetComponentInChildren<Animator>();
 			if (!_animator) {
 				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
-
-			Vector3 spawnPos = DefaultPortalPosition;
 			
-			GameObject portalEntryObject =
-				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
-			portalEntryObject.name = "Entry";
-			PortalEntry = portalEntryObject.AddComponent<DynamicPortalExit>();
-			PortalEntry.side = PortalSide.Enter;
-			PortalEntry.OnInitialized += UpdatePortalPassable;
-			PortalEntry.hostPortal = _portal;
-			
-			GameObject portalExitObject =
-				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
-			portalExitObject.name = "Exit";
-			PortalExit = portalExitObject.AddComponent<DynamicPortalExit>();
-			PortalExit.OnInitialized += UpdatePortalPassable;
-			PortalExit.side = PortalSide.Exit;
-			PortalExit.hostPortal = _portal;
+			SpawnEntry();
+			SpawnExit();
 
 			OnPrimaryFire += () => {
 				FireProjectile(PortalEntry, _portal);
@@ -100,14 +99,17 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
-			if(_portal)
+			if (_portal) {
 				Destroy(_portal.gameObject);
-			
-			if(PortalEntry)
+			}
+
+			if (PortalEntry) {
 				Destroy(PortalEntry.gameObject);
-			
-			if(PortalExit)
+			}
+
+			if (PortalExit) {
 				Destroy(PortalExit.gameObject);
+			}
 		}
 
 		private void InitPortals() {

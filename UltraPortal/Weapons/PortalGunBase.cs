@@ -7,6 +7,8 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public abstract class PortalGunBase : GunBase {
+		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
+		
 		// funny typo
 		private const string LastProjectileVisual = "UltraPortalGun/PoralGunRig/RootPortal/Last Projectile";
 
@@ -41,6 +43,29 @@ namespace UltraPortal {
 			if (LastProjectileColors && LastProjectileColors.FirstColorDone) {
 				LastProjectileColors.ColorProjectile();
 			}
+		}
+
+		protected DynamicPortalExit SpawnPortal(string objectName, PortalSide side, Portal hostPortal,
+			string prefabName = AssetPaths.PortalExit) {
+			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
+			GameObject portalPrefab = portals.LoadAsset<GameObject>(prefabName);
+			
+			if (!portalPrefab) {
+				Plugin.LogSource.LogError("Failed to load portal prefab!");
+				return null;
+			}
+			
+			Vector3 spawnPos = DefaultPortalPosition;
+			
+			GameObject portalEntryObject =
+				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
+			portalEntryObject.name = objectName;
+			DynamicPortalExit exit = portalEntryObject.AddComponent<DynamicPortalExit>();
+			exit.side = side;
+			exit.hostPortal = hostPortal;
+			exit.hostGun = this;
+
+			return exit;
 		}
 
 		private bool triggeredPortalReset = false;

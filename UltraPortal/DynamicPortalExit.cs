@@ -20,7 +20,7 @@ namespace UltraPortal {
 
 		private const float SphereCheckRadius = 0.2f;
 
-		private static Action<PortalSide, Collider, bool> _toggleColliderAction;
+		private static Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
 		
@@ -45,6 +45,8 @@ namespace UltraPortal {
 		// PORTAL
 		public Portal hostPortal;
 		public PortalSide side;
+		public PortalGunBase hostGun;
+		
 		public bool AssistedPortalTravel { get; private set; } = false;
 
 		// COLLIDERS
@@ -85,13 +87,15 @@ namespace UltraPortal {
 
 			_colorManager = gameObject.AddComponent<PortalColorManager>();
 			_colorManager.associated = this;
+
+			CalculateAssistance();
 			
-			_toggleColliderAction += (portalSide, collider, toggle) => {
+			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				// if (assistedPortalTravel && portalSide != side) {
 				// 	return;
 				// }
 				
-				ToggleColliders(toggle, collider);
+				ToggleColliders(toggle, collider, assistance);
 			};
 		}
 
@@ -125,6 +129,12 @@ namespace UltraPortal {
 			}
 		}
 
+		private void CalculateAssistance() {
+			// Check if portal is facing upwards
+			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector()));
+			AssistedPortalTravel = dot > 0.6f;
+		}
+
 		public void Initialize(Portal portal, PortalSide portalSide, RaycastHit hit) {
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
@@ -138,7 +148,8 @@ namespace UltraPortal {
 					}
 					
 					Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
-					ToggleColliders(false, leftover);
+					ToggleColliders(false, leftover, true);
+					ToggleColliders(false, leftover, false);
 				}
 			}
 
@@ -149,10 +160,6 @@ namespace UltraPortal {
 
 			transform.forward = -hit.normal;
 			transform.position = hit.point + hit.normal.normalized * ModConfig.PortalWallOffset;
-			
-			// Check if portal is facing upwards
-			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector()));
-			AssistedPortalTravel = dot > 0.6f;
 			
 			hostPortal = portal;
 			side = portalSide;
@@ -236,7 +243,28 @@ namespace UltraPortal {
 					return;
 			}
 			
-			_toggleColliderAction.Invoke(side, other, true);
+			CalculateAssistance();
+			
+			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
+		}
+
+		private void OnDestroy() {
+			if (!hostGun || !hostPortal) {
+				return;
+			}
+
+			if (hostGun is PortalGun portalGun) {
+				switch (side) {
+					case PortalSide.Enter:
+						portalGun.SpawnEntry(true);
+						break;
+					case PortalSide.Exit:
+						portalGun.SpawnExit(true);
+						break;
+				}
+			} else if (hostGun is MirrorGun mirrorGun) {
+				mirrorGun.SpawnPrimaryMirror(true);
+			}
 		}
 
 		public bool ShouldBeDisabled() {
@@ -283,24 +311,26 @@ namespace UltraPortal {
 					return;
 			}
 			
-			_toggleColliderAction.Invoke(side, other, false);
+			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
 		}
 
 		public void Reset() {
 			foreach (var traveller in _currentTravellers) {
-				ToggleColliders(false, traveller);
+				// just in case
+				ToggleColliders(false, traveller, false);
+				ToggleColliders(false, traveller, true);
 			}
 
 			_currentTravellers = new List<Collider>();
 		}
 
-		private void ToggleColliders(bool value, Collider other) {
+		private void ToggleColliders(bool value, Collider other, bool requiredAssistance) {
 			foreach (Collider c in _colliders) {
 				if (!c) {
 					continue;
 				}
 
-				if (!AssistedPortalTravel || !other.CompareTag("Player")) {
+				if (!requiredAssistance || !other.CompareTag("Player")) {
 					Physics.IgnoreCollision(c, other, value);
 				}
 				else {

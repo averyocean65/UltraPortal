@@ -19,6 +19,18 @@ namespace UltraPortal {
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _portal;
 		public DynamicPortalExit PrimaryMirror { get; private set; }
+
+		public void SpawnPrimaryMirror(bool reinit = false) {
+			PrimaryMirror = SpawnPortal("Primary Mirror", PortalSide.Enter, _portal);
+			if (PrimaryMirror) {
+				PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
+			}
+			
+			if (reinit) {
+				InitMirror();
+			}
+		}
+		
 		
 		protected override void Start() {
 			base.Start();
@@ -34,16 +46,9 @@ namespace UltraPortal {
 			if (!_animator) {
 				HudMessageReceiver.Instance.SendHudMessage("<color=#ff000>Animator is invalid!</color>");
 			}
-
-			Vector3 spawnPos = Vector3.down * 100000;
 			
-			GameObject primaryMirrorObject =
-				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
-			primaryMirrorObject.name = "Mirror Transform";
-			PrimaryMirror = primaryMirrorObject.AddComponent<DynamicPortalExit>();
-			PrimaryMirror.side = PortalSide.Enter;
-			PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
-
+			SpawnPrimaryMirror();
+			
 			OnPrimaryFire += () => {
 				FireProjectile(PrimaryMirror, _portal);
 				_animator.Play(PrimaryFireAnimHash);
