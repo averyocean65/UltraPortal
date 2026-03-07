@@ -5,5 +5,14 @@
 - Fixed various edge-cases when equipping/unequipping the portal gun with no other weapons selected.
 - Fixed clipping issues with disabling portals whilst a player was inside them.
 
+### Gameplay
+- Made portals explode if it has travelers inside of it when it gets despawned.
+- Added new style bonus *+SAFETY HAZARD*
+
+### Config
+- Added config to change portal explosion color
+- Added config to set if a portal explosion is an ultraboost
+- Added config to set *+SAFETY HAZARD* style color
+
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable prematurely.

@@ -207,7 +207,8 @@ namespace UltraPortal {
 			if (other.name == "Projectile Parry Zone") {
 				return;
 			}
-
+			
+			Collider attachedCollider = other.attachedRigidbody.GetComponent<Collider>();
 
 			// if (_tooClose) {
 			// 	if (!_tooClose.travellers.Contains(other)) {
@@ -226,6 +227,11 @@ namespace UltraPortal {
 				// i know hardcoding is bad, but i can't find anything else to identify environment chunks by.
 				// so until someone finds something noteworthy about these stupid little things, this will stay.
 				if (other.name.Contains("EnvironmentChunk")) {
+					return;
+				}
+
+				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
+					_currentTravellers.Add(attachedCollider);
 					return;
 				}
 				
@@ -272,6 +278,14 @@ namespace UltraPortal {
 			}
 
 			_toggleColliderAction.Invoke(side, other, false);
+		}
+
+		public void Reset() {
+			foreach (var traveller in _currentTravellers) {
+				ToggleColliders(false, traveller);
+			}
+
+			_currentTravellers = new List<Collider>();
 		}
 
 		private void ToggleColliders(bool value, Collider other) {

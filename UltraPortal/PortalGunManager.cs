@@ -82,6 +82,8 @@ namespace UltraPortal {
 		private void Explode() {
 			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
+
+			EnemyPatches.AlreadyDealtWith.Clear();
 				
 			Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
 				
@@ -113,11 +115,15 @@ namespace UltraPortal {
 				colors.ColorExplosion();
 				
 				Explosion explosion = explosionObject.AddComponent<Explosion>();
+				explosion.enemyDamageMultiplier = 1.5f;
+				explosion.toIgnore = new List<EnemyType>();
+				
 				explosion.sourceWeapon = gameObject;
-				explosion.hitterWeapon = "portalgun";
+				explosion.hitterWeapon = PortalExplosionWeapon;
 				explosion.damage = 25;
 				explosion.speed = 15f;
 				explosion.maxSize = maxSize;
+
 				
 				explosion.harmless = false;
 				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters;

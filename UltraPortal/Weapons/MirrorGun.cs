@@ -99,6 +99,8 @@ namespace UltraPortal {
 		public void Reset() {
 			if (!PrimaryMirror)
 				return;
+			
+			PrimaryMirror.Reset();
 			PrimaryMirror.transform.position = PortalGun.DefaultPortalPosition;
 		}
 	}

@@ -34,6 +34,9 @@ namespace UltraPortal {
 		
 		[Configgable("Visuals")]
 		public static bool ShowPortalSpawnParticles = true;
+		
+		[Configgable("Visuals/Style")]
+		public static Color SafetyHazardColor = new Color(1, 0, 0);
 
 		[Configgable("Gameplay/Projectiles/Advanced", "Projectile Speed")]
 		public static float PortalProjectileSpeed = 95.0f;

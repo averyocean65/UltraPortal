@@ -5,9 +5,15 @@ using UnityEngine;
 
 namespace UltraPortal {
     public static class Constants {
-        public static LayerMask EnvironmentLayer => LayerMask.GetMask("Environment", "EnvironmentBaked", "PlayerOnly", "Outdoors", "OutdoorsBaked");
+        public static LayerMask EnvironmentLayer => LayerMaskDefaults.Get(LMD.Environment);
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
-        public static LayerMask IgnoreTravellersLayerMask => LayerMask.NameToLayer("GibLit");
+
+        public const string PortalExplosionWeapon = "dynamicportal";
+
+        public const string StyleSafetyHazardId = "style.ultraportal.safetyhazard";
+        public const string StyleSafetyHazardName = "SAFETY HAZARD";
+        public const int StyleSafetyHazardPoints = 500;
+        
 
         private static Camera _mainCamera;
 

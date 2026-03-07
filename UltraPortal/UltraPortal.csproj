@@ -94,6 +94,7 @@
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="GunPosition.cs" />
         <Compile Include="ModConfig.cs" />
+        <Compile Include="Patches\EnemyPatches.cs" />
         <Compile Include="Patches\LevelPatches.cs" />
         <Compile Include="Patches\PlayerPatches.cs" />
         <Compile Include="Plugin.cs" />
