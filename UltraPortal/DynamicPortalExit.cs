@@ -169,11 +169,11 @@ namespace UltraPortal {
 
 			_colliders = new List<Collider>();
 			
-			if(ModConfig.ShowPortalSpawnParticles && _particles)
+			if(ModConfig.ShowPortalSpawnParticles.GetValue() && _particles)
 				_particles.Play();
 
 			transform.forward = -hit.normal;
-			transform.position = hit.point + hit.normal.normalized * ModConfig.PortalWallOffset;
+			transform.position = hit.point + hit.normal.normalized * ModConfig.PortalWallOffset.GetValue();
 			
 			hostPortal = portal;
 			side = portalSide;

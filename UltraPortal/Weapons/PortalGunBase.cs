@@ -1,5 +1,6 @@
 using System;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace UltraPortal {
 			}
 		}
 
-		protected DynamicPortalExit SpawnPortal(string objectName, PortalSide side, Portal hostPortal,
+		protected DynamicPortalExit SpawnPortalExit(string objectName, PortalSide side, Portal hostPortal,
 			string prefabName = AssetPaths.PortalExit) {
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
 			GameObject portalPrefab = portals.LoadAsset<GameObject>(prefabName);
@@ -70,7 +71,7 @@ namespace UltraPortal {
 
 		private bool triggeredPortalReset = false;
 		protected virtual void FireProjectile(DynamicPortalExit exit, Portal portal) {
-			Projectile projectile = SpawnProjectileFromAsset(AssetPaths.Projectile, ModConfig.PortalProjectileSpeed);
+			Projectile projectile = SpawnProjectileFromAsset(AssetPaths.Projectile, ModConfig.PortalProjectileSpeed.GetValue());
 			PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 			helper.exit = exit;
 			helper.portal = portal;
@@ -100,6 +101,31 @@ namespace UltraPortal {
 			}
 			
 			HandleFiring();
+		}
+
+		protected virtual Portal CreatePortal(string objectName, Transform entry, Transform exit, Vector2 size) {
+			GameObject portalObject = new GameObject(objectName) {
+				layer = PortalLayer
+			};
+
+			Portal portal = portalObject.AddComponent<Portal>();
+			portal.allowCameraTraversals = true;
+			portal.appearsInRecursions = true;
+			portal.canSeeItself = true;
+			portal.canSeePortalLayer = true;
+			
+			portal.entry = entry;
+			portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
+			
+			portal.exit = exit;
+			portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
+
+			portal.shape = new PlaneShape {
+				width = size.x,
+				height = size.y
+			};
+
+			return portal;
 		}
 	}
 }

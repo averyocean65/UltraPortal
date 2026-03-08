@@ -12,53 +12,53 @@ namespace UltraPortal {
 		public static bool UseOtherPortalForProjectileTeleport = true;
 
 		[Configgable("Visuals")]
-		public static Color PrimaryPortalColor = new Color(0.9882352941f, 0.0117647059f, 0.2705882353f);
+		public static ConfigInputField<Color> PrimaryPortalColor = new ConfigInputField<Color>(new Color(0.9882352941f, 0.0117647059f, 0.2705882353f));
 		
 		[Configgable("Visuals")]
-		public static Color PrimaryPortalParticleColor = new Color(0.5803921569f, 0.0941176471f, 0.2235294118f);
+		public static ConfigInputField<Color> PrimaryPortalParticleColor = new ConfigInputField<Color>(new Color(0.5803921569f, 0.0941176471f, 0.2235294118f));
 		
 		[Configgable("Visuals")]
-		public static Color SecondaryPortalColor = new Color(0.1803921569f, 0.2352941176f, 1f);
+		public static ConfigInputField<Color> SecondaryPortalColor = new ConfigInputField<Color>(new Color(0.1803921569f, 0.2352941176f, 1f));
 		
 		[Configgable("Visuals")]
-		public static Color SecondaryPortalParticleColor = new Color(0.1019607843f, 0.1176470588f, 0.3607843137f);
+		public static ConfigInputField<Color> SecondaryPortalParticleColor = new ConfigInputField<Color>(new Color(0.1019607843f, 0.1176470588f, 0.3607843137f));
 
 		[Configgable("Visuals")]
-		public static Color ExplosionColor = new Color(0.35686f, 0.02745f, 0.45098f);
+		public static ConfigInputField<Color> ExplosionColor = new ConfigInputField<Color>(new Color(0.35686f, 0.02745f, 0.45098f));
 
 		[Configgable("Visuals")]
-		public static int ExplosionEmissionIntensity = -1;
+		public static IntegerSlider ExplosionEmissionIntensity = new IntegerSlider(-1, -5, 5);
 		
 		[Configgable("Visuals")]
-		public static bool UseEmission = true;
+		public static ConfigInputField<bool> UseEmission = new ConfigInputField<bool>(true);
 		
 		[Configgable("Visuals")]
-		public static bool ShowPortalSpawnParticles = true;
+		public static ConfigInputField<bool> ShowPortalSpawnParticles = new ConfigInputField<bool>(true);
 		
 		[Configgable("Visuals/Style")]
-		public static Color SafetyHazardColor = new Color(1, 0, 0);
+		public static ConfigInputField<Color> SafetyHazardColor = new ConfigInputField<Color>(new Color(1, 0, 0));
 
-		[Configgable("Gameplay/Projectiles/Advanced", "Projectile Speed")]
-		public static float PortalProjectileSpeed = 95.0f;
+		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
+		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
 
 		[Configgable("Gameplay/Explosions")]
-		public static bool AreExplosionsUltraboosters = false;
+		public static ConfigInputField<bool> AreExplosionsUltraboosters = new ConfigInputField<bool>(false);
 
 		[Configgable(displayName: "Enabled")]
-		public static bool IsEnabled = true;
+		public static ConfigInputField<bool> IsEnabled = new ConfigInputField<bool>(true);
 
 		// note: i also do not have a better name for these
 		
-		[Configgable("Gameplay/Projectiles/Advanced")]
-		public static float ProjectileEnemyGroundPortalBoostMultiplier = 0.5f;
+		[Configgable("Gameplay/Projectiles/Experimental")]
+		public static ConfigInputField<float> ProjectileEnemyGroundPortalBoostMultiplier = new ConfigInputField<float>(0.5f);
 		
-		[Configgable("Gameplay/Projectiles/Advanced")]
-		public static float ProjectileEnemyNormalPortalBoostMultiplier = 2f;
+		[Configgable("Gameplay/Projectiles/Experimental")]
+		public static ConfigInputField<float> ProjectileEnemyNormalPortalBoostMultiplier = new ConfigInputField<float>(2f);
 
-		[Configgable("Gameplay/Portals/Advanced", "Minimum Entry/Exit Speed (scene reload required)")]
-		public static float MinimumEntryExitSpeed = 20f;
+		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed (scene reload required)")]
+		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
 		
-		[Configgable("Gameplay/Portals/Advanced", "Portal Wall Offset")]
-		public static float PortalWallOffset = 0.45f;
+		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
+		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
 	}
 }

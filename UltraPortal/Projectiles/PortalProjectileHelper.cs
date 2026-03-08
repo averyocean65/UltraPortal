@@ -44,10 +44,10 @@ namespace UltraPortal.Projectiles {
 				id.transform.position = desiredExitTransform.position - desiredExitTransform.forward;
 				
 				float multiplier = desiredExit.AssistedPortalTravel
-					? ModConfig.ProjectileEnemyGroundPortalBoostMultiplier
-					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier;
+					? ModConfig.ProjectileEnemyGroundPortalBoostMultiplier.GetValue()
+					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier.GetValue();
 				
-				rb.velocity = -desiredExitTransform.forward * ModConfig.PortalProjectileSpeed * multiplier;
+				rb.velocity = -desiredExitTransform.forward * 100.0f * multiplier;
 				return;
 			}
 
