@@ -108,7 +108,7 @@ namespace UltraPortal {
 				// 	return;
 				// }
 				
-				ToggleColliders(toggle, collider, assistance);
+				ToggleColliders(toggle, collider);
 			};
 		}
 
@@ -178,8 +178,7 @@ namespace UltraPortal {
 				}
 
 				Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
-				ToggleColliders(false, leftover, true);
-				ToggleColliders(false, leftover, false);
+				ToggleColliders(false, leftover);
 			}
 			
 			_currentTravellers.Clear();
@@ -236,7 +235,7 @@ namespace UltraPortal {
 			}
 
 			// it is 2AM and I am tired, so I'm just hardcoding this edge-case
-			if (other.name == "Projectile Parry Zone") {
+			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") || other.name.Contains("Ground Check")) {
 				return;
 			}
 			
@@ -334,10 +333,6 @@ namespace UltraPortal {
 			if (_colliders.Contains(other)) {
 				return;
 			}
-
-			if (!other.attachedRigidbody) {
-				return;
-			}
 			
 			if (_passableBlockage) {
 				if(_passableBlockage.activeSelf)
@@ -351,7 +346,7 @@ namespace UltraPortal {
 			Cleanup();
 		}
 
-		private void ToggleColliders(bool value, Collider other, bool requiredAssistance) {
+		private void ToggleColliders(bool value, Collider other) {
 			if (_colliders == null || !other) {
 				return;
 			}
@@ -360,19 +355,24 @@ namespace UltraPortal {
 				return;
 			}
 			
-			Plugin.LogSource.LogInfo($"TOGGLE COLLIDERS CALLED WITH: {value}; {other.name}; {requiredAssistance}");
+			if (other.GetComponent<NewMovement>()) { 
+				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
+				NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
+				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
+				NewMovement.Instance.enabled = !value;
+				NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
+			}
 			
 			foreach (Collider c in _colliders) {
 				if (!c) {
 					continue;
 				}
-
-				if (!requiredAssistance || !other.CompareTag("Player")) {
-					Physics.IgnoreCollision(c, other, value);
+				
+				if (!value) {
+					Plugin.LogSource.LogInfo($"Re-enabling collisions for: {other.name} and {c.name}");
 				}
-				else {
-				    c.enabled = !value;
-				}
+				
+				Physics.IgnoreCollision(c, other, value);
 			}
 		}
 	}
