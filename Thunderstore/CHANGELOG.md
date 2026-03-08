@@ -1,4 +1,4 @@
-# ULTRAPORTAL 0.1.6
+# ULTRAPORTAL 0.2.0
 ## Changes
 ### Bugfixes
 - Fixed mirror portal projectile from teleporting enemies if portal was despawned.
