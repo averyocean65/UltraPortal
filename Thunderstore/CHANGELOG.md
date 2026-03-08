@@ -2,8 +2,9 @@
 ## Changes
 ### Bugfixes
 - Fixed mirror portal projectile from teleporting enemies if portal was despawned.
-- Fixed configuration not loading properly on startup.
-- Ground portals now detect the proper colliders in the cybergrind.
+- Fixed configuration not loading properly on startup. ([see issue](https://github.com/averyocean65/UltraPortal/issues/10))
+- Ground portals now detect the proper colliders in the cybergrind. ([see issue](https://github.com/averyocean65/UltraPortal/issues/14))
+- Portals now reset colliders when they're destroyed.
 - Increased size of portal gun projectile to decrease collision errors at higher projectile speeds.
 
 ## Config
