@@ -5,7 +5,6 @@ using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UnityEngine;
-using UnityEngine.Animations;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
@@ -113,14 +112,32 @@ namespace UltraPortal {
 			};
 		}
 
-		private void AddCollider(Collider c) {
+		private void AddCollider(Collider c, bool checkChildren = true) {
 			if (!c) {
 				return;
 			}
+
+			if (_colliders.Contains(c)) {
+				return;
+			}
 			
-			Plugin.LogSource.LogInfo($"Adding collider: {c.name}");
+			Plugin.LogSource.LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.Add(c);
+
+			if (checkChildren) {
+				Collider[] children = c.GetComponentsInChildren<Collider>();
+				foreach (var child in children) {
+					Plugin.LogSource.LogInfo($"Child ({child.name}) layer: {LayerMask.LayerToName(child.gameObject.layer)}");
+					
+					if (!EnvironmentLayer.Contains(child.gameObject.layer)) {
+						Plugin.LogSource.LogInfo($"Rejected: {child.name}");
+						continue;
+					}
+					
+					AddCollider(child, false);
+				}
+			}
 		}
 		
 		private void GetNearbyCollider() {
@@ -139,7 +156,7 @@ namespace UltraPortal {
 					continue;
 				}
 				
-				AddCollider(hit.collider);
+				AddCollider(hit.collider, false);
 			}
 		}
 
@@ -185,7 +202,7 @@ namespace UltraPortal {
 			hostPortal = portal;
 			side = portalSide;
 
-			AddCollider(hit.collider);
+			AddCollider(hit.collider, true);
 			GetNearbyCollider();
 
 			if (OnInitialized != null) {
@@ -338,6 +355,12 @@ namespace UltraPortal {
 			if (_colliders == null || !other) {
 				return;
 			}
+
+			if (_colliders.Count < 1) {
+				return;
+			}
+			
+			Plugin.LogSource.LogInfo($"TOGGLE COLLIDERS CALLED WITH: {value}; {other.name}; {requiredAssistance}");
 			
 			foreach (Collider c in _colliders) {
 				if (!c) {
@@ -348,7 +371,6 @@ namespace UltraPortal {
 					Physics.IgnoreCollision(c, other, value);
 				}
 				else {
-				 	//c.gameObject.SetActive(!value);
 				    c.enabled = !value;
 				}
 			}
