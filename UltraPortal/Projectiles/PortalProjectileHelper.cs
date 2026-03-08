@@ -1,4 +1,3 @@
-using System;
 using ULTRAKILL.Portal;
 using UltraPortal.Extensions;
 using UnityEngine;

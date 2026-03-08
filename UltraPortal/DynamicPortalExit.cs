@@ -149,25 +149,32 @@ namespace UltraPortal {
 			AssistedPortalTravel = dot > 0.6f;
 		}
 
+		private void Cleanup() {
+			if (_currentTravellers == null) {
+				_currentTravellers = new List<Collider>();
+				return;
+			}
+			
+			foreach (Collider leftover in _currentTravellers) {
+				if (!leftover) {
+					continue;
+				}
+
+				Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
+				ToggleColliders(false, leftover, true);
+				ToggleColliders(false, leftover, false);
+			}
+			
+			_currentTravellers.Clear();
+		}
+
 		public void Initialize(Portal portal, PortalSide portalSide, RaycastHit hit) {
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
 			}
-
-			if (_colliders.Count > 0) {
-				foreach (Collider leftover in _currentTravellers) {
-					if (!leftover) {
-						continue;
-					}
-					
-					Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
-					ToggleColliders(false, leftover, true);
-					ToggleColliders(false, leftover, false);
-				}
-			}
-
-			_colliders = new List<Collider>();
+			
+			Cleanup();
 			
 			if(ModConfig.ShowPortalSpawnParticles.GetValue() && _particles)
 				_particles.Play();
@@ -256,10 +263,12 @@ namespace UltraPortal {
 		private void OnDestroy() {
 			Destroy(_keepActive.gameObject);
 			
+			Cleanup();
+			
 			if (!hostGun || !hostPortal) {
 				return;
 			}
-
+			
 			if (hostGun is PortalGun portalGun) {
 				switch (side) {
 					case PortalSide.Enter:
@@ -322,13 +331,7 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			foreach (var traveller in _currentTravellers) {
-				// just in case
-				ToggleColliders(false, traveller, false);
-				ToggleColliders(false, traveller, true);
-			}
-
-			_currentTravellers = new List<Collider>();
+			Cleanup();
 		}
 
 		private void ToggleColliders(bool value, Collider other, bool requiredAssistance) {
