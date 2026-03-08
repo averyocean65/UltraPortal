@@ -222,7 +222,7 @@ namespace UltraPortal {
 			}
 
 			int slotIndex = PortalGunSlot - 1;
-			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance &&
+			if (Input.GetKeyDown(ModConfig.PortalGunKeybind.GetValue()) && GunControl.Instance &&
 			    GunControl.Instance.slots[slotIndex].Count > 0 && GunControl.Instance.slots[slotIndex][0]) {
 				EquippedPortalGun = true;
 				GunControl.Instance.SwitchWeapon(PortalGunSlot, targetVariationIndex: _currentVariationIndex + 1, cycleVariation: true);
