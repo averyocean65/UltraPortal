@@ -68,7 +68,7 @@ namespace UltraPortal {
 				Plugin.LogSource.LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}");
 			}
 			
-			if(ModConfig.IsEnabled)
+			if(ModConfig.IsEnabled.GetValue())
 				AddToSlots();
 		}
 
@@ -125,7 +125,7 @@ namespace UltraPortal {
 				explosion.maxSize = maxSize;
 				
 				explosion.harmless = false;
-				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters;
+				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters.GetValue();
 			}
 			
 			bool gunShouldReset = true;
@@ -160,7 +160,7 @@ namespace UltraPortal {
 				_currentVariationIndex = -1;
 			}
 
-			if (!ModConfig.IsEnabled) {
+			if (!ModConfig.IsEnabled.GetValue()) {
 				if (_wasEnabledLastFrame) {
 					_wasEnabledLastFrame = false;
 					
@@ -222,7 +222,7 @@ namespace UltraPortal {
 			}
 
 			int slotIndex = PortalGunSlot - 1;
-			if (Input.GetKeyDown(ModConfig.PortalGunKeybind) && GunControl.Instance &&
+			if (Input.GetKeyDown(ModConfig.PortalGunKeybind.GetValue()) && GunControl.Instance &&
 			    GunControl.Instance.slots[slotIndex].Count > 0 && GunControl.Instance.slots[slotIndex][0]) {
 				EquippedPortalGun = true;
 				GunControl.Instance.SwitchWeapon(PortalGunSlot, targetVariationIndex: _currentVariationIndex + 1, cycleVariation: true);

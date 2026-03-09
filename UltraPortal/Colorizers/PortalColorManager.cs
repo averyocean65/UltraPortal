@@ -25,13 +25,13 @@ namespace UltraPortal.Colorizers {
             }
             
             UnityEngine.Color color = associated.side == PortalSide.Enter
-                ? ModConfig.PrimaryPortalColor
-                : ModConfig.SecondaryPortalColor;
+                ? ModConfig.PrimaryPortalColor.GetValue()
+                : ModConfig.SecondaryPortalColor.GetValue();
             
             foreach (Renderer r in _renderers) {
                 r.material.SetColor("_Color", color);
 
-                if (ModConfig.UseEmission) {
+                if (ModConfig.UseEmission.GetValue()) {
                     r.material.SetColor("_EmissionColor", color);
                 }
                 else {

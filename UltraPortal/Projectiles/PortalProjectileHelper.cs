@@ -33,21 +33,21 @@ namespace UltraPortal.Projectiles {
 				}
 				
 				Rigidbody rb = id.gameObject.GetComponent<Rigidbody>();
-				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport
+				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport.GetValue()
 					? OtherExitTransform
 					: exit.transform;
 				
-				DynamicPortalExit desiredExit = ModConfig.UseOtherPortalForProjectileTeleport
+				DynamicPortalExit desiredExit = ModConfig.UseOtherPortalForProjectileTeleport.GetValue()
 					? desiredExitTransform.GetComponent<DynamicPortalExit>()
 					: exit;
 				
 				id.transform.position = desiredExitTransform.position - desiredExitTransform.forward;
 				
 				float multiplier = desiredExit.AssistedPortalTravel
-					? ModConfig.ProjectileEnemyGroundPortalBoostMultiplier
-					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier;
+					? ModConfig.ProjectileEnemyGroundPortalBoostMultiplier.GetValue()
+					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier.GetValue();
 				
-				rb.velocity = -desiredExitTransform.forward * ModConfig.PortalProjectileSpeed * multiplier;
+				rb.velocity = -desiredExitTransform.forward * 100.0f * multiplier;
 				return;
 			}
 

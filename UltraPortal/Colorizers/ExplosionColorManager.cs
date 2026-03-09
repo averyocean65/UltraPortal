@@ -17,15 +17,15 @@ namespace UltraPortal.Colorizers {
 
 		public void ColorExplosion() {
 			if (_renderer) {
-				float factor = Mathf.Pow(2, ModConfig.ExplosionEmissionIntensity);
-				_renderer.material.SetColor("_EmissionColor", ModConfig.ExplosionColor * factor);
+				float factor = Mathf.Pow(2, ModConfig.ExplosionEmissionIntensity.GetValue());
+				_renderer.material.SetColor("_EmissionColor", ModConfig.ExplosionColor.GetValue() * factor);
 			}
 			else {
 				Plugin.LogSource.LogWarning("Renderer was not found on explosion!");
 			}
 
 			if (_light) {
-				_light.color = ModConfig.ExplosionColor;
+				_light.color = ModConfig.ExplosionColor.GetValue();
 			}
 			else {
 				Plugin.LogSource.LogWarning("Light was not found on explosion!");
