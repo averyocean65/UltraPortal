@@ -34,8 +34,6 @@ namespace UltraPortal {
 		public DynamicPortalExit PassthroughEntry { get; private set; }
 		public DynamicPortalExit PassthroughExit { get; private set; }
 		
-		private bool _firingPassthroughEntry = true;
-		
 		public void SpawnPrimaryMirror(bool reinit = false) {
 			PrimaryMirror = SpawnPortalExit("Primary Mirror", PortalSide.Enter, _mirrorPortal, AssetPaths.Mirror);
 			if (PrimaryMirror) {
@@ -56,6 +54,38 @@ namespace UltraPortal {
 			if (reinit) {
 				InitMirror();
 			}
+
+			PassthroughEntry.OnInitialized += () => {
+				void Error() {
+					HudMessageReceiver.Instance.SendHudMessage("<color=red>Failed to spawn passthrough exit!</color>");
+					PassthroughEntry.Reset();
+					PassthroughExit.Reset();
+				}
+
+				if (Mathf.Approximately(PassthroughEntry.transform.position.y, DefaultPortalPosition.y)) {
+					Error();
+					return;
+				}
+
+				Vector3 forwardPos = PassthroughEntry.transform.position + PassthroughEntry.transform.forward * 5.0f;
+				bool success = Physics.Raycast(forwardPos, -PassthroughEntry.transform.forward, out var hit, 5.5f,
+					EnvironmentLayer, QueryTriggerInteraction.Ignore);
+
+				if (!hit.collider || !success) {
+					Error();
+					return;
+				}
+
+				bool isInRoom = Physics.Raycast(hit.point, hit.normal, out var info, 100f, EnvironmentLayer,
+					QueryTriggerInteraction.Ignore);
+
+				if (!isInRoom) {
+					Error();
+					return;
+				}
+
+				PassthroughExit.Initialize(_passthroughPortal, PortalSide.Exit, hit);
+			};
 		}
 		
 		public void SpawnPassthroughExit(bool reinit = false) {
@@ -94,10 +124,12 @@ namespace UltraPortal {
 			};
 
 			OnSecondaryFire += () => {
-				FireProjectile(_firingPassthroughEntry ? PassthroughEntry : PassthroughExit, _passthroughPortal);
-				_firingPassthroughEntry = !_firingPassthroughEntry;
+				void Error() {
+					HudMessageReceiver.Instance.SendHudMessage("<color=red>Failed to spawn passthrough portal!</color>");
+				}
 				
 				_animator.Play(SecondaryFireAnimHash);
+				FireProjectile(PassthroughEntry, _passthroughPortal);
 			};
 			
 			UpdateLastProjectile(PrimaryMirror.side);
@@ -128,12 +160,20 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			if (!PrimaryMirror)
+			if (!PrimaryMirror || !PassthroughEntry || !PassthroughExit)
 				return;
 			
 			PrimaryMirror.Reset();
 			PrimaryMirror.SetPassable(false);
 			PrimaryMirror.transform.position = DefaultPortalPosition;
+			
+			PassthroughEntry.Reset();
+			PassthroughEntry.SetPassable(false);
+			PassthroughEntry.transform.position = DefaultPortalPosition;
+			
+			PassthroughExit.Reset();
+			PassthroughExit.SetPassable(false);
+			PassthroughExit.transform.position = DefaultPortalPosition;
 		}
 	}
 }
