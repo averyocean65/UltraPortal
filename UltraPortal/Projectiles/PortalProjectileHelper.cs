@@ -32,11 +32,11 @@ namespace UltraPortal.Projectiles {
 				}
 				
 				Rigidbody rb = id.gameObject.GetComponent<Rigidbody>();
-				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport
+				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport.GetValue()
 					? OtherExitTransform
 					: exit.transform;
 				
-				DynamicPortalExit desiredExit = ModConfig.UseOtherPortalForProjectileTeleport
+				DynamicPortalExit desiredExit = ModConfig.UseOtherPortalForProjectileTeleport.GetValue()
 					? desiredExitTransform.GetComponent<DynamicPortalExit>()
 					: exit;
 				
