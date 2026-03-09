@@ -32,7 +32,7 @@ namespace UltraPortal {
         }
 
         public void SpawnEntry(bool reinit = false) {
-	        PortalEntry = SpawnPortal("Entry", PortalSide.Enter, _portal);
+	        PortalEntry = SpawnPortalExit("Entry", PortalSide.Enter, _portal);
 	        if (PortalEntry) {
 		        PortalEntry.OnInitialized += UpdatePortalPassable;
 	        }
@@ -44,7 +44,7 @@ namespace UltraPortal {
         }
 
         public void SpawnExit(bool reinit = false) {
-	        PortalExit = SpawnPortal("Exit", PortalSide.Exit, _portal);
+	        PortalExit = SpawnPortalExit("Exit", PortalSide.Exit, _portal);
 	        if (PortalExit) {
 		        PortalExit.OnInitialized += UpdatePortalPassable;
 	        }
@@ -113,37 +113,39 @@ namespace UltraPortal {
 		}
 
 		private void InitPortals() {
-			_portalObject = new GameObject("Portal") {
-				layer = PortalLayer
-			};
+			// _portalObject = new GameObject("Portal") {
+			// 	layer = PortalLayer
+			// };
+   //
+			// _portal = _portalObject.AddComponent<Portal>(); 
+			//
+			// _portal.additionalSampleThreshold = 0;
+			// _portal.allowCameraTraversals = true;
+			// _portal.appearsInRecursions = true;
+			// _portal.canHearAudio = false;
+			// _portal.canSeeItself = true;
+			// _portal.canSeePortalLayer = true;
+			// _portal.clippingMethod = PortalClippingMethod.Default;
+			// _portal.consumeAudio = false;
+			// _portal.disableRange = 0;
+			// _portal.enableOverrideFog = false;
+			// _portal.enterOffset = 1.5f;
+			// _portal.entry = PortalEntry.transform;
+   //          _portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
+   //          
+			// _portal.exit = PortalExit.transform;
+			// _portal.exitOffset = 1.5f;
+			// _portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
+			//
+			// _portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
+			// _portal.fakeVPMatrix = Matrix4x4.zero;
+			// _portal.mirror = false;
+			// _portal.shape = new PlaneShape {
+			// 	width = _portalSize.x,
+			// 	height = _portalSize.y
+			// };
 
-			_portal = _portalObject.AddComponent<Portal>(); 
-			
-			_portal.additionalSampleThreshold = 0;
-			_portal.allowCameraTraversals = true;
-			_portal.appearsInRecursions = true;
-			_portal.canHearAudio = false;
-			_portal.canSeeItself = true;
-			_portal.canSeePortalLayer = true;
-			_portal.clippingMethod = PortalClippingMethod.Default;
-			_portal.consumeAudio = false;
-			_portal.disableRange = 0;
-			_portal.enableOverrideFog = false;
-			_portal.enterOffset = 1.5f;
-			_portal.entry = PortalEntry.transform;
-            _portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
-            
-			_portal.exit = PortalExit.transform;
-			_portal.exitOffset = 1.5f;
-			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
-			
-			_portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
-			_portal.fakeVPMatrix = Matrix4x4.zero;
-			_portal.mirror = false;
-			_portal.shape = new PlaneShape {
-				width = _portalSize.x,
-				height = _portalSize.y
-			};
+			_portal = CreatePortal("Portal", PortalEntry.transform, PortalExit.transform, _portalSize);
 		}
 
 		public void Reset() {

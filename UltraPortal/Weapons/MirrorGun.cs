@@ -17,11 +17,11 @@ namespace UltraPortal {
 		private Animator _animator;
 
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
-		private Portal _portal;
+		private Portal _mirrorPortal;
 		public DynamicPortalExit PrimaryMirror { get; private set; }
-
+		
 		public void SpawnPrimaryMirror(bool reinit = false) {
-			PrimaryMirror = SpawnPortal("Primary Mirror", PortalSide.Enter, _portal, AssetPaths.Mirror);
+			PrimaryMirror = SpawnPortalExit("Primary Mirror", PortalSide.Enter, _mirrorPortal, AssetPaths.Mirror);
 			if (PrimaryMirror) {
 				PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
 			}
@@ -50,47 +50,51 @@ namespace UltraPortal {
 			SpawnPrimaryMirror();
 			
 			OnPrimaryFire += () => {
-				FireProjectile(PrimaryMirror, _portal);
+				FireProjectile(PrimaryMirror, _mirrorPortal);
 				_animator.Play(PrimaryFireAnimHash);
 			};
+
+			OnSecondaryFire += () => { };
 			
 			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
 		}
 		
 		private void InitMirror() {
-			GameObject mirrorObject = new GameObject("Mirror Head") {
-				layer = PortalLayer
-			};
+			// GameObject mirrorObject = new GameObject("Mirror Head") {
+			// 	layer = PortalLayer
+			// };
+			//
+			// _mirrorPortal = mirrorObject.AddComponent<Portal>();
+			//
+			// _mirrorPortal.additionalSampleThreshold = 0;
+			// _mirrorPortal.allowCameraTraversals = true;
+			// _mirrorPortal.appearsInRecursions = true;
+			// _mirrorPortal.canHearAudio = false;
+			// _mirrorPortal.canSeeItself = true;
+			// _mirrorPortal.canSeePortalLayer = true;
+			// _mirrorPortal.clippingMethod = PortalClippingMethod.Default;
+			// _mirrorPortal.consumeAudio = false;
+			// _mirrorPortal.disableRange = 0;
+			// _mirrorPortal.enableOverrideFog = false;
+			// _mirrorPortal.enterOffset = 1.5f;
+			// _mirrorPortal.entry = PrimaryMirror.transform;
+			// _mirrorPortal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
+   //          
+			// _mirrorPortal.exit = PrimaryMirror.transform;
+			// _mirrorPortal.exitOffset = 1.5f;
+			// _mirrorPortal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
+			//
+			// _mirrorPortal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
+			// _mirrorPortal.fakeVPMatrix = Matrix4x4.zero;
+			// _mirrorPortal.mirror = false; // stuff can't travel through it otherwise :/
+			//
+			// _mirrorPortal.shape = new PlaneShape {
+			// 	width = _portalSize.x,
+			// 	height = _portalSize.y
+			// };
 
-			_portal = mirrorObject.AddComponent<Portal>();
-			
-			_portal.additionalSampleThreshold = 0;
-			_portal.allowCameraTraversals = true;
-			_portal.appearsInRecursions = true;
-			_portal.canHearAudio = false;
-			_portal.canSeeItself = true;
-			_portal.canSeePortalLayer = true;
-			_portal.clippingMethod = PortalClippingMethod.Default;
-			_portal.consumeAudio = false;
-			_portal.disableRange = 0;
-			_portal.enableOverrideFog = false;
-			_portal.enterOffset = 1.5f;
-			_portal.entry = PrimaryMirror.transform;
-			_portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
-            
-			_portal.exit = PrimaryMirror.transform;
-			_portal.exitOffset = 1.5f;
-			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
-			
-			_portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
-			_portal.fakeVPMatrix = Matrix4x4.zero;
-			_portal.mirror = false; // stuff can't travel through it otherwise :/
-			
-			_portal.shape = new PlaneShape {
-				width = _portalSize.x,
-				height = _portalSize.y
-			};
+			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
 		}
 
 		public override bool ShouldBeReset() {
@@ -106,7 +110,8 @@ namespace UltraPortal {
 				return;
 			
 			PrimaryMirror.Reset();
-			PrimaryMirror.transform.position = PortalGun.DefaultPortalPosition;
+			PrimaryMirror.SetPassable(false);
+			PrimaryMirror.transform.position = DefaultPortalPosition;
 		}
 	}
 }

@@ -5,7 +5,6 @@ using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UnityEngine;
-using UnityEngine.Animations;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
@@ -109,18 +108,36 @@ namespace UltraPortal {
 				// 	return;
 				// }
 				
-				ToggleColliders(toggle, collider, assistance);
+				ToggleColliders(toggle, collider);
 			};
 		}
 
-		private void AddCollider(Collider c) {
+		private void AddCollider(Collider c, bool checkChildren = true) {
 			if (!c) {
 				return;
 			}
+
+			if (_colliders.Contains(c)) {
+				return;
+			}
 			
-			Plugin.LogSource.LogInfo($"Adding collider: {c.name}");
+			Plugin.LogSource.LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.Add(c);
+
+			if (checkChildren) {
+				Collider[] children = c.GetComponentsInChildren<Collider>();
+				foreach (var child in children) {
+					Plugin.LogSource.LogInfo($"Child ({child.name}) layer: {LayerMask.LayerToName(child.gameObject.layer)}");
+					
+					if (!EnvironmentLayer.Contains(child.gameObject.layer)) {
+						Plugin.LogSource.LogInfo($"Rejected: {child.name}");
+						continue;
+					}
+					
+					AddCollider(child, false);
+				}
+			}
 		}
 		
 		private void GetNearbyCollider() {
@@ -139,7 +156,7 @@ namespace UltraPortal {
 					continue;
 				}
 				
-				AddCollider(hit.collider);
+				AddCollider(hit.collider, false);
 			}
 		}
 
@@ -149,25 +166,31 @@ namespace UltraPortal {
 			AssistedPortalTravel = dot > 0.6f;
 		}
 
+		private void Cleanup() {
+			if (_currentTravellers == null) {
+				_currentTravellers = new List<Collider>();
+				return;
+			}
+			
+			foreach (Collider leftover in _currentTravellers) {
+				if (!leftover) {
+					continue;
+				}
+
+				Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
+				ToggleColliders(false, leftover);
+			}
+			
+			_currentTravellers.Clear();
+		}
+
 		public void Initialize(Portal portal, PortalSide portalSide, RaycastHit hit) {
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
 			}
-
-			if (_colliders.Count > 0) {
-				foreach (Collider leftover in _currentTravellers) {
-					if (!leftover) {
-						continue;
-					}
-					
-					Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
-					ToggleColliders(false, leftover, true);
-					ToggleColliders(false, leftover, false);
-				}
-			}
-
-			_colliders = new List<Collider>();
+			
+			Cleanup();
 			
 			if(ModConfig.ShowPortalSpawnParticles.GetValue() && _particles)
 				_particles.Play();
@@ -178,7 +201,7 @@ namespace UltraPortal {
 			hostPortal = portal;
 			side = portalSide;
 
-			AddCollider(hit.collider);
+			AddCollider(hit.collider, true);
 			GetNearbyCollider();
 
 			if (OnInitialized != null) {
@@ -212,7 +235,7 @@ namespace UltraPortal {
 			}
 
 			// it is 2AM and I am tired, so I'm just hardcoding this edge-case
-			if (other.name == "Projectile Parry Zone") {
+			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") || other.name.Contains("Ground Check")) {
 				return;
 			}
 			
@@ -256,10 +279,12 @@ namespace UltraPortal {
 		private void OnDestroy() {
 			Destroy(_keepActive.gameObject);
 			
+			Cleanup();
+			
 			if (!hostGun || !hostPortal) {
 				return;
 			}
-
+			
 			if (hostGun is PortalGun portalGun) {
 				switch (side) {
 					case PortalSide.Enter:
@@ -308,10 +333,6 @@ namespace UltraPortal {
 			if (_colliders.Contains(other)) {
 				return;
 			}
-
-			if (!other.attachedRigidbody) {
-				return;
-			}
 			
 			if (_passableBlockage) {
 				if(_passableBlockage.activeSelf)
@@ -322,32 +343,36 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			foreach (var traveller in _currentTravellers) {
-				// just in case
-				ToggleColliders(false, traveller, false);
-				ToggleColliders(false, traveller, true);
-			}
-
-			_currentTravellers = new List<Collider>();
+			Cleanup();
 		}
 
-		private void ToggleColliders(bool value, Collider other, bool requiredAssistance) {
+		private void ToggleColliders(bool value, Collider other) {
 			if (_colliders == null || !other) {
 				return;
+			}
+
+			if (_colliders.Count < 1) {
+				return;
+			}
+			
+			if (other.GetComponent<NewMovement>()) { 
+				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
+				NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
+				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
+				NewMovement.Instance.enabled = !value;
+				NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
 			}
 			
 			foreach (Collider c in _colliders) {
 				if (!c) {
 					continue;
 				}
-
-				if (!requiredAssistance || !other.CompareTag("Player")) {
-					Physics.IgnoreCollision(c, other, value);
+				
+				if (!value) {
+					Plugin.LogSource.LogInfo($"Re-enabling collisions for: {other.name} and {c.name}");
 				}
-				else {
-				 	//c.gameObject.SetActive(!value);
-				    c.enabled = !value;
-				}
+				
+				Physics.IgnoreCollision(c, other, value);
 			}
 		}
 	}

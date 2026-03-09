@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UltraPortal {
     public static class Constants {
-        public static LayerMask EnvironmentLayer => LayerMaskDefaults.Get(LMD.Environment);
+        public static LayerMask EnvironmentLayer => LayerMaskDefaults.Get(LMD.Environment) | LayerMask.GetMask("PlayerOnly");
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 
         public const string PortalExplosionWeapon = "dynamicportal";

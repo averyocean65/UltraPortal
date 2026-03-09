@@ -38,7 +38,7 @@ namespace UltraPortal {
 		[Configgable("Visuals/Style")]
 		public static ConfigColor SafetyHazardColor = new ConfigColor(new Color(1, 0, 0));
 
-		[Configgable("Gameplay/Projectiles/Advanced", "Projectile Speed")]
+		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
 
 		[Configgable("Gameplay/Explosions")]
@@ -49,16 +49,16 @@ namespace UltraPortal {
 
 		// note: i also do not have a better name for these
 		
-		[Configgable("Gameplay/Projectiles/Advanced")]
+		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyGroundPortalBoostMultiplier = new ConfigInputField<float>(0.5f);
 		
-		[Configgable("Gameplay/Projectiles/Advanced")]
+		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyNormalPortalBoostMultiplier = new ConfigInputField<float>(2f);
 
-		[Configgable("Gameplay/Portals/Advanced", "Minimum Entry/Exit Speed (scene reload required)")]
+		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed (scene reload required)")]
 		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
 		
-		[Configgable("Gameplay/Portals/Advanced", "Portal Wall Offset")]
+		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
 	}
 }

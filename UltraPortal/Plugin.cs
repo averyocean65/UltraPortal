@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
     [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin {
-        private ConfigBuilder config;
+        public static ConfigBuilder ConfiggyConfig;
         
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
@@ -31,8 +32,9 @@ namespace UltraPortal {
             Harmony harmony = new Harmony(PluginInfo.Guid);
             harmony.PatchAll();
 
-            config = new ConfigBuilder(PluginInfo.Guid, PluginInfo.Name);
-            config.BuildAll();
+            ConfiggyConfig = new ConfigBuilder(PluginInfo.Guid, PluginInfo.Name);
+            ConfiggyConfig.BuildAll();
+            ConfiggyConfig.Rebuild();
 
             if (!Directory.Exists(AssetPaths.BundlePath)) {
                 Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {AssetPaths.BundlePath}; Trying other bundle path.");
@@ -40,6 +42,10 @@ namespace UltraPortal {
             }
             
             SceneManager.sceneLoaded += OnSceneLoaded;
+            ConfiggyConfig.OnConfigElementsChanged += elements => {
+                // configgy autosave no longer works, so this'll do.
+                ConfiggyConfig.SaveData();
+            };
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {

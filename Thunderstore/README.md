@@ -29,6 +29,6 @@ The Mirror Gun is the green variation, it allows you to shoot one big mirror por
 
 # Credits
 All art assets in the mod were either sourced from the ULTRAKILL game files or created by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).<br>
-A majority of the bugs were found by: 
+Most bug finds and ideas by: 
 - ballsoda
 - [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social)
