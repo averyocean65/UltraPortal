@@ -34,6 +34,8 @@ namespace UltraPortal {
 		public DynamicPortalExit PassthroughEntry { get; private set; }
 		public DynamicPortalExit PassthroughExit { get; private set; }
 		
+		private bool _firingPassthroughEntry = true;
+		
 		public void SpawnPrimaryMirror(bool reinit = false) {
 			PrimaryMirror = SpawnPortalExit("Primary Mirror", PortalSide.Enter, _mirrorPortal, AssetPaths.Mirror);
 			if (PrimaryMirror) {
@@ -67,7 +69,6 @@ namespace UltraPortal {
 			}
 		}
 		
-		
 		protected override void Start() {
 			base.Start();
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
@@ -92,7 +93,12 @@ namespace UltraPortal {
 				_animator.Play(PrimaryFireAnimHash);
 			};
 
-			OnSecondaryFire += () => { };
+			OnSecondaryFire += () => {
+				FireProjectile(_firingPassthroughEntry ? PassthroughEntry : PassthroughExit, _passthroughPortal);
+				_firingPassthroughEntry = !_firingPassthroughEntry;
+				
+				_animator.Play(SecondaryFireAnimHash);
+			};
 			
 			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
