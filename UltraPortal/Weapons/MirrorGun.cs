@@ -10,7 +10,18 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
-		
+
+		public bool BothPortalsInit {
+			get {
+				if (!PassthroughEntry || !PassthroughExit) {
+					return false;
+				}
+
+				return PassthroughEntry.transform.position.y > DefaultPortalPosition.y &&
+				       PassthroughExit.transform.position.y > DefaultPortalPosition.y;
+			}
+		}
+
 		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
 		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
 		
@@ -18,12 +29,37 @@ namespace UltraPortal {
 
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _mirrorPortal;
+		private Portal _passthroughPortal;
 		public DynamicPortalExit PrimaryMirror { get; private set; }
+		public DynamicPortalExit PassthroughEntry { get; private set; }
+		public DynamicPortalExit PassthroughExit { get; private set; }
 		
 		public void SpawnPrimaryMirror(bool reinit = false) {
 			PrimaryMirror = SpawnPortalExit("Primary Mirror", PortalSide.Enter, _mirrorPortal, AssetPaths.Mirror);
 			if (PrimaryMirror) {
 				PrimaryMirror.OnInitialized += () => PrimaryMirror.SetPassable(true);
+			}
+			
+			if (reinit) {
+				InitMirror();
+			}
+		}
+		
+		public void SpawnPassthroughEntry(bool reinit = false) {
+			PassthroughEntry = SpawnPortalExit("Passthrough Entry", PortalSide.Enter, _passthroughPortal, AssetPaths.Mirror);
+			if (PassthroughEntry) {
+				PassthroughEntry.OnInitialized += UpdatePassthroughPassable;
+			}
+			
+			if (reinit) {
+				InitMirror();
+			}
+		}
+		
+		public void SpawnPassthroughExit(bool reinit = false) {
+			PassthroughExit = SpawnPortalExit("Passthrough Exit", PortalSide.Exit, _passthroughPortal, AssetPaths.Mirror);
+			if (PassthroughExit) {
+				PassthroughExit.OnInitialized += UpdatePassthroughPassable;
 			}
 			
 			if (reinit) {
@@ -48,6 +84,8 @@ namespace UltraPortal {
 			}
 			
 			SpawnPrimaryMirror();
+			SpawnPassthroughEntry();
+			SpawnPassthroughExit();
 			
 			OnPrimaryFire += () => {
 				FireProjectile(PrimaryMirror, _mirrorPortal);
@@ -59,50 +97,28 @@ namespace UltraPortal {
 			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
 		}
-		
-		private void InitMirror() {
-			// GameObject mirrorObject = new GameObject("Mirror Head") {
-			// 	layer = PortalLayer
-			// };
-			//
-			// _mirrorPortal = mirrorObject.AddComponent<Portal>();
-			//
-			// _mirrorPortal.additionalSampleThreshold = 0;
-			// _mirrorPortal.allowCameraTraversals = true;
-			// _mirrorPortal.appearsInRecursions = true;
-			// _mirrorPortal.canHearAudio = false;
-			// _mirrorPortal.canSeeItself = true;
-			// _mirrorPortal.canSeePortalLayer = true;
-			// _mirrorPortal.clippingMethod = PortalClippingMethod.Default;
-			// _mirrorPortal.consumeAudio = false;
-			// _mirrorPortal.disableRange = 0;
-			// _mirrorPortal.enableOverrideFog = false;
-			// _mirrorPortal.enterOffset = 1.5f;
-			// _mirrorPortal.entry = PrimaryMirror.transform;
-			// _mirrorPortal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
-   //          
-			// _mirrorPortal.exit = PrimaryMirror.transform;
-			// _mirrorPortal.exitOffset = 1.5f;
-			// _mirrorPortal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
-			//
-			// _mirrorPortal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
-			// _mirrorPortal.fakeVPMatrix = Matrix4x4.zero;
-			// _mirrorPortal.mirror = false; // stuff can't travel through it otherwise :/
-			//
-			// _mirrorPortal.shape = new PlaneShape {
-			// 	width = _portalSize.x,
-			// 	height = _portalSize.y
-			// };
 
+		private void UpdatePassthroughPassable() {
+			if (PassthroughEntry)
+				PassthroughEntry.SetPassable(BothPortalsInit);
+
+			if (PassthroughExit)
+				PassthroughExit.SetPassable(BothPortalsInit);
+		}
+
+		private void InitMirror() {
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
+			_passthroughPortal = CreatePortal("Passthrough Portal", PassthroughEntry.transform, PassthroughExit.transform, _portalSize);
 		}
 
 		public override bool ShouldBeReset() {
-			if (!PrimaryMirror) {
+			if (!PrimaryMirror || !PassthroughEntry || !PassthroughExit) {
 				return true;
 			}
 
-			return PrimaryMirror.ShouldBeDisabled();
+			return PrimaryMirror.ShouldBeDisabled() &&
+			       PassthroughEntry.ShouldBeDisabled() &&
+			       PassthroughExit.ShouldBeDisabled();
 		}
 
 		public void Reset() {

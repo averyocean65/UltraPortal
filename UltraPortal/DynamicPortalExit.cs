@@ -295,7 +295,19 @@ namespace UltraPortal {
 						break;
 				}
 			} else if (hostGun is MirrorGun mirrorGun) {
-				mirrorGun.SpawnPrimaryMirror(true);
+				if (hostPortal.entry == transform && hostPortal.exit == transform) {
+					mirrorGun.SpawnPrimaryMirror(true);
+				}
+				else {
+					switch (side) {
+						case PortalSide.Enter:
+							mirrorGun.SpawnPassthroughEntry(true);
+							break;
+						case PortalSide.Exit:
+							mirrorGun.SpawnPassthroughExit(true);
+							break;
+					}
+				}
 			}
 		}
 
