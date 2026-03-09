@@ -131,11 +131,11 @@ namespace UltraPortal {
 			_portal.enableOverrideFog = false;
 			_portal.enterOffset = 1.5f;
 			_portal.entry = PortalEntry.transform;
-            _portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
+            _portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
             
 			_portal.exit = PortalExit.transform;
 			_portal.exitOffset = 1.5f;
-			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
+			_portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
 			
 			_portal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
 			_portal.fakeVPMatrix = Matrix4x4.zero;

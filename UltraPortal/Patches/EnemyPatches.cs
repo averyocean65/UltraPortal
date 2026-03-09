@@ -20,7 +20,7 @@ namespace UltraPortal {
 			if (__instance.hitterWeapons.Contains(PortalExplosionWeapon)) {
 				Plugin.LogSource.LogInfo("using safety hazard style!");
 				StyleHUD.Instance.AddPoints(StyleSafetyHazardPoints, StyleSafetyHazardId,
-					prefix: $"<color=#{ColorUtility.ToHtmlStringRGB(ModConfig.SafetyHazardColor)}>",
+					prefix: $"<color=#{ColorUtility.ToHtmlStringRGB(ModConfig.SafetyHazardColor.GetValue())}>",
 					postfix: "</color>");
 			}
 			

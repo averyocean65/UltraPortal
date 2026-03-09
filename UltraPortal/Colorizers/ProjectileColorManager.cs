@@ -14,20 +14,20 @@ namespace UltraPortal.Colorizers {
 		private Color DesiredColor {
 			get {
 				if (side == PortalSide.Enter) {
-					return ModConfig.PrimaryPortalColor;
+					return ModConfig.PrimaryPortalColor.GetValue();
 				}
 
-				return ModConfig.SecondaryPortalColor;
+				return ModConfig.SecondaryPortalColor.GetValue();
 			}
 		}
 		
 		private Color DesiredParticleColor {
 			get {
 				if (side == PortalSide.Enter) {
-					return ModConfig.PrimaryPortalParticleColor;
+					return ModConfig.PrimaryPortalParticleColor.GetValue();
 				}
 
-				return ModConfig.SecondaryPortalParticleColor;
+				return ModConfig.SecondaryPortalParticleColor.GetValue();
 			}
 		}
 		

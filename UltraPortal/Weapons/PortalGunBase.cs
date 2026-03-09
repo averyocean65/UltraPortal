@@ -70,7 +70,7 @@ namespace UltraPortal {
 
 		private bool triggeredPortalReset = false;
 		protected virtual void FireProjectile(DynamicPortalExit exit, Portal portal) {
-			Projectile projectile = SpawnProjectileFromAsset(AssetPaths.Projectile, ModConfig.PortalProjectileSpeed);
+			Projectile projectile = SpawnProjectileFromAsset(AssetPaths.Projectile, ModConfig.PortalProjectileSpeed.GetValue());
 			PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 			helper.exit = exit;
 			helper.portal = portal;
