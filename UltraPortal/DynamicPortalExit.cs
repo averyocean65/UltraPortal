@@ -6,6 +6,7 @@ using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UnityEngine;
 using static UltraPortal.Constants;
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	// i sincerely apologize for the code inside of this class, i will clean it up someday, i promise.
@@ -346,7 +347,27 @@ namespace UltraPortal {
 			Cleanup();
 		}
 
-		private void ToggleColliders(bool value, Collider other) {
+		private void HandleSpecialTraveller(bool value, Collider other, bool assisted) {
+			if (!assisted) {
+				return;
+			}	
+			
+			if (other.GetComponent<NewMovement>()) { 
+				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
+				NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
+				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
+				NewMovement.Instance.enabled = !value;
+				NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
+				return;
+			}
+
+			EnemyIdentifier eid = other.GetComponent<EnemyIdentifier>();
+			if (eid) {
+				other.excludeLayers = value ? LayerMaskDefaults.Get(LMD.Environment) : new LayerMask();
+			}
+		}
+
+		private void ToggleColliders(bool value, Collider other, bool assisted) {
 			if (_colliders == null || !other) {
 				return;
 			}
@@ -355,23 +376,16 @@ namespace UltraPortal {
 				return;
 			}
 			
-			if (other.GetComponent<NewMovement>()) { 
-				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
-				NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
-				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
-				NewMovement.Instance.enabled = !value;
-				NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
-			}
-			
 			foreach (Collider c in _colliders) {
 				if (!c) {
 					continue;
 				}
 				
 				if (!value) {
-					Plugin.LogSource.LogInfo($"Re-enabling collisions for: {other.name} and {c.name}");
+					LogInfo($"Re-enabling collisions for: {other.name} and {c.name}");
 				}
 				
+				HandleSpecialTraveller(value, other, assisted);
 				Physics.IgnoreCollision(c, other, value);
 			}
 		}

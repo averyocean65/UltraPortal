@@ -8,6 +8,9 @@ namespace UltraPortal {
 
 		// note: i do not have a better name for this
 		
+		[Configgable("Debugging", "Verbose Logging (may cause performance issues)")]
+		public static ConfigToggle VerboseLogging = new ConfigToggle(true);
+		
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
 
