@@ -36,6 +36,9 @@ namespace UltraPortal {
 		public static ConfigToggle UseEmission = new ConfigToggle(true);
 		
 		[Configgable("Visuals")]
+		public static ConfigToggle ShowPortalBorders = new ConfigToggle(true);
+		
+		[Configgable("Visuals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
 		
 		[Configgable("Visuals/Style")]

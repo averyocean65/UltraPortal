@@ -29,6 +29,11 @@ namespace UltraPortal.Colorizers {
                 : ModConfig.SecondaryPortalColor.GetValue();
             
             foreach (Renderer r in _renderers) {
+                r.enabled = ModConfig.ShowPortalBorders.GetValue();
+                if (!r.enabled) {
+                    return;
+                }
+                
                 r.material.SetColor("_Color", color);
 
                 if (ModConfig.UseEmission.GetValue()) {
