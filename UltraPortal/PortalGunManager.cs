@@ -83,7 +83,7 @@ namespace UltraPortal {
 			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
 
-			EnemyPatches.AlreadyDealtWith.Clear();
+			EnemyPatches.AlreadyAppliedStyle.Clear();
 				
 			Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
 				

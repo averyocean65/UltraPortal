@@ -63,6 +63,7 @@ namespace UltraPortal {
                 
                 // Register styles
                 StyleHUD.Instance.RegisterStyleItem(StyleSafetyHazardId, StyleSafetyHazardName);
+                StyleHUD.Instance.RegisterStyleItem(StylePortalProjectileId, StylePortalProjectileName);
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

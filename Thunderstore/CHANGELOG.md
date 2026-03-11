@@ -6,7 +6,11 @@
 - Portals now reset colliders when they're destroyed.
 - Increased size of portal gun projectile to decrease collision errors at higher projectile speeds.
 
-## Config
+### Gameplay
+- Change *+SAFETY HAZARD* from 500 points to 100 points.
+- Added new style bonus *+TELEPORTATION*.
+
+### Config
 - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
 - Added `Debug` category to configuration.
 - Added ability to hide portal borders.
