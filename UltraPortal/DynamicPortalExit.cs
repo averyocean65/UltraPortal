@@ -109,7 +109,7 @@ namespace UltraPortal {
 				// 	return;
 				// }
 				
-				ToggleColliders(toggle, collider);
+				ToggleColliders(toggle, collider, assistance);
 			};
 		}
 
@@ -178,8 +178,8 @@ namespace UltraPortal {
 					continue;
 				}
 
-				Plugin.LogSource.LogInfo($"Resetting: {leftover.name}");
-				ToggleColliders(false, leftover);
+				LogInfo($"Resetting: {leftover.name}");
+				ToggleColliders(false, leftover, true);
 			}
 			
 			_currentTravellers.Clear();
