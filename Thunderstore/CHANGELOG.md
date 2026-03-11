@@ -9,7 +9,7 @@
 ## Config
 - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
 - Added `Debug` category to configuration.
-- Added ability to hide portal borders in `Visuals`.
+- Added ability to hide portal borders.
 
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.

@@ -61,39 +61,6 @@ namespace UltraPortal {
 		}
 		
 		private void InitMirror() {
-			// GameObject mirrorObject = new GameObject("Mirror Head") {
-			// 	layer = PortalLayer
-			// };
-			//
-			// _mirrorPortal = mirrorObject.AddComponent<Portal>();
-			//
-			// _mirrorPortal.additionalSampleThreshold = 0;
-			// _mirrorPortal.allowCameraTraversals = true;
-			// _mirrorPortal.appearsInRecursions = true;
-			// _mirrorPortal.canHearAudio = false;
-			// _mirrorPortal.canSeeItself = true;
-			// _mirrorPortal.canSeePortalLayer = true;
-			// _mirrorPortal.clippingMethod = PortalClippingMethod.Default;
-			// _mirrorPortal.consumeAudio = false;
-			// _mirrorPortal.disableRange = 0;
-			// _mirrorPortal.enableOverrideFog = false;
-			// _mirrorPortal.enterOffset = 1.5f;
-			// _mirrorPortal.entry = PrimaryMirror.transform;
-			// _mirrorPortal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
-   //          
-			// _mirrorPortal.exit = PrimaryMirror.transform;
-			// _mirrorPortal.exitOffset = 1.5f;
-			// _mirrorPortal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
-			//
-			// _mirrorPortal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
-			// _mirrorPortal.fakeVPMatrix = Matrix4x4.zero;
-			// _mirrorPortal.mirror = false; // stuff can't travel through it otherwise :/
-			//
-			// _mirrorPortal.shape = new PlaneShape {
-			// 	width = _portalSize.x,
-			// 	height = _portalSize.y
-			// };
-
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
 		}
 

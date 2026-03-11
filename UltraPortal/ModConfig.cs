@@ -36,14 +36,14 @@ namespace UltraPortal {
 		public static ConfigToggle UseEmission = new ConfigToggle(true);
 		
 		[Configgable("Visuals")]
-		public static ConfigToggle UsePortalBorders = new ConfigToggle(true);
-		
-		[Configgable("Visuals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
 		
 		[Configgable("Visuals/Style")]
 		public static ConfigColor SafetyHazardColor = new ConfigColor(new Color(1, 0, 0));
 
+		[Configgable]
+		public static ConfigToggle UsePortalBorders = new ConfigToggle(true);
+		
 		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
 

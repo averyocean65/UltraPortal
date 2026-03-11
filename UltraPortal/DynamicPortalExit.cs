@@ -117,22 +117,18 @@ namespace UltraPortal {
 			if (!c) {
 				return;
 			}
-
-			if (_colliders.Contains(c)) {
-				return;
-			}
 			
-			Plugin.LogSource.LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
+			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
-			_colliders.Add(c);
+			_colliders.SafeAdd(c);
 
 			if (checkChildren) {
 				Collider[] children = c.GetComponentsInChildren<Collider>();
 				foreach (var child in children) {
-					Plugin.LogSource.LogInfo($"Child ({child.name}) layer: {LayerMask.LayerToName(child.gameObject.layer)}");
+					LogVerboseInfo($"Child ({child.name}) layer: {LayerMask.LayerToName(child.gameObject.layer)}");
 					
 					if (!EnvironmentLayer.Contains(child.gameObject.layer)) {
-						Plugin.LogSource.LogInfo($"Rejected: {child.name}");
+						LogVerboseWarning($"Rejected: {child.name}");
 						continue;
 					}
 					
@@ -214,10 +210,6 @@ namespace UltraPortal {
 		}
 
 		private void OnTriggerEnter(Collider other) {
-			if (_currentTravellers.Contains(other)) {
-				return;
-			}
-			
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -261,10 +253,10 @@ namespace UltraPortal {
 				}
 
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
-					_currentTravellers.Add(attachedCollider);
+					_currentTravellers.SafeAdd(attachedCollider);
 				}
 				
-				_currentTravellers.Add(other);
+				_currentTravellers.SafeAdd(other);
 			}
 			
 			if (_passableBlockage) {
@@ -278,9 +270,10 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
-			Destroy(_keepActive.gameObject);
-			
 			Cleanup();
+			LogInfo("FINISHED CLEANUP!");
+			
+			Destroy(_keepActive.gameObject);
 			
 			if (!hostGun || !hostPortal) {
 				return;
@@ -311,14 +304,14 @@ namespace UltraPortal {
 			_currentTravellers = _currentTravellers.Where(x => x != null && x.gameObject.activeInHierarchy).ToList();
 
 			_currentTravellers.ForEach(c => {
-				Plugin.LogSource.LogInfo($"{name} has traveller: {c.name}");
+				LogVerboseInfo($"{name} has traveller: {c.name}");
 			});
 			return _currentTravellers.Count < 1;
 		}
 
 		public void SetPassable(bool canPass) {
 			if(!_passableBlockage) {
-				Plugin.LogSource.LogInfo(
+				LogWarning(
 					$"{name} doesn't have a portal blockage defined! Ensure your blockage is called: \"{ExpectedPassableName}\"");
 				return;
 			}
@@ -327,10 +320,6 @@ namespace UltraPortal {
 		}
 
 		private void OnTriggerExit(Collider other) {
-			if (_currentTravellers.Contains(other)) {
-				_currentTravellers.Remove(other);
-			}
-			
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -341,6 +330,7 @@ namespace UltraPortal {
 			}
 			
 			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
+			_currentTravellers.SafeRemove(other);
 		}
 
 		public void Reset() {
@@ -348,25 +338,24 @@ namespace UltraPortal {
 		}
 
 		private void HandleSpecialTraveller(bool value, Collider other, bool assisted) {
-			if (!assisted) {
-				return;
-			}	
-			
-			if (other.GetComponent<NewMovement>()) { 
+			if (other.GetComponent<NewMovement>()) {
+				if (assisted) {
+					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
+					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
+					NewMovement.Instance.enabled = !value;
+				}
+				
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
-				NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
-				NewMovement.Instance.enabled = !value;
-				NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
 				return;
 			}
 
 			EnemyIdentifier eid = other.GetComponent<EnemyIdentifier>();
 			if (eid) {
-				other.excludeLayers = value ? LayerMaskDefaults.Get(LMD.Environment) : new LayerMask();
+				other.attachedRigidbody.detectCollisions = !value;
 			}
 		}
-
+		
 		private void ToggleColliders(bool value, Collider other, bool assisted) {
 			if (_colliders == null || !other) {
 				return;

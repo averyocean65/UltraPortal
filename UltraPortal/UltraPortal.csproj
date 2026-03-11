@@ -92,6 +92,7 @@
         <Compile Include="DynamicPortalExit.cs" />
         <Compile Include="DynamicPortalTooClose.cs" />
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
+        <Compile Include="Extensions\ListExtensions.cs" />
         <Compile Include="GunPosition.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\EnemyPatches.cs" />
