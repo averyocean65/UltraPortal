@@ -5,9 +5,10 @@
 - Ground portals now detect the proper colliders in the cybergrind. ([see issue](https://github.com/averyocean65/UltraPortal/issues/14))
 - Portals now reset colliders when they're destroyed.
 - Increased size of portal gun projectile to decrease collision errors at higher projectile speeds.
+- *+SAFETY HAZARD* now gets shown reliably.
 
 ### Gameplay
-- Change *+SAFETY HAZARD* from 500 points to 100 points.
+- Changed *+SAFETY HAZARD* from 500 points to 100 points.
 - Added new style bonus *+TELEPORTATION*.
 
 ### Config
