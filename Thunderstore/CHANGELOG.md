@@ -11,6 +11,11 @@
 - Added `Debug` category to configuration.
 - Added ability to hide portal borders.
 
+## Audio
+- Added sound effects for portal guns.
+  - Portal Open
+  - Portal Close
+
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.
 - Enemies travelling through portals is unreliable.
