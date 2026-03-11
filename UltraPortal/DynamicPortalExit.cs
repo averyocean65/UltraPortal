@@ -352,7 +352,10 @@ namespace UltraPortal {
 
 			EnemyIdentifier eid = other.GetComponent<EnemyIdentifier>();
 			if (eid) {
-				other.attachedRigidbody.detectCollisions = !value;
+				if (!assisted) {
+					value = true;
+				}
+				other.attachedRigidbody.detectCollisions = value;
 			}
 		}
 		
