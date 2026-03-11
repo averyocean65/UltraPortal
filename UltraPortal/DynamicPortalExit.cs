@@ -207,6 +207,13 @@ namespace UltraPortal {
 			
 			_colorManager.ColorPortal();
 			_keepActive.target = gameObject;
+
+			if (!AudioManager.Instance) {
+				LogError("Audio Manager is not present in scene!");
+				return;
+			}
+			
+			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, PortalCenter);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -270,6 +277,8 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
+			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
+			
 			Cleanup();
 			LogInfo("FINISHED CLEANUP!");
 			
@@ -334,6 +343,7 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
+			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
 			Cleanup();
 		}
 
