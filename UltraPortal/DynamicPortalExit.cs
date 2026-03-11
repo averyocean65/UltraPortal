@@ -382,7 +382,7 @@ namespace UltraPortal {
 				}
 				
 				if (!value) {
-					LogInfo($"Re-enabling collisions for: {other.name} and {c.name}");
+					LogVerboseInfo($"Re-enabling collisions for: {other.name} and {c.name}");
 				}
 				
 				HandleSpecialTraveller(value, other, assisted);
