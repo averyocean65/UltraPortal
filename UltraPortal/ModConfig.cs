@@ -69,5 +69,8 @@ namespace UltraPortal {
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
+		
+		[Configgable("Gameplay/Portals/Experimental", "Twist Gun Angle")]
+		public static ConfigInputField<float> TwistGunAngle = new ConfigInputField<float>(90.0f);
 	}
 }

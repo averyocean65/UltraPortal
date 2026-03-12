@@ -41,7 +41,9 @@ namespace UltraPortal {
 				_playerNearExit = value;
 			}
 		}
-		
+
+		public bool IsInitialized => (transform.position - PortalGunBase.DefaultPortalPosition).sqrMagnitude > 1;
+
 		// PORTAL
 		public Portal hostPortal;
 		public PortalSide side;

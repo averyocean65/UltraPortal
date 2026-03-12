@@ -1,8 +1,6 @@
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
-using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public sealed class PortalGun : PortalGunBase {
@@ -21,8 +19,7 @@ namespace UltraPortal {
 			        return false;
 		        }
 
-		        return PortalEntry.transform.position.y > DefaultPortalPosition.y &&
-		               PortalExit.transform.position.y > DefaultPortalPosition.y;
+		        return PortalEntry.IsInitialized && PortalExit.IsInitialized;
 	        }
         }
 
