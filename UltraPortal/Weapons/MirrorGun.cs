@@ -11,11 +11,6 @@ namespace UltraPortal {
 	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 
-		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
-		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
-		
-		private Animator _animator;
-
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _mirrorPortal;
 		private Portal _flippedMirrorPortal;

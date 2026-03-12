@@ -7,9 +7,6 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	public sealed class PortalGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
-
-		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
-		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
  
 		private Portal _portal;
 		private GameObject _portalObject;
@@ -17,8 +14,6 @@ namespace UltraPortal {
 
 		public DynamicPortalExit PortalEntry { get; private set; }
 		public DynamicPortalExit PortalExit { get; private set; }
-       
-        private Animator _animator;
 
         public bool BothPortalsInit {
 	        get {

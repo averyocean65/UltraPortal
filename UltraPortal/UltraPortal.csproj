@@ -110,6 +110,7 @@
         <Compile Include="Weapons\MirrorGun.cs" />
         <Compile Include="Weapons\PortalGun.cs" />
         <Compile Include="Weapons\PortalGunBase.cs" />
+        <Compile Include="Weapons\TwistGun.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

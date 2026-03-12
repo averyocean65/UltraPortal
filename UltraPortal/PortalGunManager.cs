@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UnityEngine;
 
 using static UltraPortal.Constants;
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
@@ -19,6 +18,7 @@ namespace UltraPortal {
 
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
+		private TwistGun _twistGun;
 
 		private GunBase SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, GunPosition defaultPos, GunPosition middlePos) {
 			if (!type.IsSubclassOf(typeof(GunBase))) {
@@ -64,8 +64,11 @@ namespace UltraPortal {
 			_mirrorGun = SpawnPortalGun(typeof(MirrorGun), AssetPaths.MirrorGun, WeaponVariant.GreenVariant,
 				defaultPos, middlePos) as MirrorGun;
 
-			if (!_portalGun || !_mirrorGun) {
-				Plugin.LogSource.LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}");
+			_twistGun = SpawnPortalGun(typeof(TwistGun), AssetPaths.PortalGun, WeaponVariant.RedVariant, defaultPos,
+				middlePos) as TwistGun;
+
+			if (!_portalGun || !_mirrorGun || !_twistGun) {
+				LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}, Twist Gun?: {_twistGun}");
 			}
 			
 			if(ModConfig.IsEnabled.GetValue())
@@ -73,7 +76,8 @@ namespace UltraPortal {
 		}
 
 		private void AddToSlots() {
-			GunControl.Instance.slots.Add(new List<GameObject>() { _portalGun.gameObject, _mirrorGun.gameObject });
+			GunControl.Instance.slots.Add(new List<GameObject>()
+				{ _portalGun.gameObject, _mirrorGun.gameObject, _twistGun.gameObject });
 			PortalGunSlot = GunControl.Instance.slots.Count;
 			
 			GunControl.Instance.UpdateWeaponList();
