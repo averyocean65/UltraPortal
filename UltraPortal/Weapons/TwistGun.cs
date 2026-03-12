@@ -1,3 +1,4 @@
+using System;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
@@ -80,9 +81,27 @@ namespace UltraPortal {
         }
 
         public override bool ShouldBeReset() {
-            return true;
+            if (!Entry || !Exit) {
+                return true;
+            }
+
+            return Entry.ShouldBeDisabled() && Exit.ShouldBeDisabled();
         }
-        
+
+        public void Reset() {
+            if (Entry) {
+                Entry.Reset();
+                Entry.transform.position = DefaultPortalPosition;
+            }
+
+            if (Exit) {
+                Exit.Reset();
+                Exit.transform.position = DefaultPortalPosition;
+            }
+
+            UpdatePortalPassable();
+        }
+
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", Entry.transform, Exit.transform, _portalSize);
             PrimaryPortal.usePerceivedGravityOnEnter = true;

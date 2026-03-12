@@ -107,7 +107,7 @@ namespace UltraPortal {
 			explosion.harmless = false;
 		}
 
-		public void DestroyPortals(bool isMirrorGun) {
+		public void DestroyPortals(WeaponVariant variant) {
 			void Explode(Vector3 position) {
 				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
@@ -134,8 +134,12 @@ namespace UltraPortal {
 			
 			bool gunShouldReset = true;
 
-			if (!isMirrorGun) {
-				if (_portalGun) {
+			switch (variant) {
+				case WeaponVariant.BlueVariant: {
+					if (!_portalGun) {
+						break;
+					}
+					
 					gunShouldReset = _portalGun.ShouldBeReset();
 					if (!gunShouldReset) {
 						Explode(_portalGun.PortalEntry.PortalCenter);
@@ -143,18 +147,36 @@ namespace UltraPortal {
 					}
 
 					_portalGun.Reset();
-				}
 
-				return;
-			}
-
-			if (_mirrorGun) {
-				gunShouldReset = _mirrorGun.ShouldBeReset();
-				if (!gunShouldReset) {
-					Explode(_mirrorGun.PrimaryMirror.PortalCenter);
+					return;
 				}
+				case WeaponVariant.GreenVariant: {
+					if (!_mirrorGun) {
+						break;
+					}
+					
+					gunShouldReset = _mirrorGun.ShouldBeReset();
+					if (!gunShouldReset) {
+						Explode(_mirrorGun.PrimaryMirror.PortalCenter);
+					}
 				
-				_mirrorGun.Reset();
+					_mirrorGun.Reset();
+					break;
+				}
+				case WeaponVariant.RedVariant: {
+					if (!_twistGun) {
+						break;
+					}
+					
+					gunShouldReset = _twistGun.ShouldBeReset();
+					if (!gunShouldReset) {
+						Explode(_twistGun.Entry.PortalCenter);
+						Explode(_twistGun.Exit.PortalCenter);
+					}
+				
+					_twistGun.Reset();
+					break;
+				}
 			}
 		}
 		
@@ -168,8 +190,11 @@ namespace UltraPortal {
 				if (_wasEnabledLastFrame) {
 					_wasEnabledLastFrame = false;
 					
-					DestroyPortals(false);
-					DestroyPortals(true);
+					DestroyPortals(WeaponVariant.BlueVariant);
+					DestroyPortals(WeaponVariant.GreenVariant);
+					DestroyPortals(WeaponVariant.RedVariant);
+					DestroyPortals(WeaponVariant.GoldVariant);
+					
 					int previousSlot = GunControl.Instance.currentSlotIndex;
 					
 					// take out of the slots
@@ -218,11 +243,15 @@ namespace UltraPortal {
 			}
 
 			if (_portalGun.WantsToReset) {
-				DestroyPortals(false);
+				DestroyPortals(WeaponVariant.BlueVariant);
 			}
 			
 			if (_mirrorGun.WantsToReset) {
-				DestroyPortals(true);
+				DestroyPortals(WeaponVariant.GreenVariant);
+			}
+			
+			if (_twistGun.WantsToReset) {
+				DestroyPortals(WeaponVariant.RedVariant);
 			}
 
 			int slotIndex = PortalGunSlot - 1;
