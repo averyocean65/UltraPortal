@@ -9,7 +9,8 @@
 
 ### Gameplay
 - Changed *+SAFETY HAZARD* from 500 points to 100 points.
-- Added new style bonus *+TELEPORTATION*.
+- Added new style bonus *+DISPLACEMENT*.
+- Added alternative fire for mirror gun.
 
 ### Config
 - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.

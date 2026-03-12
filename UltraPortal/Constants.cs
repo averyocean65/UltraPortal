@@ -16,7 +16,7 @@ namespace UltraPortal {
         public const int StyleSafetyHazardPoints = 100;
         
         public const string StylePortalProjectileId = "style.ultraportal.projectiled";
-        public const string StylePortalProjectileName = "TELEPORTATION";
+        public const string StylePortalProjectileName = "DISPLACEMENT";
         public const int StylePortalProjectilePoints = 25;
         
 
