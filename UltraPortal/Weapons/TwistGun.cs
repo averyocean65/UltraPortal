@@ -6,6 +6,7 @@ namespace UltraPortal {
         public Portal PrimaryPortal { get; private set; }
         public DynamicPortalExit Entry { get; private set; }
         public DynamicPortalExit Exit { get; private set; }
+        
         private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
         public bool BothPortalsInit {

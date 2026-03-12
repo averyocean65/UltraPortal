@@ -10,6 +10,14 @@ namespace UltraPortal {
 		
 		[Configgable("Debugging", "Verbose Logging (may cause performance issues)")]
 		public static ConfigToggle VerboseLogging = new ConfigToggle(false);
+
+		[Configgable("Debugging", "New Gravity")]
+		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);
+		
+		[Configgable("Debugging", "Set Gravity")]
+		private static ConfigButton _setGravity = new ConfigButton(() => {
+			NewMovement.Instance.SwitchGravity(_newGravity.GetValue(), true);
+		});
 		
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
@@ -70,7 +78,7 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
 		
-		[Configgable("Gameplay/Portals/Experimental", "Twist Gun Angle")]
+		[Configgable("Gameplay/Guns/Experimental", "Twist Gun Angle")]
 		public static ConfigInputField<float> TwistGunAngle = new ConfigInputField<float>(90.0f);
 	}
 }
