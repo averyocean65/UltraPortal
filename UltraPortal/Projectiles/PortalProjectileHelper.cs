@@ -47,6 +47,9 @@ namespace UltraPortal.Projectiles {
 					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier.GetValue();
 				
 				rb.velocity = -desiredExitTransform.forward * 100.0f * multiplier;
+				
+				id.hitterWeapons.Add(PortalProjectileWeapon);
+				id.SimpleDamage(0.02f);
 				return;
 			}
 

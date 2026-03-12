@@ -86,7 +86,7 @@ namespace UltraPortal {
 			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
 		}
-
+		
 		private void InitMirror() {
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
 			

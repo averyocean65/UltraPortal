@@ -9,10 +9,15 @@ namespace UltraPortal {
         public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
 
         public const string PortalExplosionWeapon = "dynamicportal";
+        public const string PortalProjectileWeapon = "portalprojectile";
 
         public const string StyleSafetyHazardId = "style.ultraportal.safetyhazard";
         public const string StyleSafetyHazardName = "SAFETY HAZARD";
-        public const int StyleSafetyHazardPoints = 500;
+        public const int StyleSafetyHazardPoints = 100;
+        
+        public const string StylePortalProjectileId = "style.ultraportal.projectiled";
+        public const string StylePortalProjectileName = "TELEPORTATION";
+        public const int StylePortalProjectilePoints = 25;
         
 
         private static Camera _mainCamera;

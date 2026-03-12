@@ -8,6 +8,9 @@ namespace UltraPortal {
 
 		// note: i do not have a better name for this
 		
+		[Configgable("Debugging", "Verbose Logging (may cause performance issues)")]
+		public static ConfigToggle VerboseLogging = new ConfigToggle(false);
+		
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
 
@@ -37,7 +40,13 @@ namespace UltraPortal {
 		
 		[Configgable("Visuals/Style")]
 		public static ConfigColor SafetyHazardColor = new ConfigColor(new Color(1, 0, 0));
+		
+		[Configgable("Visuals/Style")]
+		public static ConfigColor ProjectileBonusColor = new ConfigColor(new Color(0, 1, 0));
 
+		[Configgable]
+		public static ConfigToggle UsePortalBorders = new ConfigToggle(true);
+		
 		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
 
