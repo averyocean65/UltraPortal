@@ -74,10 +74,6 @@ namespace UltraPortal {
 			};
 
 			OnSecondaryFire += () => {
-				void Error() {
-					HudMessageReceiver.Instance.SendHudMessage("<color=red>Failed to spawn passthrough portal!</color>");
-				}
-				
 				_animator.Play(SecondaryFireAnimHash);
 				UpdateLastProjectile(PortalSide.Exit);
 				FireProjectile(FlippedMirror, _flippedMirrorPortal);
@@ -90,7 +86,7 @@ namespace UltraPortal {
 		private void InitMirror() {
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
 			
-			_flippedMirrorPortal = CreatePortal("Passthrough Portal", FlippedMirror.transform, FlippedMirror.transform,
+			_flippedMirrorPortal = CreatePortal("Flipped Mirror Portal", FlippedMirror.transform, FlippedMirror.transform,
 				_portalSize);
 			_flippedMirrorPortal.usePerceivedGravityOnEnter = true;
 			_flippedMirrorPortal.usePerceivedGravityOnExit = true;
