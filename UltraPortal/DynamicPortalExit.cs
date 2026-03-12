@@ -290,6 +290,7 @@ namespace UltraPortal {
 				}
 			} else if (hostGun is MirrorGun mirrorGun) {
 				mirrorGun.SpawnPrimaryMirror(true);
+				mirrorGun.SpawnFlippedMirror(true);
 			}
 		}
 
