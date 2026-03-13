@@ -9,8 +9,6 @@ namespace UltraPortal {
         public Portal PrimaryPortal { get; private set; }
         public DynamicPortalExit Entry { get; private set; }
         public DynamicPortalExit Exit { get; private set; }
-
-        private DirectionalGravityVolume _gravityVolume;
         
         private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
@@ -37,16 +35,9 @@ namespace UltraPortal {
         }
         
         public void SpawnExit(bool reinit = false) {
-            _gravityVolume = gameObject.AddComponent<DirectionalGravityVolume>();
-            _gravityVolume.updateContinuously = false;
-            _gravityVolume.resetOnExit = false;
-            
             Exit = SpawnPortalExit("Twist Exit", PortalSide.Exit, PrimaryPortal);
             if (Exit) {
                 Exit.OnInitialized += UpdatePortalPassable;
-                Exit.OnInitialized += () => {
-                    _gravityVolume.Forward = PrimaryPortal.exitTransform.forward;
-                };
             }
 
             
@@ -84,7 +75,19 @@ namespace UltraPortal {
                 _animator.Play(SecondaryFireAnimHash);
             };
             
+            Entry.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, Entry);
+            Exit.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, Exit);
+            
             InitPortal();
+        }
+
+        private void OnPlayerTravelled(bool entryExit, DynamicPortalExit exit) {
+            if (entryExit) {
+                return;
+            }
+            
+            NewMovement.Instance.rb.SetCustomGravityMode(true);
+            NewMovement.Instance.rb.SetCustomGravity(-exit.transform.forward.normalized * Physics.gravity.magnitude);
         }
 
         public override bool ShouldBeReset() {
@@ -111,7 +114,6 @@ namespace UltraPortal {
 
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", Entry.transform, Exit.transform, _portalSize);
-            PrimaryPortal.exitGravityVolume = _gravityVolume;
         }
     }
 }

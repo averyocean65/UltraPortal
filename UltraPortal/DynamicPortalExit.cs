@@ -23,6 +23,7 @@ namespace UltraPortal {
 		private static Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
+		public Action<bool> OnPlayerTravelled;
 		
 		public bool IsEntityNear {
 			get {
@@ -280,19 +281,38 @@ namespace UltraPortal {
 			if (!hostGun || !hostPortal) {
 				return;
 			}
-			
-			if (hostGun is PortalGun portalGun) {
-				switch (side) {
-					case PortalSide.Enter:
+
+			switch (hostGun.variant) {
+				case WeaponVariant.BlueVariant:
+					PortalGun portalGun = hostGun as PortalGun;
+					
+					if (side == PortalSide.Enter) {
 						portalGun.SpawnEntry(true);
-						break;
-					case PortalSide.Exit:
+					}
+					else {
 						portalGun.SpawnExit(true);
-						break;
-				}
-			} else if (hostGun is MirrorGun mirrorGun) {
-				mirrorGun.SpawnPrimaryMirror(true);
-				mirrorGun.SpawnFlippedMirror(true);
+					}
+					break;
+				case WeaponVariant.GreenVariant:
+					MirrorGun mirrorGun = hostGun as MirrorGun;
+					
+					if (side == PortalSide.Enter) {
+						mirrorGun.SpawnPrimaryMirror(true);
+					}
+					else {
+						mirrorGun.SpawnFlippedMirror(true);
+					}
+					break;
+				case WeaponVariant.RedVariant:
+					TwistGun twistGun = hostGun as TwistGun;
+					
+					if (side == PortalSide.Enter) {
+						twistGun.SpawnEntry(true);
+					}
+					else {
+						twistGun.SpawnExit(true);
+					}
+					break;
 			}
 		}
 
@@ -350,6 +370,11 @@ namespace UltraPortal {
 				
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
+
+				if (OnPlayerTravelled != null) {
+					OnPlayerTravelled.Invoke(!value);
+				}
+
 				return;
 			}
 

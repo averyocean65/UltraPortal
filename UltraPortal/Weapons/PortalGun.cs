@@ -7,7 +7,6 @@ namespace UltraPortal {
 		private static ManualLogSource Logger => Plugin.LogSource;
  
 		private Portal _portal;
-		private GameObject _portalObject;
 		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
 		public DynamicPortalExit PortalEntry { get; private set; }
