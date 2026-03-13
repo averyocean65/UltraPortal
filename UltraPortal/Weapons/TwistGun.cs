@@ -60,11 +60,6 @@ namespace UltraPortal {
             SpawnEntry();
             SpawnExit();
             
-            Exit.OnInitialized += () => {
-                Vector3 euler = Exit.transform.localEulerAngles;
-                Exit.transform.localEulerAngles = new Vector3(euler.x, euler.y, ModConfig.TwistGunAngle.GetValue());
-            };
-            
             OnPrimaryFire += () => {
                 FireProjectile(Entry, PrimaryPortal);
                 UpdateLastProjectile(PortalSide.Enter);

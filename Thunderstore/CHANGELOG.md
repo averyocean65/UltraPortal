@@ -14,9 +14,12 @@
 - Added the Twist Gun.
 
 ### Config
-- Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
+- Changed categorization of config values
+  - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
+  - Moved portal color properties to `Visuals/Portals`.
 - Added `Debug` category to configuration.
-- Added ability to hide portal borders.
+- Added setting to disable portal borders.
+- Added setting to change max recursions of portals.
 
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.

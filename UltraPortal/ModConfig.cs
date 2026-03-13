@@ -22,16 +22,16 @@ namespace UltraPortal {
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
 
-		[Configgable("Visuals")]
+		[Configgable("Visuals/Portals")]
 		public static ConfigColor PrimaryPortalColor = new ConfigColor(new Color(0.9882352941f, 0.0117647059f, 0.2705882353f));
 		
-		[Configgable("Visuals")]
+		[Configgable("Visuals/Portals")]
 		public static ConfigColor PrimaryPortalParticleColor = new ConfigColor(new Color(0.5803921569f, 0.0941176471f, 0.2235294118f));
 		
-		[Configgable("Visuals")]
+		[Configgable("Visuals/Portals")]
 		public static ConfigColor SecondaryPortalColor = new ConfigColor(new Color(0.1803921569f, 0.2352941176f, 1f));
 		
-		[Configgable("Visuals")]
+		[Configgable("Visuals/Portals")]
 		public static ConfigColor SecondaryPortalParticleColor = new ConfigColor(new Color(0.1019607843f, 0.1176470588f, 0.3607843137f));
 
 		[Configgable("Visuals")]
@@ -40,11 +40,14 @@ namespace UltraPortal {
 		[Configgable("Visuals")]
 		public static IntegerSlider ExplosionEmissionIntensity = new IntegerSlider(-1, -5, 5);
 		
-		[Configgable("Visuals")]
+		[Configgable("Visuals/Portals", "Emission On Portal Border")]
 		public static ConfigToggle UseEmission = new ConfigToggle(true);
 		
-		[Configgable("Visuals")]
+		[Configgable("Visuals/Portals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
+		
+		[Configgable("Visuals/Portals", "Maximum Portal Recursions (scene reload required)")]
+		public static IntegerSlider MaxPortalRecursions = new IntegerSlider(3, 0, 10);
 		
 		[Configgable("Visuals/Style")]
 		public static ConfigColor SafetyHazardColor = new ConfigColor(new Color(1, 0, 0));

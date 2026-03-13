@@ -121,6 +121,8 @@ namespace UltraPortal {
 			Portal portal = portalObject.AddComponent<Portal>();
 			portal.allowCameraTraversals = true;
 			portal.appearsInRecursions = true;
+			portal.maxRecursions = ModConfig.MaxPortalRecursions.GetValue();
+			
 			portal.canSeeItself = true;
 			portal.canSeePortalLayer = true;
 			
