@@ -45,6 +45,7 @@ namespace UltraPortal {
 			}
 
 			LastProjectileColors.side = side;
+			LastProjectileColors.variant = variant;
 			LastProjectileColors.ColorProjectile();
 		}
 
@@ -88,6 +89,7 @@ namespace UltraPortal {
 
 			ProjectileColorManager colorManager = projectile.gameObject.AddComponent<ProjectileColorManager>();
 			colorManager.side = exit.side;
+			colorManager.variant = variant;
 			colorManager.ColorProjectile();
 		}
 

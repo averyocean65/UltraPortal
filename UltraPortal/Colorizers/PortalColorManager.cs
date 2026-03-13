@@ -8,25 +8,6 @@ namespace UltraPortal.Colorizers {
         public DynamicPortalExit associated;
 
         private Renderer[] _renderers;
-
-        private Color GetColor() {
-            switch (associated.hostGun.variant) {
-                case WeaponVariant.BlueVariant:
-                    return associated.side == PortalSide.Enter
-                        ? ModConfig.PrimaryPortalColor.GetValue()
-                        : ModConfig.SecondaryPortalColor.GetValue();
-                case WeaponVariant.GreenVariant:
-                    return associated.side == PortalSide.Enter
-                        ? ModConfig.PrimaryMirrorColor.GetValue()
-                        : ModConfig.FlippedMirrorColor.GetValue();
-                case WeaponVariant.RedVariant:
-                    return associated.side == PortalSide.Enter
-                        ? ModConfig.PrimaryTwistColor.GetValue()
-                        : ModConfig.SecondaryTwistColor.GetValue();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
         
         private void Start() {
             Transform visualsRoot = transform.Find(VisualsPath);
@@ -44,7 +25,7 @@ namespace UltraPortal.Colorizers {
                 return;
             }
 
-            UnityEngine.Color color = GetColor();
+            UnityEngine.Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
             
             foreach (Renderer r in _renderers) {
                 r.gameObject.SetActive(ModConfig.UsePortalBorders.GetValue());
