@@ -18,6 +18,7 @@
   - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
   - Moved portal color properties to `Visuals/Portals`.
 - Added `Debug` category to configuration.
+- Added individual colors for all portals.
 - Added setting to disable portal borders.
 - Added setting to change max recursions of portals.
 

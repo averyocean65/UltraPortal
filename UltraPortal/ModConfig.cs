@@ -22,18 +22,48 @@ namespace UltraPortal {
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
 
+		#region Portal Gun
 		[Configgable("Visuals/Portals")]
 		public static ConfigColor PrimaryPortalColor = new ConfigColor(new Color(0.9882352941f, 0.0117647059f, 0.2705882353f));
 		
-		[Configgable("Visuals/Portals")]
+		[Configgable("Visuals/Portals/Particles")]
 		public static ConfigColor PrimaryPortalParticleColor = new ConfigColor(new Color(0.5803921569f, 0.0941176471f, 0.2235294118f));
 		
 		[Configgable("Visuals/Portals")]
 		public static ConfigColor SecondaryPortalColor = new ConfigColor(new Color(0.1803921569f, 0.2352941176f, 1f));
 		
-		[Configgable("Visuals/Portals")]
+		[Configgable("Visuals/Portals/Particles")]
 		public static ConfigColor SecondaryPortalParticleColor = new ConfigColor(new Color(0.1019607843f, 0.1176470588f, 0.3607843137f));
+		#endregion
+		
+		#region Mirror Gun
+		[Configgable("Visuals/Portals")]
+		public static ConfigColor PrimaryMirrorColor = new ConfigColor(new Color(0, 1, 0.369f));
+		
+		[Configgable("Visuals/Portals/Particles")]
+		public static ConfigColor PrimaryMirrorParticleColor = new ConfigColor(new Color(0, 0.639f, 0.235f));
+		
+		[Configgable("Visuals/Portals")]
+		public static ConfigColor FlippedMirrorColor = new ConfigColor(new Color(1, 0.78f, 0));
+		
+		[Configgable("Visuals/Portals/Particles")]
+		public static ConfigColor FlippedMirrorParticleColor = new ConfigColor(new Color(0.741f, 0.58f, 0));
+		#endregion
 
+		#region Twist Gun
+		[Configgable("Visuals/Portals")]
+		public static ConfigColor PrimaryTwistColor = new ConfigColor(new Color(1, 0, 0));
+		
+		[Configgable("Visuals/Portals/Particles")]
+		public static ConfigColor PrimaryTwistParticleColor = new ConfigColor(new Color(0.8f, 0, 0));
+		
+		[Configgable("Visuals/Portals")]
+		public static ConfigColor SecondaryTwistColor = new ConfigColor(new Color(1, 1, 1));
+		
+		[Configgable("Visuals/Portals/Particles")]
+		public static ConfigColor SecondaryTwistParticleColor = new ConfigColor(new Color(0.8f, 0.8f, 0.8f));
+		#endregion
+		
 		[Configgable("Visuals")]
 		public static ConfigColor ExplosionColor = new ConfigColor(new Color(0.35686f, 0.02745f, 0.45098f));
 

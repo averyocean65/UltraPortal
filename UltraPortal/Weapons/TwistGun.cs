@@ -99,8 +99,8 @@ namespace UltraPortal {
 
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", Entry.transform, Exit.transform, _portalSize);
-            PrimaryPortal.usePerceivedGravityOnEnter = true;
-            PrimaryPortal.usePerceivedGravityOnExit = true;
+            PrimaryPortal.forceOrthogonalGravityOnEnter = true;
+            PrimaryPortal.forceOrthogonalGravityOnExit = true;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
@@ -7,6 +8,25 @@ namespace UltraPortal.Colorizers {
         public DynamicPortalExit associated;
 
         private Renderer[] _renderers;
+
+        private Color GetColor() {
+            switch (associated.hostGun.variant) {
+                case WeaponVariant.BlueVariant:
+                    return associated.side == PortalSide.Enter
+                        ? ModConfig.PrimaryPortalColor.GetValue()
+                        : ModConfig.SecondaryPortalColor.GetValue();
+                case WeaponVariant.GreenVariant:
+                    return associated.side == PortalSide.Enter
+                        ? ModConfig.PrimaryMirrorColor.GetValue()
+                        : ModConfig.FlippedMirrorColor.GetValue();
+                case WeaponVariant.RedVariant:
+                    return associated.side == PortalSide.Enter
+                        ? ModConfig.PrimaryTwistColor.GetValue()
+                        : ModConfig.SecondaryTwistColor.GetValue();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
         
         private void Start() {
             Transform visualsRoot = transform.Find(VisualsPath);
@@ -23,10 +43,8 @@ namespace UltraPortal.Colorizers {
             if (_renderers.Length < 1) {
                 return;
             }
-            
-            UnityEngine.Color color = associated.side == PortalSide.Enter
-                ? ModConfig.PrimaryPortalColor.GetValue()
-                : ModConfig.SecondaryPortalColor.GetValue();
+
+            UnityEngine.Color color = GetColor();
             
             foreach (Renderer r in _renderers) {
                 r.gameObject.SetActive(ModConfig.UsePortalBorders.GetValue());
