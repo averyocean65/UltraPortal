@@ -20,7 +20,7 @@ namespace UltraPortal {
 
 		private const float SphereCheckRadius = 0.2f;
 
-		private static Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
+		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
 		public Action<bool> OnPlayerTravelled;
@@ -49,12 +49,10 @@ namespace UltraPortal {
 		public Portal hostPortal;
 		public PortalSide side;
 		public PortalGunBase hostGun;
+		public DynamicPortalExit otherExit;
 		
 		public bool AssistedPortalTravel { get; private set; } = false;
-
-		// COLLIDERS
-		private DynamicPortalTooClose _tooClose;
-
+		
 		private GameObject _passableBlockage;
 		
 		public Vector3 PortalCenter {
@@ -104,8 +102,6 @@ namespace UltraPortal {
 				Plugin.LogSource.LogError($"Failed to find {TooCloseTrigger} on {name}.");
 				return;
 			}
-
-			_tooClose = tooCloseTransform.gameObject.AddComponent<DynamicPortalTooClose>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				// if (assistedPortalTravel && portalSide != side) {

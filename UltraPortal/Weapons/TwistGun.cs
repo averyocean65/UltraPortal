@@ -7,25 +7,25 @@ using UnityEngine;
 namespace UltraPortal {
     public class TwistGun : PortalGunBase {
         public Portal PrimaryPortal { get; private set; }
-        public DynamicPortalExit Entry { get; private set; }
-        public DynamicPortalExit Exit { get; private set; }
+        public DynamicPortalExit TwistEntry { get; private set; }
+        public DynamicPortalExit TwistExit { get; private set; }
         
         private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
         public bool BothPortalsInit {
             get {
-                if (!Entry || !Exit) {
+                if (!TwistEntry || !TwistExit) {
                     return false;
                 }
 
-                return Entry.IsInitialized && Exit.IsInitialized;
+                return TwistEntry.IsInitialized && TwistExit.IsInitialized;
             }
         }
 
         public void SpawnEntry(bool reinit = false) {
-            Entry = SpawnPortalExit("Twist Entry", PortalSide.Enter, PrimaryPortal);
-            if (Entry) {
-                Entry.OnInitialized += UpdatePortalPassable;
+            TwistEntry = SpawnPortalExit("Twist Entry", PortalSide.Enter, PrimaryPortal);
+            if (TwistEntry) {
+                TwistEntry.OnInitialized += UpdatePortalPassable;
             }
 
             if (reinit) {
@@ -35,11 +35,10 @@ namespace UltraPortal {
         }
         
         public void SpawnExit(bool reinit = false) {
-            Exit = SpawnPortalExit("Twist Exit", PortalSide.Exit, PrimaryPortal);
-            if (Exit) {
-                Exit.OnInitialized += UpdatePortalPassable;
+            TwistExit = SpawnPortalExit("Twist Exit", PortalSide.Exit, PrimaryPortal);
+            if (TwistExit) {
+                TwistExit.OnInitialized += UpdatePortalPassable;
             }
-
             
             if (reinit) {
                 InitPortal();
@@ -48,12 +47,12 @@ namespace UltraPortal {
         }
 
         private void UpdatePortalPassable() {
-            if (Entry) {
-                Entry.SetPassable(BothPortalsInit);
+            if (TwistEntry) {
+                TwistEntry.SetPassable(BothPortalsInit);
             }
 
-            if (Exit) {
-                Exit.SetPassable(BothPortalsInit);
+            if (TwistExit) {
+                TwistExit.SetPassable(BothPortalsInit);
             }
         }
 
@@ -64,19 +63,19 @@ namespace UltraPortal {
             SpawnExit();
             
             OnPrimaryFire += () => {
-                FireProjectile(Entry, PrimaryPortal);
+                FireProjectile(TwistEntry, PrimaryPortal);
                 UpdateLastProjectile(PortalSide.Enter);
                 _animator.Play(PrimaryFireAnimHash);
             };
             
             OnSecondaryFire += () => {
-                FireProjectile(Exit, PrimaryPortal);
+                FireProjectile(TwistExit, PrimaryPortal);
                 UpdateLastProjectile(PortalSide.Exit);
                 _animator.Play(SecondaryFireAnimHash);
             };
             
-            Entry.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, Entry);
-            Exit.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, Exit);
+            TwistEntry.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, TwistEntry);
+            TwistExit.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, TwistExit);
             
             InitPortal();
         }
@@ -91,29 +90,29 @@ namespace UltraPortal {
         }
 
         public override bool ShouldBeReset() {
-            if (!Entry || !Exit) {
+            if (!TwistEntry || !TwistExit) {
                 return true;
             }
 
-            return Entry.ShouldBeDisabled() && Exit.ShouldBeDisabled();
+            return TwistEntry.ShouldBeDisabled() && TwistExit.ShouldBeDisabled();
         }
 
         public void Reset() {
-            if (Entry) {
-                Entry.Reset();
-                Entry.transform.position = DefaultPortalPosition;
+            if (TwistEntry) {
+                TwistEntry.Reset();
+                TwistEntry.transform.position = DefaultPortalPosition;
             }
 
-            if (Exit) {
-                Exit.Reset();
-                Exit.transform.position = DefaultPortalPosition;
+            if (TwistExit) {
+                TwistExit.Reset();
+                TwistExit.transform.position = DefaultPortalPosition;
             }
 
             UpdatePortalPassable();
         }
 
         private void InitPortal() {
-            PrimaryPortal = CreatePortal("Twist Portal", Entry.transform, Exit.transform, _portalSize);
+            PrimaryPortal = CreatePortal("Twist Portal", TwistEntry.transform, TwistExit.transform, _portalSize);
         }
     }
 }

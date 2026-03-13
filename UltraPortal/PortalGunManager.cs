@@ -170,8 +170,8 @@ namespace UltraPortal {
 					
 					gunShouldReset = _twistGun.ShouldBeReset();
 					if (!gunShouldReset) {
-						Explode(_twistGun.Entry.PortalCenter);
-						Explode(_twistGun.Exit.PortalCenter);
+						Explode(_twistGun.TwistEntry.PortalCenter);
+						Explode(_twistGun.TwistExit.PortalCenter);
 					}
 				
 					_twistGun.Reset();
