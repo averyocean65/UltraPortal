@@ -1,5 +1,7 @@
 using System;
+using Gravity;
 using ULTRAKILL.Portal;
+using UltraPortal.Extensions;
 using UnityEngine;
 
 namespace UltraPortal {
@@ -7,6 +9,8 @@ namespace UltraPortal {
         public Portal PrimaryPortal { get; private set; }
         public DynamicPortalExit Entry { get; private set; }
         public DynamicPortalExit Exit { get; private set; }
+
+        private SimpleGravityVolume _gravityVolume;
         
         private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
@@ -33,11 +37,19 @@ namespace UltraPortal {
         }
         
         public void SpawnExit(bool reinit = false) {
+            _gravityVolume = gameObject.AddComponent<SimpleGravityVolume>();
+            _gravityVolume.updateContinuously = true;
+            _gravityVolume.resetOnExit = false;
+            
             Exit = SpawnPortalExit("Twist Exit", PortalSide.Exit, PrimaryPortal);
             if (Exit) {
                 Exit.OnInitialized += UpdatePortalPassable;
+                Exit.OnInitialized += () => {
+                    _gravityVolume.DesiredGravity = Exit.transform.eulerAngles;
+                };
             }
 
+            
             if (reinit) {
                 InitPortal();
                 UpdatePortalPassable();
@@ -99,8 +111,7 @@ namespace UltraPortal {
 
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", Entry.transform, Exit.transform, _portalSize);
-            PrimaryPortal.forceOrthogonalGravityOnEnter = true;
-            PrimaryPortal.forceOrthogonalGravityOnExit = true;
+            PrimaryPortal.exitGravityVolume = _gravityVolume;
         }
     }
 }
