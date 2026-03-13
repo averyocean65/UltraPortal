@@ -38,14 +38,14 @@ namespace UltraPortal {
         
         public void SpawnExit(bool reinit = false) {
             _gravityVolume = gameObject.AddComponent<SimpleGravityVolume>();
-            _gravityVolume.updateContinuously = true;
+            _gravityVolume.updateContinuously = false;
             _gravityVolume.resetOnExit = false;
             
             Exit = SpawnPortalExit("Twist Exit", PortalSide.Exit, PrimaryPortal);
             if (Exit) {
                 Exit.OnInitialized += UpdatePortalPassable;
                 Exit.OnInitialized += () => {
-                    _gravityVolume.DesiredGravity = Exit.transform.eulerAngles;
+                    _gravityVolume.DesiredGravity = PrimaryPortal.exitTransform.forward;
                 };
             }
 
