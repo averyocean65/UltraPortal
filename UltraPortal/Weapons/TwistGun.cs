@@ -1,3 +1,4 @@
+using System.Collections;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
@@ -76,13 +77,21 @@ namespace UltraPortal {
             InitPortal();
         }
 
+        private IEnumerator ISwitchPlayerGravity(DynamicPortalExit exit) {
+            LogInfo("Changing player gravity");
+
+            yield return new WaitForSecondsRealtime(0.05f);
+            
+            NewMovement.Instance.rb.SetCustomGravityMode(true);
+            NewMovement.Instance.rb.SetCustomGravity(-exit.transform.forward.normalized *
+                                                     Physics.gravity.magnitude);
+        }
+        
+        private bool travelEventLocked = false;
         private void OnObjectTravel(DynamicPortalExit exit, IPortalTraveller traveller, PortalTravelDetails details) {
             LogVerboseInfo("Checking portal traveller");
             if (traveller.travellerType == PortalTravellerType.PLAYER) {
-                LogInfo("Changing player gravity");
-                NewMovement.Instance.rb.SetCustomGravityMode(true);
-                NewMovement.Instance.rb.SetCustomGravity(-exit.transform.forward.normalized *
-                                                         Physics.gravity.magnitude);
+                StartCoroutine(ISwitchPlayerGravity(exit));
             }
         }
 
