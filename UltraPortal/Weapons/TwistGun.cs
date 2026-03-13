@@ -10,7 +10,7 @@ namespace UltraPortal {
         public DynamicPortalExit Entry { get; private set; }
         public DynamicPortalExit Exit { get; private set; }
 
-        private SimpleGravityVolume _gravityVolume;
+        private DirectionalGravityVolume _gravityVolume;
         
         private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
 
@@ -37,7 +37,7 @@ namespace UltraPortal {
         }
         
         public void SpawnExit(bool reinit = false) {
-            _gravityVolume = gameObject.AddComponent<SimpleGravityVolume>();
+            _gravityVolume = gameObject.AddComponent<DirectionalGravityVolume>();
             _gravityVolume.updateContinuously = false;
             _gravityVolume.resetOnExit = false;
             
@@ -45,7 +45,7 @@ namespace UltraPortal {
             if (Exit) {
                 Exit.OnInitialized += UpdatePortalPassable;
                 Exit.OnInitialized += () => {
-                    _gravityVolume.DesiredGravity = PrimaryPortal.exitTransform.forward;
+                    _gravityVolume.Forward = PrimaryPortal.exitTransform.forward;
                 };
             }
 
