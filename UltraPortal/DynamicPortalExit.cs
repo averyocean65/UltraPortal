@@ -23,7 +23,6 @@ namespace UltraPortal {
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
-		public Action<bool> OnPlayerTravelled;
 		
 		public bool IsEntityNear {
 			get {
@@ -49,7 +48,6 @@ namespace UltraPortal {
 		public Portal hostPortal;
 		public PortalSide side;
 		public PortalGunBase hostGun;
-		public DynamicPortalExit otherExit;
 		
 		public bool AssistedPortalTravel { get; private set; } = false;
 		
@@ -366,12 +364,6 @@ namespace UltraPortal {
 				
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
-
-				if (OnPlayerTravelled != null) {
-					OnPlayerTravelled.Invoke(!value);
-				}
-
-				return;
 			}
 
 			EnemyIdentifier eid = other.GetComponent<EnemyIdentifier>();

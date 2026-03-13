@@ -1,8 +1,7 @@
-using System;
-using Gravity;
 using ULTRAKILL.Portal;
-using UltraPortal.Extensions;
 using UnityEngine;
+
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
     public class TwistGun : PortalGunBase {
@@ -74,19 +73,17 @@ namespace UltraPortal {
                 _animator.Play(SecondaryFireAnimHash);
             };
             
-            TwistEntry.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, TwistEntry);
-            TwistExit.OnPlayerTravelled += (entryExit) => OnPlayerTravelled(entryExit, TwistExit);
-            
             InitPortal();
         }
 
-        private void OnPlayerTravelled(bool entryExit, DynamicPortalExit exit) {
-            if (entryExit) {
-                return;
+        private void OnObjectTravel(DynamicPortalExit exit, IPortalTraveller traveller, PortalTravelDetails details) {
+            LogVerboseInfo("Checking portal traveller");
+            if (traveller.travellerType == PortalTravellerType.PLAYER) {
+                LogInfo("Changing player gravity");
+                NewMovement.Instance.rb.SetCustomGravityMode(true);
+                NewMovement.Instance.rb.SetCustomGravity(-exit.transform.forward.normalized *
+                                                         Physics.gravity.magnitude);
             }
-            
-            NewMovement.Instance.rb.SetCustomGravityMode(true);
-            NewMovement.Instance.rb.SetCustomGravity(-exit.transform.forward.normalized * Physics.gravity.magnitude);
         }
 
         public override bool ShouldBeReset() {
@@ -113,6 +110,13 @@ namespace UltraPortal {
 
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", TwistEntry.transform, TwistExit.transform, _portalSize);
+            PrimaryPortal.onEntryTravel = new UnityEventPortalTravel();
+            PrimaryPortal.onEntryTravel.AddListener((traveller, details) =>
+                OnObjectTravel(TwistExit, traveller, details));
+            
+            PrimaryPortal.onExitTravel = new UnityEventPortalTravel();
+            PrimaryPortal.onExitTravel.AddListener((traveller, details) =>
+                OnObjectTravel(TwistEntry, traveller, details));
         }
     }
 }
