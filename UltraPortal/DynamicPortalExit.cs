@@ -94,13 +94,6 @@ namespace UltraPortal {
 			GameObject keepActive = new GameObject($"{name} Keep Active");
 			_keepActive = keepActive.AddComponent<KeepActive>();
 			
-			// Get too close trigger
-			Transform tooCloseTransform = transform.Find(TooCloseTrigger);
-			if (!tooCloseTransform) {
-				Plugin.LogSource.LogError($"Failed to find {TooCloseTrigger} on {name}.");
-				return;
-			}
-			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				// if (assistedPortalTravel && portalSide != side) {
 				// 	return;

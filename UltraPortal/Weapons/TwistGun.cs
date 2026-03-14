@@ -91,6 +91,7 @@ namespace UltraPortal {
         private void OnObjectTravel(DynamicPortalExit exit, IPortalTraveller traveller, PortalTravelDetails details) {
             LogVerboseInfo("Checking portal traveller");
             if (traveller is MonoBehaviour mono) {
+                LogVerboseInfo($"Found {nameof(MonoBehaviour)} on {mono.name}");
                 Rigidbody rb = mono.GetComponent<Rigidbody>();
                 if (!rb) {
                     LogVerboseWarning($"{mono.name} doesn't have a rigidbody! Aborting gravity change!");
