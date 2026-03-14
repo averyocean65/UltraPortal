@@ -77,21 +77,26 @@ namespace UltraPortal {
             InitPortal();
         }
 
-        private IEnumerator ISwitchPlayerGravity(DynamicPortalExit exit) {
+        private IEnumerator ISwitchRigidbodyGravity(Rigidbody rb, DynamicPortalExit exit) {
             LogInfo("Changing player gravity");
 
             yield return new WaitForSecondsRealtime(0.05f);
             
-            NewMovement.Instance.rb.SetCustomGravityMode(true);
-            NewMovement.Instance.rb.SetCustomGravity(-exit.transform.forward.normalized *
+            rb.SetCustomGravityMode(true);
+            rb.SetCustomGravity(-exit.transform.forward.normalized *
                                                      Physics.gravity.magnitude);
         }
         
-        private bool travelEventLocked = false;
+        private bool _travelEventLocked = false;
         private void OnObjectTravel(DynamicPortalExit exit, IPortalTraveller traveller, PortalTravelDetails details) {
             LogVerboseInfo("Checking portal traveller");
-            if (traveller.travellerType == PortalTravellerType.PLAYER) {
-                StartCoroutine(ISwitchPlayerGravity(exit));
+            if (traveller is MonoBehaviour mono) {
+                Rigidbody rb = mono.GetComponent<Rigidbody>();
+                if (!rb) {
+                    LogVerboseWarning($"{mono.name} doesn't have a rigidbody! Aborting gravity change!");
+                }
+                
+                StartCoroutine(ISwitchRigidbodyGravity(rb, exit));
             }
         }
 

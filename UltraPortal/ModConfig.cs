@@ -21,7 +21,7 @@ namespace UltraPortal {
 		
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
-
+		
 		#region Portal Gun
 		[Configgable("Visuals/Portal Gun")]
 		public static ConfigColor PrimaryPortalColor = new ConfigColor(new Color(0.9882352941f, 0.0117647059f, 0.2705882353f));
@@ -76,7 +76,7 @@ namespace UltraPortal {
 		[Configgable("Visuals/Portals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
 		
-		[Configgable("Visuals/Portals", "Maximum Portal Recursions (scene reload required)")]
+		[Configgable("Visuals/Portals", "Maximum Portal Recursions", description: "Requires level restart!")]
 		public static IntegerSlider MaxPortalRecursions = new IntegerSlider(3, 0, 10);
 		
 		[Configgable("Visuals/Style")]
@@ -105,7 +105,7 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyNormalPortalBoostMultiplier = new ConfigInputField<float>(2f);
 
-		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed (scene reload required)")]
+		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: "Requires level restart!")]
 		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
