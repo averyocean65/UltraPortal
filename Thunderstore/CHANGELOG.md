@@ -6,6 +6,7 @@
 - Portals now reset colliders when they're destroyed.
 - Increased size of portal gun projectile to decrease collision errors at higher projectile speeds.
 - *+SAFETY HAZARD* now gets shown reliably.
+- Fixed portal duplication with frozen sandbox objects.
 
 ### Gameplay
 - Changed *+SAFETY HAZARD* from 500 points to 100 points.
