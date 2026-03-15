@@ -108,6 +108,10 @@ namespace UltraPortal {
 			if (!c) {
 				return;
 			}
+			
+			if (c.transform.IsChildOf(transform)) {
+				return;
+			}
 
 
 			Vector3 dir = (transform.position - c.transform.position).normalized;
