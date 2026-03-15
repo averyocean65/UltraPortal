@@ -14,6 +14,7 @@
 - Added new style bonus *+DISPLACEMENT*.
 - Added alternative fire for mirror gun.
 - Added the Twist Gun.
+- *+USED PORTAL GUN* in the level end screen is only enabled when a portal gun was actually fired.
 
 ### Config
 - Changed categorization of config values
