@@ -7,6 +7,7 @@
 - Increased size of portal gun projectile to decrease collision errors at higher projectile speeds.
 - *+SAFETY HAZARD* now gets shown reliably.
 - Fixed portal duplication with frozen sandbox objects.
+- Fixed leaderboard submission not being handled properly.
 
 ### Gameplay
 - Changed *+SAFETY HAZARD* from 500 points to 100 points.
