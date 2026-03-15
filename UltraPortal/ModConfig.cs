@@ -10,6 +10,10 @@ namespace UltraPortal {
 		
 		[Configgable("Debugging", "Verbose Logging (may cause performance issues)")]
 		public static ConfigToggle VerboseLogging = new ConfigToggle(false);
+
+		[Configgable("Debugging", "Unload Asset Bundles",
+			description: "Only use if you intend to swap out asset bundles in real time!")]
+		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleHelpers.UnloadAllAssetBundles);
 		
 		[Configgable("Gameplay")]
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
