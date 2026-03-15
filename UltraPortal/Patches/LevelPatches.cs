@@ -7,7 +7,7 @@ namespace UltraPortal {
         [HarmonyPatch(typeof(FinalRank), nameof(FinalRank.SetInfo))]
         static void SetInfoPatch(ref FinalRank __instance, int restarts, bool damage, bool majorUsed, bool cheatsUsed) {
             Plugin.LogSource.LogInfo("Patching level ending!");
-            if (PortalGunManager.EquippedPortalGun) {
+            if (PortalGunManager.UsedPortalGun) {
                 Plugin.LogSource.LogInfo("Portal gun was used!");
                 __instance.extraInfo.text += "- <color=#FA0A56>PORTAL GUN USED</color>\n";
             }
@@ -16,7 +16,7 @@ namespace UltraPortal {
         [HarmonyPrefix]
         [HarmonyPatch(typeof(GameProgressSaver), nameof(GameProgressSaver.SaveRank))]
         static void SaveRankPatch(ref bool __runOriginal) {
-            if (PortalGunManager.EquippedPortalGun) {
+            if (PortalGunManager.UsedPortalGun) {
                 // for reference: this blocks the actual GameProgressSaver.SaveRank function from running.
                 __runOriginal = false;
             }
@@ -25,7 +25,7 @@ namespace UltraPortal {
         [HarmonyPrefix]
         [HarmonyPatch(typeof(FinalCyberRank), nameof(FinalCyberRank.GameOver))]
         static void GameOverPatch() {
-            if (PortalGunManager.EquippedPortalGun) {
+            if (PortalGunManager.UsedPortalGun) {
                 StatsManager.Instance.majorUsed = true;
             }
         }
@@ -33,7 +33,7 @@ namespace UltraPortal {
         [HarmonyPrefix]
         [HarmonyPatch(typeof(LeaderboardController), nameof(LeaderboardController.SubmitLevelScore))]
         static void SubmitLevelScorePatch(ref bool __runOriginal) {
-            if (PortalGunManager.EquippedPortalGun) {
+            if (PortalGunManager.UsedPortalGun) {
                 __runOriginal = false;
             }
         }

@@ -16,7 +16,7 @@ namespace UltraPortal {
 		
 		[Configgable("Debugging", "Set Gravity")]
 		private static ConfigButton _setGravity = new ConfigButton(() => {
-			PortalGunManager.EquippedPortalGun = true; // you manipulated gravity, cheater!!
+			PortalGunManager.UsedPortalGun = true; // you manipulated gravity, cheater!!
 			NewMovement.Instance.SwitchGravity(_newGravity.GetValue(), true);
 		});
 		

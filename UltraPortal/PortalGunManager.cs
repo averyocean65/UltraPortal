@@ -13,7 +13,7 @@ namespace UltraPortal {
 		
 		private static int PortalGunSlot = -1;
 		
-		public static bool EquippedPortalGun = false;
+		public static bool UsedPortalGun = false;
 		private int _currentVariationIndex = -1;
 
 		private PortalGun _portalGun;
@@ -257,7 +257,6 @@ namespace UltraPortal {
 			int slotIndex = PortalGunSlot - 1;
 			if (Input.GetKeyDown(ModConfig.PortalGunKeybind.GetValue()) && GunControl.Instance &&
 			    GunControl.Instance.slots[slotIndex].Count > 0 && GunControl.Instance.slots[slotIndex][0]) {
-				EquippedPortalGun = true;
 				GunControl.Instance.SwitchWeapon(PortalGunSlot, targetVariationIndex: _currentVariationIndex + 1, cycleVariation: true);
 				_currentVariationIndex = GunControl.Instance.currentVariationIndex;
 			}

@@ -33,12 +33,19 @@ namespace UltraPortal {
 				Plugin.LogSource.LogWarning($"{LastProjectileVisual} is not present on portal gun!");
 			}
 
+			OnPrimaryFire += UpdateUsedPortalGun;
+			OnSecondaryFire += UpdateUsedPortalGun;
+			
 			_animator = GetComponentInChildren<Animator>();
 			if (!_animator) {
 				LogError("Animator wasn't found in portal gun children!");
 			}
 		}
-		
+
+		private void UpdateUsedPortalGun() {
+			PortalGunManager.UsedPortalGun = true;
+		}
+
 		protected virtual void UpdateLastProjectile(PortalSide side) {
 			if (!LastProjectileColors) {
 				return;
