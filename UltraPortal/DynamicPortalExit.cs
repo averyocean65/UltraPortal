@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Interop.std;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
@@ -107,6 +108,11 @@ namespace UltraPortal {
 			if (!c) {
 				return;
 			}
+
+
+			Vector3 dir = (transform.position - c.transform.position).normalized;
+			float dot = Vector3.Dot(transform.forward, dir);
+			LogInfo($"Dot of {c.name}: {dot}");
 			
 			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
@@ -149,7 +155,7 @@ namespace UltraPortal {
 
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
-			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector()));
+			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector().normalized));
 			AssistedPortalTravel = dot > 0.6f;
 		}
 
