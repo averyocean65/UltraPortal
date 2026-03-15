@@ -16,6 +16,7 @@ namespace UltraPortal {
 		
 		[Configgable("Debugging", "Set Gravity")]
 		private static ConfigButton _setGravity = new ConfigButton(() => {
+			PortalGunManager.EquippedPortalGun = true; // you manipulated gravity, cheater!!
 			NewMovement.Instance.SwitchGravity(_newGravity.GetValue(), true);
 		});
 		
@@ -110,8 +111,5 @@ namespace UltraPortal {
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
-		
-		[Configgable("Gameplay/Guns/Experimental", "Twist Gun Angle")]
-		public static ConfigInputField<float> TwistGunAngle = new ConfigInputField<float>(90.0f);
 	}
 }
