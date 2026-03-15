@@ -11,6 +11,10 @@ namespace UltraPortal {
 		[Configgable("Debugging", "Verbose Logging (may cause performance issues)")]
 		public static ConfigToggle VerboseLogging = new ConfigToggle(false);
 
+		[Configgable("Debugging", "Unload Asset Bundles",
+			description: "Only use if you intend to swap out asset bundles in real time!")]
+		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleHelpers.UnloadAllAssetBundles);
+    
 		[Configgable("Debugging", "New Gravity")]
 		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);
 		
