@@ -17,6 +17,9 @@ namespace UltraPortal {
     
 		[Configgable("Debugging", "New Gravity")]
 		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);
+
+		[Configgable("Debugging", "Draw Debug Arrows")]
+		public static ConfigToggle DrawDebugObjects = new ConfigToggle(false);
 		
 		[Configgable("Debugging", "Set Gravity")]
 		private static ConfigButton _setGravity = new ConfigButton(() => {
@@ -117,7 +120,7 @@ namespace UltraPortal {
 		public static ConfigInputField<float> PerpendicularThreshold = new ConfigInputField<float>(0.01f);
 		
 		[Configgable("Gameplay/Portals/Experimental")]
-		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.9f);
+		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.6f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);

@@ -114,10 +114,11 @@ namespace UltraPortal {
 			}
 			
 			if (!AssistedPortalTravel) {
-				Vector3 dir = (transform.position - c.transform.position).normalized;
-				float dot = Vector3.Dot(transform.forward, dir);
+				Vector3 dir = (c.transform.position - transform.position).normalized;
+				float dot = Vector3.Dot(-transform.forward, dir);
+				
 				LogInfo($"Dot of {c.name}: {dot}");
-				if (Mathf.Abs(dot) < ModConfig.PerpendicularThreshold.GetValue()) {
+				if (Mathf.Abs(dot) > ModConfig.PerpendicularThreshold.GetValue()) {
 					LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
 					return;
 				}
@@ -148,7 +149,7 @@ namespace UltraPortal {
 			
 			// Raycast to ensure some slopes (like at the start of 8-2) work
 			RaycastHit[] sphereCastResults = Physics.SphereCastAll(transform.position, SphereCheckRadius,
-				transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
+				-transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
 			if (sphereCastResults.Length < 1) {
 				return;
 			}
@@ -212,6 +213,8 @@ namespace UltraPortal {
 			
 			_colorManager.ColorPortal();
 			_keepActive.target = gameObject;
+			
+			ShowForwardArrow(transform.position, -transform.forward, 10f);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -270,7 +273,6 @@ namespace UltraPortal {
 			}
 			
 			CalculateAssistance();
-			
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
 
