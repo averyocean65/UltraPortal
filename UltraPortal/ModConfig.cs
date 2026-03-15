@@ -113,6 +113,12 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: "Requires level restart!")]
 		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
 		
+		[Configgable("Gameplay/Portals/Experimental")]
+		public static ConfigInputField<float> PerpendicularThreshold = new ConfigInputField<float>(0.01f);
+		
+		[Configgable("Gameplay/Portals/Experimental")]
+		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.9f);
+		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
 	}

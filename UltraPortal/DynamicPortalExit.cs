@@ -112,12 +112,17 @@ namespace UltraPortal {
 			if (c.transform.IsChildOf(transform)) {
 				return;
 			}
-
-
-			Vector3 dir = (transform.position - c.transform.position).normalized;
-			float dot = Vector3.Dot(transform.forward, dir);
-			LogInfo($"Dot of {c.name}: {dot}");
 			
+			if (!AssistedPortalTravel) {
+				Vector3 dir = (transform.position - c.transform.position).normalized;
+				float dot = Vector3.Dot(transform.forward, dir);
+				LogInfo($"Dot of {c.name}: {dot}");
+				if (Mathf.Abs(dot) < ModConfig.PerpendicularThreshold.GetValue()) {
+					LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
+					return;
+				}
+			}
+
 			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.SafeAdd(c);
@@ -160,7 +165,7 @@ namespace UltraPortal {
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
 			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector().normalized));
-			AssistedPortalTravel = dot > 0.6f;
+			AssistedPortalTravel = dot > ModConfig.AssistedPortalThreshold.GetValue();
 		}
 
 		private void Cleanup() {
