@@ -64,7 +64,7 @@ namespace UltraPortal {
 			_mirrorGun = SpawnPortalGun(typeof(MirrorGun), AssetPaths.MirrorGun, WeaponVariant.GreenVariant,
 				defaultPos, middlePos) as MirrorGun;
 
-			_twistGun = SpawnPortalGun(typeof(TwistGun), AssetPaths.PortalGun, WeaponVariant.RedVariant, defaultPos,
+			_twistGun = SpawnPortalGun(typeof(TwistGun), AssetPaths.TwistGun, WeaponVariant.RedVariant, defaultPos,
 				middlePos) as TwistGun;
 
 			if (!_portalGun || !_mirrorGun || !_twistGun) {
