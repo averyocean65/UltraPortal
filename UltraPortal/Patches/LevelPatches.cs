@@ -29,7 +29,15 @@ namespace UltraPortal {
                 StatsManager.Instance.majorUsed = true;
             }
         }
-
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(LeaderboardController), nameof(LeaderboardController.SubmitLevelScore))]
+        static void SubmitLevelScorePatch(ref bool __runOriginal) {
+            if (PortalGunManager.EquippedPortalGun) {
+                __runOriginal = false;
+            }
+        }
+        
         // Test if __runOriginal allows you to block the execution of a function.
         
         // [HarmonyPrefix]
