@@ -11,11 +11,6 @@ namespace UltraPortal {
 	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 
-		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
-		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
-		
-		private Animator _animator;
-
 		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
 		private Portal _mirrorPortal;
 		private Portal _flippedMirrorPortal;
@@ -74,10 +69,6 @@ namespace UltraPortal {
 			};
 
 			OnSecondaryFire += () => {
-				void Error() {
-					HudMessageReceiver.Instance.SendHudMessage("<color=red>Failed to spawn passthrough portal!</color>");
-				}
-				
 				_animator.Play(SecondaryFireAnimHash);
 				UpdateLastProjectile(PortalSide.Exit);
 				FireProjectile(FlippedMirror, _flippedMirrorPortal);
@@ -90,7 +81,7 @@ namespace UltraPortal {
 		private void InitMirror() {
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
 			
-			_flippedMirrorPortal = CreatePortal("Passthrough Portal", FlippedMirror.transform, FlippedMirror.transform,
+			_flippedMirrorPortal = CreatePortal("Flipped Mirror Portal", FlippedMirror.transform, FlippedMirror.transform,
 				_portalSize);
 			_flippedMirrorPortal.usePerceivedGravityOnEnter = true;
 			_flippedMirrorPortal.usePerceivedGravityOnExit = true;

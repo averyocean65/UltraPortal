@@ -14,6 +14,10 @@ namespace UltraPortal {
 			MirrorGun mirrorGun = GameObject.FindObjectOfType<MirrorGun>(true);
 			if(mirrorGun)
 				mirrorGun.Reset();
+			
+			TwistGun twistGun = GameObject.FindObjectOfType<TwistGun>(true);
+			if(twistGun)
+				twistGun.Reset();
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Interop.std;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
@@ -20,7 +21,7 @@ namespace UltraPortal {
 
 		private const float SphereCheckRadius = 0.2f;
 
-		private static Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
+		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
 		
@@ -41,17 +42,16 @@ namespace UltraPortal {
 				_playerNearExit = value;
 			}
 		}
-		
+
+		public bool IsInitialized => (transform.position - PortalGunBase.DefaultPortalPosition).sqrMagnitude > 1;
+
 		// PORTAL
 		public Portal hostPortal;
 		public PortalSide side;
 		public PortalGunBase hostGun;
 		
 		public bool AssistedPortalTravel { get; private set; } = false;
-
-		// COLLIDERS
-		private DynamicPortalTooClose _tooClose;
-
+		
 		private GameObject _passableBlockage;
 		
 		public Vector3 PortalCenter {
@@ -95,15 +95,6 @@ namespace UltraPortal {
 			GameObject keepActive = new GameObject($"{name} Keep Active");
 			_keepActive = keepActive.AddComponent<KeepActive>();
 			
-			// Get too close trigger
-			Transform tooCloseTransform = transform.Find(TooCloseTrigger);
-			if (!tooCloseTransform) {
-				Plugin.LogSource.LogError($"Failed to find {TooCloseTrigger} on {name}.");
-				return;
-			}
-
-			_tooClose = tooCloseTransform.gameObject.AddComponent<DynamicPortalTooClose>();
-			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				// if (assistedPortalTravel && portalSide != side) {
 				// 	return;
@@ -117,6 +108,11 @@ namespace UltraPortal {
 			if (!c) {
 				return;
 			}
+
+
+			Vector3 dir = (transform.position - c.transform.position).normalized;
+			float dot = Vector3.Dot(transform.forward, dir);
+			LogInfo($"Dot of {c.name}: {dot}");
 			
 			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
@@ -159,7 +155,7 @@ namespace UltraPortal {
 
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
-			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector()));
+			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector().normalized));
 			AssistedPortalTravel = dot > 0.6f;
 		}
 
@@ -278,19 +274,38 @@ namespace UltraPortal {
 			if (!hostGun || !hostPortal) {
 				return;
 			}
-			
-			if (hostGun is PortalGun portalGun) {
-				switch (side) {
-					case PortalSide.Enter:
+
+			switch (hostGun.variant) {
+				case WeaponVariant.BlueVariant:
+					PortalGun portalGun = hostGun as PortalGun;
+					
+					if (side == PortalSide.Enter) {
 						portalGun.SpawnEntry(true);
-						break;
-					case PortalSide.Exit:
+					}
+					else {
 						portalGun.SpawnExit(true);
-						break;
-				}
-			} else if (hostGun is MirrorGun mirrorGun) {
-				mirrorGun.SpawnPrimaryMirror(true);
-				mirrorGun.SpawnFlippedMirror(true);
+					}
+					break;
+				case WeaponVariant.GreenVariant:
+					MirrorGun mirrorGun = hostGun as MirrorGun;
+					
+					if (side == PortalSide.Enter) {
+						mirrorGun.SpawnPrimaryMirror(true);
+					}
+					else {
+						mirrorGun.SpawnFlippedMirror(true);
+					}
+					break;
+				case WeaponVariant.RedVariant:
+					TwistGun twistGun = hostGun as TwistGun;
+					
+					if (side == PortalSide.Enter) {
+						twistGun.SpawnEntry(true);
+					}
+					else {
+						twistGun.SpawnExit(true);
+					}
+					break;
 			}
 		}
 
@@ -348,7 +363,6 @@ namespace UltraPortal {
 				
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
-				return;
 			}
 
 			EnemyIdentifier eid = other.GetComponent<EnemyIdentifier>();

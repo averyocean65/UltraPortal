@@ -5,10 +5,15 @@ using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
 using static UltraPortal.Constants;
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	public abstract class PortalGunBase : GunBase {
 		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
+		
+		protected static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
+        protected static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire");
+        protected Animator _animator;
 		
 		// funny typo
 		private const string LastProjectileVisual = "UltraPortalGun/PoralGunRig/RootPortal/Last Projectile";
@@ -27,14 +32,27 @@ namespace UltraPortal {
 			else {
 				Plugin.LogSource.LogWarning($"{LastProjectileVisual} is not present on portal gun!");
 			}
+
+			OnPrimaryFire += UpdateUsedPortalGun;
+			OnSecondaryFire += UpdateUsedPortalGun;
+			
+			_animator = GetComponentInChildren<Animator>();
+			if (!_animator) {
+				LogError("Animator wasn't found in portal gun children!");
+			}
 		}
-		
+
+		private void UpdateUsedPortalGun() {
+			PortalGunManager.UsedPortalGun = true;
+		}
+
 		protected virtual void UpdateLastProjectile(PortalSide side) {
 			if (!LastProjectileColors) {
 				return;
 			}
 
 			LastProjectileColors.side = side;
+			LastProjectileColors.variant = variant;
 			LastProjectileColors.ColorProjectile();
 		}
 
@@ -78,6 +96,7 @@ namespace UltraPortal {
 
 			ProjectileColorManager colorManager = projectile.gameObject.AddComponent<ProjectileColorManager>();
 			colorManager.side = exit.side;
+			colorManager.variant = variant;
 			colorManager.ColorProjectile();
 		}
 
@@ -111,6 +130,8 @@ namespace UltraPortal {
 			Portal portal = portalObject.AddComponent<Portal>();
 			portal.allowCameraTraversals = true;
 			portal.appearsInRecursions = true;
+			portal.maxRecursions = ModConfig.MaxPortalRecursions.GetValue();
+			
 			portal.canSeeItself = true;
 			portal.canSeePortalLayer = true;
 			
