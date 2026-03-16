@@ -76,6 +76,11 @@ namespace UltraPortal {
 		}
 
 		private void AddToSlots() {
+			if (!_portalGun || !_mirrorGun) {
+				LogError($"Portal Gun: {_portalGun}; Mirror Gun: {_mirrorGun}");
+				return;
+			}
+			
 			GunControl.Instance.slots.Add(new List<GameObject>()
 				{ _portalGun.gameObject, _mirrorGun.gameObject, _twistGun.gameObject });
 			PortalGunSlot = GunControl.Instance.slots.Count;

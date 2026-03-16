@@ -1,7 +1,9 @@
 fileFormatVersion: 2
-guid: 30c3756603c998344ada1e09fa26b93f
-PrefabImporter:
+guid: ff991d3c50852f298a7bcac26bd0973f
+ShaderImporter:
   externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
   userData: 
   assetBundleName: portals
   assetBundleVariant: 
