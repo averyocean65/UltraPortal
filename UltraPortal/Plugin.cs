@@ -49,7 +49,7 @@ namespace UltraPortal {
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
-            PortalGunManager.EquippedPortalGun = false;
+            PortalGunManager.UsedPortalGun = false;
             
             if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
                 return;
