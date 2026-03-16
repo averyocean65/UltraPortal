@@ -1,3 +1,4 @@
+using System;
 using ULTRAKILL.Portal;
 using UltraPortal.Extensions;
 using UnityEngine;
@@ -72,7 +73,7 @@ namespace UltraPortal.Projectiles {
 				}
 
 				exit.transform.parent = null;
-				exit.transform.localScale = Vector3.one;
+				exit.transform.localScale = Vector3.one * ModConfig.PortalScaleMod.GetValue();
 				exit.transform.parent = hit.transform;
 				
 				exit.Initialize(portal, exit.side, hit);

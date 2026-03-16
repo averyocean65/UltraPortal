@@ -1,3 +1,5 @@
+using System;
+using System.Security.Permissions;
 using Configgy;
 using UnityEngine;
 
@@ -94,7 +96,7 @@ namespace UltraPortal {
 		public static ConfigColor ProjectileBonusColor = new ConfigColor(new Color(0, 1, 0));
 
 		[Configgable]
-		public static ConfigToggle UsePortalBorders = new ConfigToggle(true);
+		public static ConfigToggle CanSeePortalBorders = new ConfigToggle(true);
 		
 		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
@@ -106,6 +108,12 @@ namespace UltraPortal {
 		public static ConfigToggle IsEnabled = new ConfigToggle(true);
 
 		// note: i also do not have a better name for these
+
+		[Configgable("Gameplay/Portals", "Portal Scale Modifier", description: "You need to press <b>Apply Portal Scale</b> for this to work. <color=#ffff00>WARNING</color>:Pressing the button reloads the current level!")]
+		public static ConfigInputField<float> PortalScaleMod = new ConfigInputField<float>(1.0f);
+		
+		[Configgable("Gameplay/Portals", "Apply Portal Scale")]
+		public static ConfigButton ApplyPortalScale = new ConfigButton(SceneHelper.RestartScene);
 		
 		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyGroundPortalBoostMultiplier = new ConfigInputField<float>(0.5f);

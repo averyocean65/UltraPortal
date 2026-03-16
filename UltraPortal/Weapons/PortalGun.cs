@@ -1,5 +1,6 @@
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
 
 namespace UltraPortal {
@@ -7,7 +8,7 @@ namespace UltraPortal {
 		private static ManualLogSource Logger => Plugin.LogSource;
  
 		private Portal _portal;
-		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
+		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f) * ModConfig.PortalScaleMod.GetValue();
 
 		public DynamicPortalExit PortalEntry { get; private set; }
 		public DynamicPortalExit PortalExit { get; private set; }

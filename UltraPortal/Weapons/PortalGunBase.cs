@@ -77,6 +77,7 @@ namespace UltraPortal {
 			
 			GameObject portalEntryObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
+			
 			portalEntryObject.name = objectName;
 			DynamicPortalExit exit = portalEntryObject.AddComponent<DynamicPortalExit>();
 			exit.side = side;
