@@ -75,6 +75,9 @@ namespace UltraPortal {
             };
             
             InitPortal();
+            
+            TwistEntry.otherExit = TwistExit;
+            TwistExit.otherExit = TwistEntry;
         }
 
         private IEnumerator ISwitchRigidbodyGravity(Rigidbody rb, DynamicPortalExit exit) {

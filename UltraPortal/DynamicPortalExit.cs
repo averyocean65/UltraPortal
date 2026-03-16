@@ -24,6 +24,7 @@ namespace UltraPortal {
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
+		public DynamicPortalExit otherExit;
 		
 		public bool IsEntityNear {
 			get {
@@ -96,10 +97,6 @@ namespace UltraPortal {
 			_keepActive = keepActive.AddComponent<KeepActive>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
-				// if (assistedPortalTravel && portalSide != side) {
-				// 	return;
-				// }
-				
 				ToggleColliders(toggle, collider, assistance);
 			};
 		}
@@ -166,7 +163,7 @@ namespace UltraPortal {
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
 			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector().normalized));
-			AssistedPortalTravel = dot > ModConfig.AssistedPortalThreshold.GetValue();
+			AssistedPortalTravel = dot < ModConfig.AssistedPortalThreshold.GetValue();
 		}
 
 		private void Cleanup() {
@@ -273,6 +270,11 @@ namespace UltraPortal {
 			}
 			
 			CalculateAssistance();
+			
+			if (otherExit) {
+				otherExit.CalculateAssistance();
+				otherExit._toggleColliderAction.Invoke(side, other, true, otherExit.AssistedPortalTravel);
+			}
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
 
@@ -355,7 +357,11 @@ namespace UltraPortal {
 				if(_passableBlockage.activeSelf)
 					return;
 			}
-			
+
+			if (otherExit) {
+				otherExit.CalculateAssistance();
+				otherExit._toggleColliderAction.Invoke(side, other, false, otherExit.AssistedPortalTravel);
+			}
 			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
 			_currentTravellers.SafeRemove(other);
 		}

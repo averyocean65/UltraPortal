@@ -71,6 +71,8 @@ namespace UltraPortal {
 			};
 			
 			InitPortals();
+			PortalEntry.otherExit = PortalExit;
+			PortalExit.otherExit = PortalEntry;
 		}
 
 		public override bool ShouldBeReset() {
