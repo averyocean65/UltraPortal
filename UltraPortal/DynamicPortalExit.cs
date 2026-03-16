@@ -275,7 +275,7 @@ namespace UltraPortal {
 			
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, true, otherExit.AssistedPortalTravel);
+				otherExit._toggleColliderAction.Invoke(side, other, true, false);
 			}
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}

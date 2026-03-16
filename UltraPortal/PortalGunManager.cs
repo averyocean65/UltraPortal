@@ -76,8 +76,8 @@ namespace UltraPortal {
 		}
 
 		private void AddToSlots() {
-			if (!_portalGun || !_mirrorGun) {
-				LogError($"Portal Gun: {_portalGun}; Mirror Gun: {_mirrorGun}");
+			if (!_portalGun || !_mirrorGun || !_twistGun) {
+				LogError($"Portal Gun: {_portalGun}; Mirror Gun: {_mirrorGun}; Twist Gun: {_twistGun}");
 				return;
 			}
 			
