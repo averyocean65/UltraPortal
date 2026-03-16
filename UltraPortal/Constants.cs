@@ -46,11 +46,11 @@ namespace UltraPortal {
                     return Path.Combine(AssemblyFolderPath, "Bundles");
                 }
             }
-            public const string  PortalBundle = "portals";
-            public const string  WeaponBundle = "weapons";
+            public const string PortalBundle = "portals";
+            public const string WeaponBundle = "weapons";
 
-            public const string  PortalExit = "Portal Exit";
-            public const string  Mirror = "Mirror";
+            public const string PortalExit = "Portal Exit";
+            public const string Mirror = "Mirror";
 
             public const string PortalGun = "Portal Gun";
             public const string MirrorGun = "Mirror Gun";

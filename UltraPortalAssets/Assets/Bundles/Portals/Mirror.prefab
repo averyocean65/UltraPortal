@@ -76,6 +76,18 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1773128498660249614, guid: 5432fcac026a070469bf1755bc09d960, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773128498660249614, guid: 5432fcac026a070469bf1755bc09d960, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773128498660249614, guid: 5432fcac026a070469bf1755bc09d960, type: 3}
+      propertyPath: InitialModule.startSizeZ.scalar
+      value: 1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2953124203372690190, guid: 5432fcac026a070469bf1755bc09d960, type: 3}
       propertyPath: m_IsActive
       value: 1

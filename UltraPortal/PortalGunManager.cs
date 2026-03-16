@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UnityEngine;
 
 using static UltraPortal.Constants;
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
@@ -73,6 +72,11 @@ namespace UltraPortal {
 		}
 
 		private void AddToSlots() {
+			if (!_portalGun || !_mirrorGun) {
+				LogError($"Portal Gun: {_portalGun}; Mirror Gun: {_mirrorGun}");
+				return;
+			}
+			
 			GunControl.Instance.slots.Add(new List<GameObject>() { _portalGun.gameObject, _mirrorGun.gameObject });
 			PortalGunSlot = GunControl.Instance.slots.Count;
 			
