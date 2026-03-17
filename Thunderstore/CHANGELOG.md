@@ -16,7 +16,7 @@
 - Added the Twist Gun.
 - *+USED PORTAL GUN* in the level end screen is only enabled when a portal gun was actually fired.
 - Buffed damage of portal projectile.
-- The Portal projectile only teleports light enemies now.
+- Portal projectiles only teleport light enemies now.
 
 ### Config
 - Changed categorization of config values
