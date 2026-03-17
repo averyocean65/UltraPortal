@@ -105,6 +105,7 @@
         <Compile Include="Utils\CollisionPrinter.cs" />
         <Compile Include="Utils\ColorHelpers.cs" />
         <Compile Include="Utils\DebugUtils.cs" />
+        <Compile Include="Utils\EnemyHelpers.cs" />
         <Compile Include="Utils\KeepActive.cs" />
         <Compile Include="Utils\LayerPrinter.cs" />
         <Compile Include="Weapons\GunBase.cs" />

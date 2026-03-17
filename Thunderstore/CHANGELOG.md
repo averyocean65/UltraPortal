@@ -15,6 +15,8 @@
 - Added alternative fire for mirror gun.
 - Added the Twist Gun.
 - *+USED PORTAL GUN* in the level end screen is only enabled when a portal gun was actually fired.
+- Buffed damage of portal projectile.
+- The Portal projectile only teleports light enemies now.
 
 ### Config
 - Changed categorization of config values
@@ -24,6 +26,7 @@
 - Added individual colors for all portals.
 - Added setting to disable portal borders.
 - Added setting to change max recursions of portals.
+- Added setting to scale portals.
 
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.

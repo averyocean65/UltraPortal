@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace UltraPortal {
 	public static class ModConfig {
+		private const string RequiresLevelReload = "Requires restart of current level!";
+		
 		[Configgable("Controls", "Portal Gun Slot")] 
 		public static ConfigKeybind PortalGunKeybind = new ConfigKeybind(KeyCode.Alpha7);
 
@@ -86,7 +88,7 @@ namespace UltraPortal {
 		[Configgable("Visuals/Portals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
 		
-		[Configgable("Visuals/Portals", "Maximum Portal Recursions", description: "Requires level restart!")]
+		[Configgable("Visuals/Portals", "Maximum Portal Recursions", description: RequiresLevelReload)]
 		public static IntegerSlider MaxPortalRecursions = new IntegerSlider(3, 0, 10);
 		
 		[Configgable("Visuals/Style")]
@@ -109,11 +111,8 @@ namespace UltraPortal {
 
 		// note: i also do not have a better name for these
 
-		[Configgable("Gameplay/Portals", "Portal Scale Modifier", description: "You need to press <b>Apply Portal Scale</b> for this to work. <color=#ffff00>WARNING</color>:Pressing the button reloads the current level!")]
+		[Configgable("Gameplay/Portals", "Portal Scale Modifier", description: RequiresLevelReload)]
 		public static ConfigInputField<float> PortalScaleMod = new ConfigInputField<float>(1.0f);
-		
-		[Configgable("Gameplay/Portals", "Apply Portal Scale")]
-		public static ConfigButton ApplyPortalScale = new ConfigButton(SceneHelper.RestartScene);
 		
 		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyGroundPortalBoostMultiplier = new ConfigInputField<float>(0.5f);
@@ -121,7 +120,7 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyNormalPortalBoostMultiplier = new ConfigInputField<float>(2f);
 
-		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: "Requires level restart!")]
+		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: RequiresLevelReload)]
 		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
 		
 		[Configgable("Gameplay/Portals/Experimental")]

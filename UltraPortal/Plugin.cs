@@ -8,6 +8,7 @@ using BepInEx.Logging;
 using Configgy;
 using HarmonyLib;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Projectiles;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -50,6 +51,7 @@ namespace UltraPortal {
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
             PortalGunManager.UsedPortalGun = false;
+            PortalProjectileHelper.PortalScaleSceneStart = ModConfig.PortalScaleMod.GetValue();
             
             if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
                 return;
