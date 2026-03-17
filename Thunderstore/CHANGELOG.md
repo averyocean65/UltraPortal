@@ -10,10 +10,10 @@
 - Fixed leaderboard submission not being handled properly.
 
 ### Gameplay
+- Added the **Twist Gun**.
 - Changed *+SAFETY HAZARD* from 500 points to 100 points.
 - Added new style bonus *+DISPLACEMENT*.
 - Added alternative fire for mirror gun.
-- Added the Twist Gun.
 - *+USED PORTAL GUN* in the level end screen is only enabled when a portal gun was actually fired.
 - Buffed damage of portal projectile.
 - Portal projectiles only teleport light enemies now.
@@ -29,7 +29,8 @@
 - Added setting to scale portals.
 
 ### Visuals
-- Improved portal and portal gun designs by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social)
+- Improved portal and portal gun designs by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).
+  - Voronoi Shader for portal blockage taken from [ronja-tutorials](https://github.com/ronja-tutorials/ShaderTutorials/tree/master/Assets/028_Voronoi_Noise).
 
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.
