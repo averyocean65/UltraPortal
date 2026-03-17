@@ -48,12 +48,14 @@ namespace UltraPortal {
             }
             public const string  PortalBundle = "portals";
             public const string  WeaponBundle = "weapons";
+            public const string  DebugBundle = "debug";
 
-            public const string  PortalExit = "Portal Exit";
-            public const string  Mirror = "Mirror";
+            public const string PortalExit = "Portal Exit";
+            public const string Mirror = "Mirror";
 
             public const string PortalGun = "Portal Gun";
             public const string MirrorGun = "Mirror Gun";
+            public const string TwistGun = "Twist Gun Variant";
             
             public const string Projectile = "Projectile";
 
@@ -61,6 +63,8 @@ namespace UltraPortal {
             public const string PortalGunIconGlow = "UltraPortalGunIconGlow";
 
             public const string Explosion = "Explosion";
+
+            public const string DebugForwardArrow = "ForwardArrow";
         }
     }
 }

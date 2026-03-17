@@ -1,3 +1,4 @@
+using System;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
@@ -23,10 +24,8 @@ namespace UltraPortal.Colorizers {
             if (_renderers.Length < 1) {
                 return;
             }
-            
-            UnityEngine.Color color = associated.side == PortalSide.Enter
-                ? ModConfig.PrimaryPortalColor.GetValue()
-                : ModConfig.SecondaryPortalColor.GetValue();
+
+            UnityEngine.Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
             
             foreach (Renderer r in _renderers) {
                 r.gameObject.SetActive(ModConfig.UsePortalBorders.GetValue());
