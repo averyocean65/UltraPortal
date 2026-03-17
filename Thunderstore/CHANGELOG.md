@@ -25,5 +25,8 @@
 - Added setting to disable portal borders.
 - Added setting to change max recursions of portals.
 
+### Visuals
+- Improved portal and portal gun designs by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social)
+
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.
