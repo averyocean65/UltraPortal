@@ -163,7 +163,7 @@ namespace UltraPortal {
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
 			float dot = Mathf.Abs(Vector3.Dot(transform.forward.normalized, NewMovement.Instance.rb.GetGravityVector().normalized));
-			LogInfo($"{name} dot to {NewMovement.Instance.rb.GetGravityVector().normalized}: {dot}");
+			LogVerboseInfo($"{name} dot to {NewMovement.Instance.rb.GetGravityVector().normalized}: {dot}");
 			AssistedPortalTravel = dot > ModConfig.AssistedPortalThreshold.GetValue();
 		}
 

@@ -88,6 +88,9 @@ namespace UltraPortal {
 		[Configgable("Visuals/Portals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
 		
+		[Configgable("Visuals/Portals")]
+		public static ConfigToggle ShowPortalAmbianceParticles = new ConfigToggle(true);
+		
 		[Configgable("Visuals/Portals", "Maximum Portal Recursions", description: RequiresLevelReload)]
 		public static IntegerSlider MaxPortalRecursions = new IntegerSlider(3, 0, 10);
 		
