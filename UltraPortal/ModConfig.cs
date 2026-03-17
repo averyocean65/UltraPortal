@@ -1,8 +1,12 @@
+using System;
+using System.Security.Permissions;
 using Configgy;
 using UnityEngine;
 
 namespace UltraPortal {
 	public static class ModConfig {
+		private const string RequiresLevelReload = "Requires restart of current level!";
+		
 		[Configgable("Controls", "Portal Gun Slot")] 
 		public static ConfigKeybind PortalGunKeybind = new ConfigKeybind(KeyCode.Alpha7);
 
@@ -17,6 +21,9 @@ namespace UltraPortal {
     
 		[Configgable("Debugging", "New Gravity")]
 		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);
+
+		[Configgable("Debugging", "Draw Debug Arrows")]
+		public static ConfigToggle DrawDebugObjects = new ConfigToggle(false);
 		
 		[Configgable("Debugging", "Set Gravity")]
 		private static ConfigButton _setGravity = new ConfigButton(() => {
@@ -81,7 +88,7 @@ namespace UltraPortal {
 		[Configgable("Visuals/Portals")]
 		public static ConfigToggle ShowPortalSpawnParticles = new ConfigToggle(true);
 		
-		[Configgable("Visuals/Portals", "Maximum Portal Recursions", description: "Requires level restart!")]
+		[Configgable("Visuals/Portals", "Maximum Portal Recursions", description: RequiresLevelReload)]
 		public static IntegerSlider MaxPortalRecursions = new IntegerSlider(3, 0, 10);
 		
 		[Configgable("Visuals/Style")]
@@ -91,7 +98,7 @@ namespace UltraPortal {
 		public static ConfigColor ProjectileBonusColor = new ConfigColor(new Color(0, 1, 0));
 
 		[Configgable]
-		public static ConfigToggle UsePortalBorders = new ConfigToggle(true);
+		public static ConfigToggle CanSeePortalBorders = new ConfigToggle(true);
 		
 		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
@@ -103,6 +110,9 @@ namespace UltraPortal {
 		public static ConfigToggle IsEnabled = new ConfigToggle(true);
 
 		// note: i also do not have a better name for these
+
+		[Configgable("Gameplay/Portals", "Portal Scale Modifier", description: RequiresLevelReload)]
+		public static ConfigInputField<float> PortalScaleMod = new ConfigInputField<float>(1.0f);
 		
 		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyGroundPortalBoostMultiplier = new ConfigInputField<float>(0.5f);
@@ -110,8 +120,14 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Projectiles/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyNormalPortalBoostMultiplier = new ConfigInputField<float>(2f);
 
-		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: "Requires level restart!")]
+		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: RequiresLevelReload)]
 		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
+		
+		[Configgable("Gameplay/Portals/Experimental")]
+		public static ConfigInputField<float> PerpendicularThreshold = new ConfigInputField<float>(0.01f);
+		
+		[Configgable("Gameplay/Portals/Experimental")]
+		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.6f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);

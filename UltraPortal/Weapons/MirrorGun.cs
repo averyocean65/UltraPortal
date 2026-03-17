@@ -11,7 +11,7 @@ namespace UltraPortal {
 	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
 
-		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
+		private readonly Vector2 _portalSize = new Vector2(11f, 11f) * ModConfig.PortalScaleMod.GetValue();
 		private Portal _mirrorPortal;
 		private Portal _flippedMirrorPortal;
 		public DynamicPortalExit PrimaryMirror { get; private set; }

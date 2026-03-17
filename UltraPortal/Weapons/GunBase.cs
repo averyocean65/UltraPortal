@@ -94,6 +94,8 @@ namespace UltraPortal {
 			Projectile projectile = spawned.AddComponent<Projectile>();
 			projectile.damage = 0f;
 			projectile.sourceWeapon = gameObject;
+			projectile.playerBullet = true;
+			projectile.isTargetPlayer = false;
 			projectile.friendly = true;
 			projectile.speed = speed;
 			projectile.bulletType = "";

@@ -28,8 +28,8 @@ namespace UltraPortal.Colorizers {
             UnityEngine.Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
             
             foreach (Renderer r in _renderers) {
-                r.gameObject.SetActive(ModConfig.UsePortalBorders.GetValue());
-                if (!r.gameObject.activeSelf) {
+                r.enabled = ModConfig.CanSeePortalBorders.GetValue();
+                if (!r.enabled) {
                     continue;
                 }
                 

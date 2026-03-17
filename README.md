@@ -6,6 +6,7 @@ Adding portals to ULTRAKILL, because why not?
 ## UltraPortalAssets
 ### Credits
 All art assets were created by [Rose Warbug](https://bsky.app/profile/rosewarbug.bsky.social)
+Voronoi shader taken from ronja-tutorials (https://github.com/ronja-tutorials/ShaderTutorials/tree/master/Assets/028_Voronoi_Noise)
 
 ### Requirements
 To use the UltraPortalAssets project, you will need Unity `2022.3.28f1` in order to open the project.

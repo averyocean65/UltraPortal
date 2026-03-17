@@ -24,6 +24,7 @@ namespace UltraPortal {
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
+		public DynamicPortalExit otherExit;
 		
 		public bool IsEntityNear {
 			get {
@@ -96,10 +97,6 @@ namespace UltraPortal {
 			_keepActive = keepActive.AddComponent<KeepActive>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
-				// if (assistedPortalTravel && portalSide != side) {
-				// 	return;
-				// }
-				
 				ToggleColliders(toggle, collider, assistance);
 			};
 		}
@@ -108,12 +105,22 @@ namespace UltraPortal {
 			if (!c) {
 				return;
 			}
-
-
-			Vector3 dir = (transform.position - c.transform.position).normalized;
-			float dot = Vector3.Dot(transform.forward, dir);
-			LogInfo($"Dot of {c.name}: {dot}");
 			
+			if (c.transform.IsChildOf(transform)) {
+				return;
+			}
+			
+			if (!AssistedPortalTravel) {
+				Vector3 dir = (c.transform.position - transform.position).normalized;
+				float dot = Vector3.Dot(-transform.forward, dir);
+				
+				LogInfo($"Dot of {c.name}: {dot}");
+				if (Mathf.Abs(dot) > ModConfig.PerpendicularThreshold.GetValue()) {
+					LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
+					return;
+				}
+			}
+
 			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.SafeAdd(c);
@@ -139,7 +146,7 @@ namespace UltraPortal {
 			
 			// Raycast to ensure some slopes (like at the start of 8-2) work
 			RaycastHit[] sphereCastResults = Physics.SphereCastAll(transform.position, SphereCheckRadius,
-				transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
+				-transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
 			if (sphereCastResults.Length < 1) {
 				return;
 			}
@@ -155,8 +162,9 @@ namespace UltraPortal {
 
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
-			float dot = Mathf.Abs(Vector3.Dot(transform.forward, NewMovement.Instance.rb.GetGravityVector().normalized));
-			AssistedPortalTravel = dot > 0.6f;
+			float dot = Mathf.Abs(Vector3.Dot(transform.forward.normalized, NewMovement.Instance.rb.GetGravityVector().normalized));
+			LogInfo($"{name} dot to {NewMovement.Instance.rb.GetGravityVector().normalized}: {dot}");
+			AssistedPortalTravel = dot > ModConfig.AssistedPortalThreshold.GetValue();
 		}
 
 		private void Cleanup() {
@@ -203,6 +211,8 @@ namespace UltraPortal {
 			
 			_colorManager.ColorPortal();
 			_keepActive.target = gameObject;
+			
+			ShowForwardArrow(transform.position, -transform.forward, 10f);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -262,6 +272,10 @@ namespace UltraPortal {
 			
 			CalculateAssistance();
 			
+			if (otherExit) {
+				otherExit.CalculateAssistance();
+				otherExit._toggleColliderAction.Invoke(side, other, true, false);
+			}
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
 
@@ -344,7 +358,11 @@ namespace UltraPortal {
 				if(_passableBlockage.activeSelf)
 					return;
 			}
-			
+
+			if (otherExit) {
+				otherExit.CalculateAssistance();
+				otherExit._toggleColliderAction.Invoke(side, other, false, otherExit.AssistedPortalTravel);
+			}
 			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
 			_currentTravellers.SafeRemove(other);
 		}

@@ -1,5 +1,6 @@
 using System.Collections;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
 
 using static UltraPortal.DebugUtils;
@@ -10,7 +11,7 @@ namespace UltraPortal {
         public DynamicPortalExit TwistEntry { get; private set; }
         public DynamicPortalExit TwistExit { get; private set; }
         
-        private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
+        private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f) * ModConfig.PortalScaleMod.GetValue();
 
         public bool BothPortalsInit {
             get {
@@ -75,6 +76,9 @@ namespace UltraPortal {
             };
             
             InitPortal();
+            
+            TwistEntry.otherExit = TwistExit;
+            TwistExit.otherExit = TwistEntry;
         }
 
         private IEnumerator ISwitchRigidbodyGravity(Rigidbody rb, DynamicPortalExit exit) {

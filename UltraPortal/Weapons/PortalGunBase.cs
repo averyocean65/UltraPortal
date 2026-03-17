@@ -1,4 +1,3 @@
-using System;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
@@ -78,6 +77,7 @@ namespace UltraPortal {
 			
 			GameObject portalEntryObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
+			
 			portalEntryObject.name = objectName;
 			DynamicPortalExit exit = portalEntryObject.AddComponent<DynamicPortalExit>();
 			exit.side = side;
