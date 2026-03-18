@@ -178,7 +178,7 @@ namespace UltraPortal {
 					continue;
 				}
 
-				LogInfo($"Resetting: {leftover.name}");
+				LogVerboseInfo($"Resetting: {leftover.name}");
 				ToggleColliders(false, leftover, true);
 			}
 			
