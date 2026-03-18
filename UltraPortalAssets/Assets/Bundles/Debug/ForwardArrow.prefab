@@ -92,6 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6836970231069672714}
+  - component: {fileID: 8695732120623854222}
   m_Layer: 0
   m_Name: ForwardArrow
   m_TagString: Untagged
@@ -116,6 +117,20 @@ Transform:
   - {fileID: 1120505105198831714}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8695732120623854222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7012874167985674563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1602517806, guid: 98df00ee1e93188489cd8f717e42c7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderer: {fileID: 5988099193921397300}
+  startUpColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &9091943280222538298
 GameObject:
   m_ObjectHideFlags: 0

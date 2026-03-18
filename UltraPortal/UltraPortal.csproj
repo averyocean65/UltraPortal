@@ -57,9 +57,6 @@
         <Reference Include="UnityEngine.PhysicsModule">
             <HintPath>$(ManagedDir)/UnityEngine.PhysicsModule.dll</HintPath>
         </Reference>
-        <Reference Include="Unity.Addressables">
-            <HintPath>$(ManagedDir)/Unity.Addressables.dll</HintPath>
-        </Reference>
         <Reference Include="UnityEngine.AnimationModule">
             <HintPath>$(ManagedDir)/UnityEngine.AnimationModule.dll</HintPath>
         </Reference>
@@ -130,7 +127,7 @@
     -->
     
     <Target Name="CopyMod" AfterTargets="AfterBuild">
-        <Copy SourceFiles="$(OutDir)/$(MSBuildProjectName).dll" DestinationFolder="$(BepInExPlugins)/$(MSBuildProjectName)"/>
+        <Copy SourceFiles="$(OutDir)/$(MSBuildProjectName).dll" DestinationFolder="$(ModOutputDir)"/>
     </Target>
 
 </Project>
