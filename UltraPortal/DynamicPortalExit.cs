@@ -19,8 +19,6 @@ namespace UltraPortal {
 		
 		private const string ExpectedPassableName = "Passable";
 
-		private const float SphereCheckRadius = 0.2f;
-
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
@@ -106,22 +104,24 @@ namespace UltraPortal {
 				return;
 			}
 			
+			if (c.isTrigger) {
+				return;
+			}
+			
 			if (c.transform.IsChildOf(transform)) {
 				return;
 			}
 			
-			if (!AssistedPortalTravel) {
-				Vector3 dir = (c.transform.position - transform.position).normalized;
-				float dot = Vector3.Dot(-transform.forward, dir);
-				
-				LogInfo($"Dot of {c.name}: {dot}");
-				if (Mathf.Abs(dot) > ModConfig.PerpendicularThreshold.GetValue()) {
-					LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
-					return;
-				}
+			Vector3 dir = (c.transform.position - transform.position).normalized;
+			float dot = Mathf.Abs(Vector3.Dot(-transform.forward, dir));
+			
+			LogVerboseInfo($"Dot of {c.name}: {dot}");
+			if (Mathf.Abs(dot) < ModConfig.PerpendicularThreshold.GetValue()) {
+				LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
+				return;
 			}
 
-			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
+			LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.SafeAdd(c);
 
@@ -141,22 +141,15 @@ namespace UltraPortal {
 		}
 		
 		private void GetNearbyCollider() {
-			Collider[] sphereCheck = Physics.OverlapSphere(transform.position, SphereCheckRadius, EnvironmentLayer, QueryTriggerInteraction.Ignore);
-			_colliders.AddRange(sphereCheck);
-			
-			// Raycast to ensure some slopes (like at the start of 8-2) work
-			RaycastHit[] sphereCastResults = Physics.SphereCastAll(transform.position, SphereCheckRadius,
-				-transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
-			if (sphereCastResults.Length < 1) {
-				return;
-			}
+			Collider[] sphereCheck = Physics.OverlapSphere(transform.position,
+				ModConfig.PortalSphereCheckRadius.GetValue(), EnvironmentLayer, QueryTriggerInteraction.Ignore);
 
-			foreach (RaycastHit hit in sphereCastResults) {
-				if (!hit.collider) {
+			foreach (Collider c in sphereCheck) {
+				if (!c) {
 					continue;
 				}
 				
-				AddCollider(hit.collider, false);
+				AddCollider(c);
 			}
 		}
 
@@ -274,7 +267,7 @@ namespace UltraPortal {
 			
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, true, false);
+				otherExit._toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 			}
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
@@ -361,7 +354,7 @@ namespace UltraPortal {
 
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, false, otherExit.AssistedPortalTravel);
+				otherExit._toggleColliderAction.Invoke(side, other, false, true);
 			}
 			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
 			_currentTravellers.SafeRemove(other);
