@@ -5,6 +5,7 @@ using Interop.std;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
+using UltraPortal.Shared;
 using UnityEngine;
 using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
@@ -82,6 +83,11 @@ namespace UltraPortal {
 		private KeepActive _keepActive;
 
 		private void Awake() {
+			DynamicPortalInfo info = GetComponent<DynamicPortalInfo>();
+			if (!info) {
+				LogError($"{nameof(DynamicPortalInfo)} not found on {name}!");
+			}
+			
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
 			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;

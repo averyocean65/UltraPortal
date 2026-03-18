@@ -560,6 +560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8886598135973059516}
   - component: {fileID: 7746152099610641030}
+  - component: {fileID: 4367774975728913399}
   m_Layer: 30
   m_Name: Portal Exit
   m_TagString: Untagged
@@ -607,6 +608,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.5, y: 7.5, z: 3.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4367774975728913399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6767319267238147828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 292234927, guid: ca2d5bd750d053e45b3d553cad515952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnParticles: {fileID: 1773128498660249614}
+  portalColliders:
+  - {fileID: 3220463477969294353}
+  - {fileID: 5331819845208417438}
+  - {fileID: 6914496953759841694}
+  - {fileID: 7907269839839010140}
+  - {fileID: 8204182722547623748}
 --- !u!1 &7490939830697811800
 GameObject:
   m_ObjectHideFlags: 0
@@ -925,6 +945,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31984ad9d80fc8b4b89a8b5ae2c7e561, type: 3}
+--- !u!198 &1773128498660249614 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8783588125301409909, guid: 31984ad9d80fc8b4b89a8b5ae2c7e561, type: 3}
+  m_PrefabInstance: {fileID: 7025325307920521339}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2868540549354365158 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5094101465924384925, guid: 31984ad9d80fc8b4b89a8b5ae2c7e561, type: 3}
