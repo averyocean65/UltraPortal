@@ -114,6 +114,12 @@
         <Compile Include="Weapons\PortalGunBase.cs" />
         <Compile Include="Weapons\TwistGun.cs" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\UltraPortal.Shared\UltraPortal.Shared.csproj">
+        <Project>{bf2bd752-2035-4da4-9938-346bc0b4c942}</Project>
+        <Name>UltraPortal.Shared</Name>
+      </ProjectReference>
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
