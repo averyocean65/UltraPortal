@@ -133,6 +133,6 @@ namespace UltraPortal {
 		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(0.5f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
-		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
+		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.15f);
 	}
 }

@@ -102,7 +102,7 @@ namespace UltraPortal {
 			_keepActive = keepActive.AddComponent<KeepActive>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
-				ToggleColliders(toggle, collider, assistance);
+				ToggleColliders(toggle, collider, assistance, portalSide);
 			};
 		}
 
@@ -179,7 +179,7 @@ namespace UltraPortal {
 				}
 
 				LogVerboseInfo($"Resetting: {leftover.name}");
-				ToggleColliders(false, leftover, true);
+				ToggleColliders(false, leftover, true, side);
 			}
 			
 			_currentTravellers.Clear();
@@ -371,9 +371,9 @@ namespace UltraPortal {
 			Cleanup();
 		}
 
-		private void HandleSpecialTraveller(bool value, Collider other, bool assisted) {
+		private void HandleSpecialTraveller(bool value, Collider other, bool assisted, PortalSide inputSide) {
 			if (other.GetComponent<NewMovement>()) {
-				if (assisted) {
+				if (assisted && inputSide == side) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
 					NewMovement.Instance.enabled = !value;
@@ -392,7 +392,7 @@ namespace UltraPortal {
 			}
 		}
 		
-		private void ToggleColliders(bool value, Collider other, bool assisted) {
+		private void ToggleColliders(bool value, Collider other, bool assisted, PortalSide inputSide) {
 			if (_colliders == null || !other) {
 				return;
 			}
@@ -410,7 +410,7 @@ namespace UltraPortal {
 					LogVerboseInfo($"Re-enabling collisions for: {other.name} and {c.name}");
 				}
 				
-				HandleSpecialTraveller(value, other, assisted);
+				HandleSpecialTraveller(value, other, assisted, inputSide);
 				Physics.IgnoreCollision(c, other, value);
 			}
 		}
