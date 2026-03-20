@@ -560,7 +560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8886598135973059516}
   - component: {fileID: 7746152099610641030}
-  - component: {fileID: 1066042958838690687}
+  - component: {fileID: 3730334401495748760}
   m_Layer: 30
   m_Name: Portal Exit
   m_TagString: Untagged
@@ -608,7 +608,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.5, y: 7.5, z: 4}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1066042958838690687
+--- !u!114 &3730334401495748760
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -617,16 +617,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 6767319267238147828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 292234927, guid: 98df00ee1e93188489cd8f717e42c7a6, type: 3}
+  m_Script: {fileID: 778340757, guid: ca2d5bd750d053e45b3d553cad515952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  passable: {fileID: 8782300208408385437}
+  portalEdgeRenderers:
+  - {fileID: 6510947024146603153}
+  - {fileID: 7791533682072436832}
+  - {fileID: 8924339415455875283}
+  - {fileID: 5032719108971012333}
   spawnParticles: {fileID: 1773128498660249614}
   portalColliders:
   - {fileID: 5331819845208417438}
   - {fileID: 6914496953759841694}
   - {fileID: 7907269839839010140}
   - {fileID: 8204182722547623748}
-  passable: {fileID: 8782300208408385437}
 --- !u!1 &7490939830697811800
 GameObject:
   m_ObjectHideFlags: 0
