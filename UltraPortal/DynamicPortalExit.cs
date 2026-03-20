@@ -270,12 +270,12 @@ namespace UltraPortal {
 					return;
 			}
 			
-			CalculateAssistance();
-			
 			if (otherExit) {
 				otherExit.CalculateAssistance();
 				otherExit._toggleColliderAction.Invoke(side, other, true, otherExit.AssistedPortalTravel);
 			}
+			
+			CalculateAssistance();
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
 
@@ -361,7 +361,7 @@ namespace UltraPortal {
 
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, false, true);
+				otherExit._toggleColliderAction.Invoke(side, other, false, otherExit.AssistedPortalTravel);
 			}
 			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
 			_currentTravellers.SafeRemove(other);
@@ -376,7 +376,7 @@ namespace UltraPortal {
 				if (assisted) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
-					// NewMovement.Instance.enabled = !value;
+					NewMovement.Instance.enabled = !value;
 				}
 				
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
