@@ -82,6 +82,8 @@ namespace UltraPortal {
 
 		private KeepActive _keepActive;
 
+		private AudioSource _ambianceSource;
+
 		private void Awake() {
 			gameObject.layer = PortalLayer;
 			_particles = GetComponentInChildren<ParticleSystem>();
@@ -214,6 +216,7 @@ namespace UltraPortal {
 			}
 			
 			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, PortalCenter);
+			_ambianceSource = AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalAmbiance, PortalCenter, true);
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -278,6 +281,11 @@ namespace UltraPortal {
 
 		private void OnDestroy() {
 			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
+
+			if (_ambianceSource) {
+				_ambianceSource.Stop();
+				Destroy(_ambianceSource.gameObject);
+			}
 			
 			Cleanup();
 			LogInfo("FINISHED CLEANUP!");

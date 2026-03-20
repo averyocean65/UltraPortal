@@ -36,6 +36,7 @@ namespace UltraPortal {
                 public const string BundleName = "audio";
                 public const string PortalOpen = "Portal Open";
                 public const string PortalClose = "Portal Close";
+                public const string PortalAmbiance = "Portal Ambiance";
             }
             
             public static string BundlePath {
