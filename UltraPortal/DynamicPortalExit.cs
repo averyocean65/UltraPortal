@@ -25,6 +25,8 @@ namespace UltraPortal {
 		public Action OnInitialized;
 		public DynamicPortalExit otherExit;
 		
+		private DynamicPortalInfo _info;
+		
 		public bool IsEntityNear {
 			get {
 				if (side == PortalSide.Enter) {
@@ -83,14 +85,14 @@ namespace UltraPortal {
 		private KeepActive _keepActive;
 
 		private void Awake() {
-			DynamicPortalInfo info = GetComponent<DynamicPortalInfo>();
-			if (!info) {
+			_info = GetComponent<DynamicPortalInfo>();
+			if (!_info) {
 				LogError($"{nameof(DynamicPortalInfo)} not found on {name}!");
 			}
 			
 			gameObject.layer = PortalLayer;
-			_particles = GetComponentInChildren<ParticleSystem>();
-			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;
+			_particles = _info.spawnParticles;
+			_passableBlockage = _info.passable;
 
 			_colorManager = gameObject.AddComponent<PortalColorManager>();
 			_colorManager.associated = this;
@@ -114,7 +116,7 @@ namespace UltraPortal {
 				return;
 			}
 			
-			if (c.transform.IsChildOf(transform)) {
+			if (_info.portalColliders.Contains(c)) {
 				return;
 			}
 			
@@ -162,7 +164,7 @@ namespace UltraPortal {
 		private void CalculateAssistance() {
 			// Check if portal is facing upwards
 			float dot = Mathf.Abs(Vector3.Dot(transform.forward.normalized, NewMovement.Instance.rb.GetGravityVector().normalized));
-			LogInfo($"{name} dot to {NewMovement.Instance.rb.GetGravityVector().normalized}: {dot}");
+			LogVerboseInfo($"{name} dot to {NewMovement.Instance.rb.GetGravityVector().normalized}: {dot}");
 			AssistedPortalTravel = dot > ModConfig.AssistedPortalThreshold.GetValue();
 		}
 
@@ -273,7 +275,7 @@ namespace UltraPortal {
 			
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
+				otherExit._toggleColliderAction.Invoke(side, other, true, otherExit.AssistedPortalTravel);
 			}
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
@@ -375,7 +377,7 @@ namespace UltraPortal {
 				if (assisted) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
-					NewMovement.Instance.enabled = !value;
+					// NewMovement.Instance.enabled = !value;
 				}
 				
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
