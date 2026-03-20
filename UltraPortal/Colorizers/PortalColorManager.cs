@@ -10,14 +10,7 @@ namespace UltraPortal.Colorizers {
         private Renderer[] _renderers;
         
         private void Start() {
-            Transform visualsRoot = transform.Find(VisualsPath);
-            if (!visualsRoot) {
-                Plugin.LogSource.LogInfo(
-                    $"Couldn't find visuals for {name}, please group your visuals under an object called \"{VisualsPath}\"");
-                enabled = false;
-            }
-
-            _renderers = visualsRoot.GetComponentsInChildren<Renderer>();
+            _renderers = associated.info.portalEdgeRenderers;
         }
 
         public void ColorPortal() {
@@ -25,7 +18,7 @@ namespace UltraPortal.Colorizers {
                 return;
             }
 
-            UnityEngine.Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
+            Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
             
             foreach (Renderer r in _renderers) {
                 r.enabled = ModConfig.CanSeePortalBorders.GetValue();

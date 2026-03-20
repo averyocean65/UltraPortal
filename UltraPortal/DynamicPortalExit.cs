@@ -24,8 +24,7 @@ namespace UltraPortal {
 
 		public Action OnInitialized;
 		public DynamicPortalExit otherExit;
-		
-		private DynamicPortalInfo _info;
+		public PortalInfo info;
 		
 		public bool IsEntityNear {
 			get {
@@ -85,14 +84,14 @@ namespace UltraPortal {
 		private KeepActive _keepActive;
 
 		private void Awake() {
-			_info = GetComponent<DynamicPortalInfo>();
-			if (!_info) {
-				LogError($"{nameof(DynamicPortalInfo)} not found on {name}!");
+			info = GetComponent<PortalInfo>();
+			if (!info) {
+				LogError($"{nameof(PortalInfo)} not found on {name}!");
 			}
 			
 			gameObject.layer = PortalLayer;
-			_particles = _info.spawnParticles;
-			_passableBlockage = _info.passable;
+			_particles = info.spawnParticles;
+			_passableBlockage = info.passable;
 
 			_colorManager = gameObject.AddComponent<PortalColorManager>();
 			_colorManager.associated = this;
@@ -116,7 +115,7 @@ namespace UltraPortal {
 				return;
 			}
 			
-			if (_info.portalColliders.Contains(c)) {
+			if (info.portalColliders.Contains(c)) {
 				return;
 			}
 			
