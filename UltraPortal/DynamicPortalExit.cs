@@ -166,6 +166,12 @@ namespace UltraPortal {
 		}
 
 		private void Cleanup() {
+			if (_ambianceSource) {
+				_ambianceSource.mute = true;
+				_ambianceSource.Stop();
+				Destroy(_ambianceSource.gameObject);
+			}
+			
 			if (_currentTravellers == null) {
 				_currentTravellers = new List<Collider>();
 				return;
@@ -215,8 +221,10 @@ namespace UltraPortal {
 				return;
 			}
 			
-			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, PortalCenter);
-			_ambianceSource = AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalAmbiance, PortalCenter, true);
+			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, MainCamera.transform.position);
+			_ambianceSource = AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalAmbiance, PortalCenter + transform.forward, true);
+			
+			LogInfo($"Ambiance source: {_ambianceSource}");
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -280,13 +288,10 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
-			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
-
-			if (_ambianceSource) {
-				_ambianceSource.Stop();
-				Destroy(_ambianceSource.gameObject);
+			if (!IsBlocked) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
 			}
-			
+
 			Cleanup();
 			LogInfo("FINISHED CLEANUP!");
 			
@@ -351,7 +356,7 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
+			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position);
 			Cleanup();
 		}
 

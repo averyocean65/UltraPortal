@@ -20,12 +20,12 @@ namespace UltraPortal {
 			};
 
 			AudioSource source = emitter.AddComponent<AudioSource>();
-			source.outputAudioMixerGroup = AudioMixerController.Instance.doorGroup;
+			source.outputAudioMixerGroup = AudioMixerController.Instance.goreGroup;
 			source.volume = AudioMixerController.Instance.sfxVolume;
+			source.dopplerLevel = 0.0f;
 			source.minDistance = 1.0f;
 			source.maxDistance = 100.0f;
 			
-			source.rolloffMode = AudioRolloffMode.Linear;
 			source.clip = clip;
 			source.loop = loop;
 			
