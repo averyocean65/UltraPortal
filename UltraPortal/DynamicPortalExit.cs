@@ -81,7 +81,7 @@ namespace UltraPortal {
 		private PortalColorManager _colorManager;
 
 		private KeepActive _keepActive;
-
+ 
 		private AudioSource _ambianceSource;
 
 		private void Awake() {
@@ -220,11 +220,18 @@ namespace UltraPortal {
 				LogError("Audio Manager is not present in scene!");
 				return;
 			}
-			
-			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, MainCamera.transform.position);
-			_ambianceSource = AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalAmbiance, PortalCenter + transform.forward, true);
-			
-			LogInfo($"Ambiance source: {_ambianceSource}");
+
+			if (ModConfig.CanHearSFX.GetValue()) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, MainCamera.transform.position,
+					spatialBlend: 0.0f);
+			}
+
+			if (ModConfig.CanHearAmbiance.GetValue()) {
+				Vector3 ambianceSourcePos = transform.position;
+				_ambianceSource = AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalAmbiance,
+					ambianceSourcePos, true, minDistance: ModConfig.PortalAmbianceMinDistance.GetValue(),
+					maxDistance: ModConfig.PortalAmbianceMaxDistance.GetValue());
+			}
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -288,8 +295,8 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
-			if (!IsBlocked) {
-				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, PortalCenter);
+			if (!IsBlocked && ModConfig.CanHearSFX.GetValue()) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position, spatialBlend: 0.0f);
 			}
 
 			Cleanup();

@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using UltraPortal.Extensions;
 using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public class AudioManager : MonoSingleton<AudioManager> {
-		public AudioSource PlayAudioFromAsset(string assetName, Vector3 emitterPositon, bool loop = false) {
+		public AudioSource PlayAudioFromAsset(string assetName, Vector3 emitterPositon, bool loop = false,
+			float minDistance = 1.0f, float maxDistance = 100.0f, float spatialBlend = 1.0f) {
 			AssetBundle bundle = AssetBundleHelpers.LoadAssetBundle(AssetPaths.Sfx.BundleName);
 			AudioClip clip = bundle.LoadAsset<AudioClip>(assetName);
 
@@ -13,7 +12,7 @@ namespace UltraPortal {
 				return null;
 			}
 
-			GameObject emitter = new GameObject("Temporary Audio Source") {
+			GameObject emitter = new GameObject($"Temporary Audio Source ({assetName})") {
 				transform = {
 					position = emitterPositon
 				}
@@ -22,14 +21,17 @@ namespace UltraPortal {
 			AudioSource source = emitter.AddComponent<AudioSource>();
 			source.outputAudioMixerGroup = AudioMixerController.Instance.goreGroup;
 			source.volume = AudioMixerController.Instance.sfxVolume;
-			source.dopplerLevel = 0.0f;
-			source.minDistance = 1.0f;
-			source.maxDistance = 100.0f;
-			
+
+			source.minDistance = minDistance;
+			source.maxDistance = maxDistance;
+			source.rolloffMode = AudioRolloffMode.Linear;
+
+			source.spatialBlend = spatialBlend;
+
 			source.clip = clip;
 			source.loop = loop;
-			
-			source.Play();
+
+			source.Play(tracked: true);
 
 			if (!loop) {
 				Destroy(emitter, clip.length + 0.2f);
