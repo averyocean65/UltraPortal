@@ -132,7 +132,7 @@ namespace UltraPortal {
 			explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters.GetValue();
 		}
 
-		public void DestroyPortals(WeaponVariant variant) {
+		public void DestroyPortals(WeaponVariant variant, bool useSfx = false) {
 			switch (variant) {
 				case WeaponVariant.BlueVariant: {
 					StartCoroutine(IDestroyPortals(_portalGun, _portalGun.PortalEntry, _portalGun.PortalExit));
@@ -146,6 +146,11 @@ namespace UltraPortal {
 					StartCoroutine(IDestroyPortals(_twistGun, _twistGun.TwistExit, _twistGun.TwistExit));
 					break;
 				}
+			}
+
+			if (useSfx) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position,
+					spatialBlend: 0.0f);
 			}
 		}
 		
@@ -212,15 +217,15 @@ namespace UltraPortal {
 			}
 
 			if (_portalGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.BlueVariant);
+				DestroyPortals(WeaponVariant.BlueVariant, true);
 			}
 			
 			if (_mirrorGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.GreenVariant);
+				DestroyPortals(WeaponVariant.GreenVariant, true);
 			}
 			
 			if (_twistGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.RedVariant);
+				DestroyPortals(WeaponVariant.RedVariant, true);
 			}
 
 			int slotIndex = PortalGunSlot - 1;

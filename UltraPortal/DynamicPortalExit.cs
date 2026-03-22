@@ -305,10 +305,6 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
-			if (!IsBlocked && ModConfig.CanHearSFX.GetValue()) {
-				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position, spatialBlend: 0.0f);
-			}
-
 			Cleanup();
 			LogInfo("FINISHED CLEANUP!");
 			
@@ -397,7 +393,6 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
-			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position);
 			Cleanup();
 		}
 
