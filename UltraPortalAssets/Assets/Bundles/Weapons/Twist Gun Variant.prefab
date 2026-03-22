@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7163257333233488442
+--- !u!1001 &4178479323947960614
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1091552195915551170, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.06914735
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1091552195915551170, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.992822
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1091552195915551170, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.1677837
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1091552195915551170, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -51,10 +51,14 @@ PrefabInstance:
     - target: {fileID: 5628868919396160730, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 86b48253f3af6609db17b29d2bbcc050, type: 2}
+      objectReference: {fileID: -3184809642213414432, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
+    - target: {fileID: 5628868919396160730, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: -7397794647972524142, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
     - target: {fileID: 7664739437907150544, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_Name
-      value: Mirror Gun
+      value: Twist Gun Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

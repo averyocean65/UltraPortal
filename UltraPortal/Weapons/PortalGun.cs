@@ -2,23 +2,16 @@ using BepInEx.Logging;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UnityEngine;
-using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public sealed class PortalGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
-
-		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
-		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
  
 		private Portal _portal;
-		private GameObject _portalObject;
-		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f);
+		private readonly Vector2 _portalSize = new Vector2(5.95f, 7.95f) * ModConfig.PortalScaleMod.GetValue();
 
 		public DynamicPortalExit PortalEntry { get; private set; }
 		public DynamicPortalExit PortalExit { get; private set; }
-       
-        private Animator _animator;
 
         public bool BothPortalsInit {
 	        get {
@@ -26,8 +19,7 @@ namespace UltraPortal {
 			        return false;
 		        }
 
-		        return PortalEntry.transform.position.y > DefaultPortalPosition.y &&
-		               PortalExit.transform.position.y > DefaultPortalPosition.y;
+		        return PortalEntry.IsInitialized && PortalExit.IsInitialized;
 	        }
         }
 
@@ -80,6 +72,8 @@ namespace UltraPortal {
 			};
 			
 			InitPortals();
+			PortalEntry.otherExit = PortalExit;
+			PortalExit.otherExit = PortalEntry;
 		}
 
 		public override bool ShouldBeReset() {

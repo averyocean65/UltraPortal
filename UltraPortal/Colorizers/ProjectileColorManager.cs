@@ -11,31 +11,12 @@ namespace UltraPortal.Colorizers {
 
 		public bool FirstColorDone;
 		
-		private Color DesiredColor {
-			get {
-				if (side == PortalSide.Enter) {
-					return ModConfig.PrimaryPortalColor.GetValue();
-				}
-
-				return ModConfig.SecondaryPortalColor.GetValue();
-			}
-		}
-		
-		private Color DesiredParticleColor {
-			get {
-				if (side == PortalSide.Enter) {
-					return ModConfig.PrimaryPortalParticleColor.GetValue();
-				}
-
-				return ModConfig.SecondaryPortalParticleColor.GetValue();
-			}
-		}
-		
 		private Renderer _renderer;
 		private ParticleSystem _lightningParticles;
 		private ParticleSystem _glowParticles;
 		private Light _light;
 
+		public WeaponVariant variant;
 		public PortalSide side;
 
 		private void GetParticlesInChild(string childName, out ParticleSystem system) {
@@ -65,23 +46,25 @@ namespace UltraPortal.Colorizers {
 
 		public void ColorProjectile() {
 			FirstColorDone = true;
-			
-			_renderer.material.SetColor("_Color", DesiredColor);
-			_renderer.material.SetColor("_EmissionColor", DesiredColor);
+
+			Color desiredColor = ColorHelpers.GetPortalColor(variant, side);
+			Color desiredParticleColor = ColorHelpers.GetPortalParticleColor(variant, side);
+			_renderer.material.SetColor("_Color", desiredColor);
+			_renderer.material.SetColor("_EmissionColor", desiredColor);
 
 			if (_light) {
-				_light.color = DesiredColor;
+				_light.color = desiredColor;
 			}
 
 			_lightningParticles.Stop();
 			ParticleSystem.MainModule lightningModule = _lightningParticles.main;
-			lightningModule.startColor = new ParticleSystem.MinMaxGradient(DesiredParticleColor,
-				DesiredParticleColor * AltParticleColorMultiplier);
+			lightningModule.startColor = new ParticleSystem.MinMaxGradient(desiredParticleColor,
+				desiredParticleColor * AltParticleColorMultiplier);
 			_lightningParticles.Play();
 			
 			_glowParticles.Stop();
 			ParticleSystem.MainModule glowModule = _glowParticles.main;
-			glowModule.startColor = new ParticleSystem.MinMaxGradient(DesiredParticleColor * GlowColorMultiplier);
+			glowModule.startColor = new ParticleSystem.MinMaxGradient(desiredParticleColor * GlowColorMultiplier);
 			_glowParticles.Play();
 		}
 	}

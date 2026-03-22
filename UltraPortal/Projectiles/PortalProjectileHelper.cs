@@ -1,11 +1,16 @@
+using System;
 using ULTRAKILL.Portal;
 using UltraPortal.Extensions;
 using UnityEngine;
 
 using static UltraPortal.Constants;
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal.Projectiles {
 	public class PortalProjectileHelper : MonoBehaviour {
+		public static float PortalScaleSceneStart = 1.0f;
+		public static float ProjectileDamage = 0.49f; // almost filth health
+		
 		private Transform OtherExitTransform {
 			get {
 				if (exit.side == PortalSide.Enter) {
@@ -19,10 +24,21 @@ namespace UltraPortal.Projectiles {
 		public DynamicPortalExit exit;
 		public Portal portal;
 
+		private void DamageEnemy(EnemyIdentifier eid, bool wasTeleported = true) {
+			if (wasTeleported) {
+				eid.hitterWeapons.Add(PortalProjectileWeapon);
+			}
+			eid.SimpleDamage(ProjectileDamage);
+		}
+		
 		private void OnTriggerEnter(Collider other) {
-			EnemyIdentifier id = other.GetComponentInParent<EnemyIdentifier>();
+			if (!other) {
+				return;
+			}
 			
-			if (id) {
+			EnemyIdentifier eid = other.GetComponentInParent<EnemyIdentifier>();
+			
+			if (eid) {
 				if (!portal) {
 					return;
 				}
@@ -30,8 +46,18 @@ namespace UltraPortal.Projectiles {
 				if (exit.IsBlocked) {
 					return;
 				}
+
+				if (eid.Dead) {
+					return;
+				}
 				
-				Rigidbody rb = id.gameObject.GetComponent<Rigidbody>();
+				if (!EnemyHelpers.IsLightEnemy(eid.enemyType)) {
+					LogVerboseWarning("Enemy is not a light enemy! Not teleporting!");
+					DamageEnemy(eid, false);
+					return;
+				}
+				
+				Rigidbody rb = eid.gameObject.GetComponent<Rigidbody>();
 				Transform desiredExitTransform = ModConfig.UseOtherPortalForProjectileTeleport.GetValue()
 					? OtherExitTransform
 					: exit.transform;
@@ -40,17 +66,14 @@ namespace UltraPortal.Projectiles {
 					? desiredExitTransform.GetComponent<DynamicPortalExit>()
 					: exit;
 				
-				id.transform.position = desiredExitTransform.position - desiredExitTransform.forward;
+				eid.transform.position = desiredExitTransform.position - desiredExitTransform.forward;
 				
 				float multiplier = desiredExit.AssistedPortalTravel
 					? ModConfig.ProjectileEnemyGroundPortalBoostMultiplier.GetValue()
 					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier.GetValue();
 				
 				rb.velocity = -desiredExitTransform.forward * 100.0f * multiplier;
-				return;
-			}
-
-			if (!other) {
+				DamageEnemy(eid);
 				return;
 			}
 
@@ -69,7 +92,9 @@ namespace UltraPortal.Projectiles {
 				}
 
 				exit.transform.parent = null;
-				exit.transform.localScale = Vector3.one;
+
+				Vector3 appliedScale = Vector3.one * PortalScaleSceneStart;
+				exit.transform.localScale = new Vector3(appliedScale.x, appliedScale.y, 1.0f);
 				exit.transform.parent = hit.transform;
 				
 				exit.Initialize(portal, exit.side, hit);
