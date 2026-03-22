@@ -14,6 +14,7 @@ namespace UltraPortal.Colorizers {
         private ParticleSystem _ambiancePartiles;
         
         private void Start() {
+            _renderers = associated.info.portalEdgeRenderers;
             Transform visualsRoot = transform.Find(VisualsPath);
             _ambiancePartiles = transform.Find(AmbianceParticlesPath).GetComponent<ParticleSystem>();
             
@@ -32,14 +33,6 @@ namespace UltraPortal.Colorizers {
             }
             else {
                 LogError($"Couldn't find particles for {name}, please group your visuals under an object called \"{AmbianceParticlesPath}\"");
-            }
-
-            if (visualsRoot) {
-                _renderers = visualsRoot.GetComponentsInChildren<Renderer>();
-            }
-            else {
-                LogError(
-                    $"Couldn't find visuals for {name}, please group your visuals under an object called \"{VisualsPath}\"");
             }
         }
 

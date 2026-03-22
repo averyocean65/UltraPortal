@@ -126,11 +126,14 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: RequiresLevelReload)]
 		public static ConfigInputField<float> MinimumEntryExitSpeed = new ConfigInputField<float>(20f);
 		
-		[Configgable("Gameplay/Portals/Experimental")]
+		[Configgable("Gameplay/Portals/Experimental", description: "The required dot product threshold for a portal to be determined perpendicular to a collider.")]
 		public static ConfigInputField<float> PerpendicularThreshold = new ConfigInputField<float>(0.01f);
 		
-		[Configgable("Gameplay/Portals/Experimental")]
+		[Configgable("Gameplay/Portals/Experimental", description: "An assisted portal is a portal with special checks to ensure functionality for ground portals.")]
 		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.6f);
+		
+		[Configgable("Gameplay/Portals/Experimental", description: "The size of a sphere, which checks colliders around a portal")]
+		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(0.5f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);

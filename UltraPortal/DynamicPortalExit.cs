@@ -5,6 +5,7 @@ using Interop.std;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
+using UltraPortal.Shared;
 using UnityEngine;
 using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
@@ -19,12 +20,11 @@ namespace UltraPortal {
 		
 		private const string ExpectedPassableName = "Passable";
 
-		private const float SphereCheckRadius = 0.2f;
-
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;
 		public DynamicPortalExit otherExit;
+		public PortalInfo info;
 		
 		public bool IsEntityNear {
 			get {
@@ -86,9 +86,14 @@ namespace UltraPortal {
 		private AudioSource _ambianceSource;
 
 		private void Awake() {
+			info = GetComponent<PortalInfo>();
+			if (!info) {
+				LogError($"{nameof(PortalInfo)} not found on {name}!");
+			}
+			
 			gameObject.layer = PortalLayer;
-			_particles = GetComponentInChildren<ParticleSystem>();
-			_passableBlockage = transform.Find(ExpectedPassableName).gameObject;
+			_particles = info.spawnParticles;
+			_passableBlockage = info.passable;
 
 			_colorManager = gameObject.AddComponent<PortalColorManager>();
 			_colorManager.associated = this;
@@ -99,7 +104,7 @@ namespace UltraPortal {
 			_keepActive = keepActive.AddComponent<KeepActive>();
 			
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
-				ToggleColliders(toggle, collider, assistance);
+				ToggleColliders(toggle, collider, assistance, portalSide);
 			};
 		}
 
@@ -108,22 +113,24 @@ namespace UltraPortal {
 				return;
 			}
 			
-			if (c.transform.IsChildOf(transform)) {
+			if (c.isTrigger) {
 				return;
 			}
 			
-			if (!AssistedPortalTravel) {
-				Vector3 dir = (c.transform.position - transform.position).normalized;
-				float dot = Vector3.Dot(-transform.forward, dir);
-				
-				LogInfo($"Dot of {c.name}: {dot}");
-				if (Mathf.Abs(dot) > ModConfig.PerpendicularThreshold.GetValue()) {
-					LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
-					return;
-				}
+			if (info.portalColliders.Contains(c)) {
+				return;
+			}
+			
+			Vector3 dir = (c.transform.position - transform.position).normalized;
+			float dot = Mathf.Abs(Vector3.Dot(-transform.forward, dir));
+			
+			LogVerboseInfo($"Dot of {c.name}: {dot}");
+			if (Mathf.Abs(dot) < ModConfig.PerpendicularThreshold.GetValue()) {
+				LogVerboseInfo($"Rejected: {c.name} (close to perpendicular to exit)");
+				return;
 			}
 
-			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
+			LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.SafeAdd(c);
 
@@ -143,22 +150,15 @@ namespace UltraPortal {
 		}
 		
 		private void GetNearbyCollider() {
-			Collider[] sphereCheck = Physics.OverlapSphere(transform.position, SphereCheckRadius, EnvironmentLayer, QueryTriggerInteraction.Ignore);
-			_colliders.AddRange(sphereCheck);
-			
-			// Raycast to ensure some slopes (like at the start of 8-2) work
-			RaycastHit[] sphereCastResults = Physics.SphereCastAll(transform.position, SphereCheckRadius,
-				-transform.forward, 3f, EnvironmentLayer, QueryTriggerInteraction.Ignore);
-			if (sphereCastResults.Length < 1) {
-				return;
-			}
+			Collider[] sphereCheck = Physics.OverlapSphere(transform.position,
+				ModConfig.PortalSphereCheckRadius.GetValue(), EnvironmentLayer, QueryTriggerInteraction.Ignore);
 
-			foreach (RaycastHit hit in sphereCastResults) {
-				if (!hit.collider) {
+			foreach (Collider c in sphereCheck) {
+				if (!c) {
 					continue;
 				}
 				
-				AddCollider(hit.collider, false);
+				AddCollider(c);
 			}
 		}
 
@@ -186,8 +186,8 @@ namespace UltraPortal {
 					continue;
 				}
 
-				LogInfo($"Resetting: {leftover.name}");
-				ToggleColliders(false, leftover, true);
+				LogVerboseInfo($"Resetting: {leftover.name}");
+				ToggleColliders(false, leftover, true, side);
 			}
 			
 			_currentTravellers.Clear();
@@ -295,12 +295,12 @@ namespace UltraPortal {
 					return;
 			}
 			
-			CalculateAssistance();
-			
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, true, false);
+				otherExit._toggleColliderAction.Invoke(side, other, true, otherExit.AssistedPortalTravel);
 			}
+			
+			CalculateAssistance();
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
 		}
 
@@ -401,9 +401,9 @@ namespace UltraPortal {
 			Cleanup();
 		}
 
-		private void HandleSpecialTraveller(bool value, Collider other, bool assisted) {
+		private void HandleSpecialTraveller(bool value, Collider other, bool assisted, PortalSide inputSide) {
 			if (other.GetComponent<NewMovement>()) {
-				if (assisted) {
+				if (assisted && inputSide == side) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
 					NewMovement.Instance.enabled = !value;
@@ -422,7 +422,7 @@ namespace UltraPortal {
 			}
 		}
 		
-		private void ToggleColliders(bool value, Collider other, bool assisted) {
+		private void ToggleColliders(bool value, Collider other, bool assisted, PortalSide inputSide) {
 			if (_colliders == null || !other) {
 				return;
 			}
@@ -440,7 +440,7 @@ namespace UltraPortal {
 					LogVerboseInfo($"Re-enabling collisions for: {other.name} and {c.name}");
 				}
 				
-				HandleSpecialTraveller(value, other, assisted);
+				HandleSpecialTraveller(value, other, assisted, inputSide);
 				Physics.IgnoreCollision(c, other, value);
 			}
 		}

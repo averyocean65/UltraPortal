@@ -73,6 +73,8 @@ namespace UltraPortal {
             public const string Explosion = "Explosion";
 
             public const string DebugForwardArrow = "ForwardArrow";
+
+            public const string UltraPortalSharedAssembly = "UltraPortal.Shared";
         }
     }
 }

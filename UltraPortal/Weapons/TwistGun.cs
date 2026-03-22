@@ -129,9 +129,9 @@ namespace UltraPortal {
 
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", TwistEntry.transform, TwistExit.transform, _portalSize);
-            PrimaryPortal.onEntryTravel = new UnityEventPortalTravel();
-            PrimaryPortal.onEntryTravel.AddListener((traveller, details) =>
-                OnObjectTravel(TwistExit, traveller, details));
+            // PrimaryPortal.onEntryTravel = new UnityEventPortalTravel();
+            // PrimaryPortal.onEntryTravel.AddListener((traveller, details) =>
+            //     OnObjectTravel(TwistExit, traveller, details));
             
             PrimaryPortal.onExitTravel = new UnityEventPortalTravel();
             PrimaryPortal.onExitTravel.AddListener((traveller, details) =>

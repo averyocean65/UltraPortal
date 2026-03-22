@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltraPortal", "UltraPortal\UltraPortal.csproj", "{E06BCEE7-CB1F-477B-B385-AF8D67AD477C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltraPortal.Shared", "UltraPortal.Shared\UltraPortal.Shared.csproj", "{BF2BD752-2035-4DA4-9938-346BC0B4C942}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{E06BCEE7-CB1F-477B-B385-AF8D67AD477C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E06BCEE7-CB1F-477B-B385-AF8D67AD477C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E06BCEE7-CB1F-477B-B385-AF8D67AD477C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF2BD752-2035-4DA4-9938-346BC0B4C942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF2BD752-2035-4DA4-9938-346BC0B4C942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF2BD752-2035-4DA4-9938-346BC0B4C942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF2BD752-2035-4DA4-9938-346BC0B4C942}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

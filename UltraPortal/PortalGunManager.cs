@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UltraPortal.Colorizers;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
 	public class PortalGunManager : MonoBehaviour {
 		public static PortalGunManager Instance;
+
+		private static float PortalGunResetWait = 0.1f;
 		
 		private static int PortalGunSlot = -1;
 		
@@ -88,98 +91,59 @@ namespace UltraPortal {
 			GunControl.Instance.UpdateWeaponList();
 		}
 
-		private void Explode() {
+		private IEnumerator IDestroyPortals(PortalGunBase gun, params DynamicPortalExit[] exits) {
+			if (!gun) {
+				yield break;
+			}
+					
+			bool gunShouldReset = gun.ShouldBeReset();
+			if (!gunShouldReset) {
+				foreach (var exit in exits) {
+					SpawnPortalExplosion(exit.PortalCenter);
+				}
+
+				yield return new WaitForSeconds(PortalGunResetWait);
+			}
+			
+			gun.Invoke("Reset", 0.0f);
+		}
+		
+		private void SpawnPortalExplosion(Vector3 position) {
 			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
-
-			EnemyPatches.AlreadyAppliedStyle.Clear();
-				
-			Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
 				
 			GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
-			float maxSize = 10f;
+			float maxSize = 15f;
 
 			ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
 			colors.ColorExplosion();
 				
 			Explosion explosion = explosionObject.AddComponent<Explosion>();
+			explosion.enemyDamageMultiplier = 1.5f;
+			explosion.toIgnore = new List<EnemyType>();
+				
 			explosion.sourceWeapon = gameObject;
 			explosion.hitterWeapon = PortalExplosionWeapon;
-			explosion.damage = 50;
-			explosion.speed = 7.5f;
+			explosion.damage = 25;
+			explosion.speed = 15f;
 			explosion.maxSize = maxSize;
 				
 			explosion.harmless = false;
+			explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters.GetValue();
 		}
 
 		public void DestroyPortals(WeaponVariant variant) {
-			void Explode(Vector3 position) {
-				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
-				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
-				
-				GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
-				float maxSize = 15f;
-
-				ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
-				colors.ColorExplosion();
-				
-				Explosion explosion = explosionObject.AddComponent<Explosion>();
-				explosion.enemyDamageMultiplier = 1.5f;
-				explosion.toIgnore = new List<EnemyType>();
-				
-				explosion.sourceWeapon = gameObject;
-				explosion.hitterWeapon = PortalExplosionWeapon;
-				explosion.damage = 25;
-				explosion.speed = 15f;
-				explosion.maxSize = maxSize;
-				
-				explosion.harmless = false;
-				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters.GetValue();
-			}
-			
-			bool gunShouldReset = true;
-
 			switch (variant) {
 				case WeaponVariant.BlueVariant: {
-					if (!_portalGun) {
-						break;
-					}
-					
-					gunShouldReset = _portalGun.ShouldBeReset();
-					if (!gunShouldReset) {
-						Explode(_portalGun.PortalEntry.PortalCenter);
-						Explode(_portalGun.PortalExit.PortalCenter);
-					}
-
-					_portalGun.Reset();
-
-					return;
+					StartCoroutine(IDestroyPortals(_portalGun, _portalGun.PortalEntry, _portalGun.PortalExit));
+					break;
 				}
 				case WeaponVariant.GreenVariant: {
-					if (!_mirrorGun) {
-						break;
-					}
-					
-					gunShouldReset = _mirrorGun.ShouldBeReset();
-					if (!gunShouldReset) {
-						Explode(_mirrorGun.PrimaryMirror.PortalCenter);
-					}
-				
-					_mirrorGun.Reset();
+					StartCoroutine(IDestroyPortals(_mirrorGun, _mirrorGun.PrimaryMirror, _mirrorGun.FlippedMirror));
 					break;
 				}
 				case WeaponVariant.RedVariant: {
-					if (!_twistGun) {
-						break;
-					}
-					
-					gunShouldReset = _twistGun.ShouldBeReset();
-					if (!gunShouldReset) {
-						Explode(_twistGun.TwistEntry.PortalCenter);
-						Explode(_twistGun.TwistExit.PortalCenter);
-					}
-				
-					_twistGun.Reset();
+					StartCoroutine(IDestroyPortals(_twistGun, _twistGun.TwistExit, _twistGun.TwistExit));
 					break;
 				}
 			}

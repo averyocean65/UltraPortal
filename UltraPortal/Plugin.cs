@@ -9,6 +9,7 @@ using Configgy;
 using HarmonyLib;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Projectiles;
+using UltraPortal.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,6 +42,8 @@ namespace UltraPortal {
                 Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {AssetPaths.BundlePath}; Trying other bundle path.");
                 AssetPaths.UseAltBundlePath = true; // why, r2modman, why??
             }
+            
+            AssemblyHelpers.PreloadAssemblies();
             
             SceneManager.sceneLoaded += OnSceneLoaded;
             ConfiggyConfig.OnConfigElementsChanged += elements => {
