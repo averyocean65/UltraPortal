@@ -65,6 +65,9 @@ namespace UltraPortal {
                 
                 GameObject manager = new GameObject("Portal Gun Manager");
                 manager.AddComponent<PortalGunManager>();
+
+                GameObject audioManager = new GameObject("Audio Manager");
+                audioManager.AddComponent<AudioManager>();
                 
                 // Register styles
                 StyleHUD.Instance.RegisterStyleItem(StyleSafetyHazardId, StyleSafetyHazardName);

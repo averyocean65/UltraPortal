@@ -37,6 +37,13 @@ namespace UltraPortal {
             public static string AssemblyPath => Assembly.GetExecutingAssembly().Location;
             public static string AssemblyFolderPath => Path.GetDirectoryName(AssemblyPath);
 
+            public static class Sfx {
+                public const string BundleName = "audio";
+                public const string PortalOpen = "Portal Open";
+                public const string PortalClose = "Portal Close";
+                public const string PortalAmbiance = "Portal Ambiance";
+            }
+            
             public static string BundlePath {
                 get {
                     if (UseAltBundlePath) {
@@ -46,6 +53,7 @@ namespace UltraPortal {
                     return Path.Combine(AssemblyFolderPath, "Bundles");
                 }
             }
+            
             public const string  PortalBundle = "portals";
             public const string  WeaponBundle = "weapons";
             public const string  DebugBundle = "debug";

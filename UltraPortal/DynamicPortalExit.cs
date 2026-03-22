@@ -82,6 +82,8 @@ namespace UltraPortal {
 		private PortalColorManager _colorManager;
 
 		private KeepActive _keepActive;
+ 
+		private AudioSource _ambianceSource;
 
 		private void Awake() {
 			info = GetComponent<PortalInfo>();
@@ -168,6 +170,12 @@ namespace UltraPortal {
 		}
 
 		private void Cleanup() {
+			if (_ambianceSource) {
+				_ambianceSource.mute = true;
+				_ambianceSource.Stop();
+				Destroy(_ambianceSource.gameObject);
+			}
+			
 			if (_currentTravellers == null) {
 				_currentTravellers = new List<Collider>();
 				return;
@@ -211,8 +219,25 @@ namespace UltraPortal {
 			
 			_colorManager.ColorPortal();
 			_keepActive.target = gameObject;
-			
-			ShowForwardArrow(transform.position, -transform.forward, 10f);
+      
+      ShowForwardArrow(transform.position, -transform.forward, 10f);
+      
+			if (!AudioManager.Instance) {
+				LogError("Audio Manager is not present in scene!");
+				return;
+			}
+
+			if (ModConfig.CanHearSFX.GetValue()) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalOpen, MainCamera.transform.position,
+					spatialBlend: 0.0f);
+			}
+
+			if (ModConfig.CanHearAmbiance.GetValue()) {
+				Vector3 ambianceSourcePos = transform.position;
+				_ambianceSource = AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalAmbiance,
+					ambianceSourcePos, true, minDistance: ModConfig.PortalAmbianceMinDistance.GetValue(),
+					maxDistance: ModConfig.PortalAmbianceMaxDistance.GetValue());
+			}
 		}
 
 		private void OnTriggerEnter(Collider other) {
@@ -280,6 +305,10 @@ namespace UltraPortal {
 		}
 
 		private void OnDestroy() {
+			if (!IsBlocked && ModConfig.CanHearSFX.GetValue()) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position, spatialBlend: 0.0f);
+			}
+
 			Cleanup();
 			LogInfo("FINISHED CLEANUP!");
 			
@@ -368,6 +397,7 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
+			AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position);
 			Cleanup();
 		}
 

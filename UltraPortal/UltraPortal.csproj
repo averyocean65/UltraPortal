@@ -66,6 +66,9 @@
         <Reference Include="UnityEngine.AssetBundleModule">
             <HintPath>$(ManagedDir)/UnityEngine.AssetBundleModule.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+            <HintPath>$(ManagedDir)/UnityEngine.AudioModule.dll</HintPath>
+        </Reference>
         <Reference Include="Configgy">
             <HintPath>$(BepInExPlugins)/Configgy.dll</HintPath>
         </Reference>
@@ -82,6 +85,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AssetBundleHelpers.cs" />
+        <Compile Include="AudioManager.cs" />
         <Compile Include="Colorizers\ExplosionColorManager.cs" />
         <Compile Include="Colorizers\PortalColorManager.cs" />
         <Compile Include="Colorizers\ProjectileColorManager.cs" />

@@ -2,15 +2,38 @@ using System;
 using ULTRAKILL.Portal;
 using UnityEngine;
 
+using static UltraPortal.DebugUtils;
+
 namespace UltraPortal.Colorizers {
     public class PortalColorManager : MonoBehaviour {
         private const string VisualsPath = "Visuals";
+        private const string AmbianceParticlesPath = "Portal Ambiance Particles";
         public DynamicPortalExit associated;
 
         private Renderer[] _renderers;
+        private ParticleSystem _ambiancePartiles;
         
         private void Start() {
             _renderers = associated.info.portalEdgeRenderers;
+            Transform visualsRoot = transform.Find(VisualsPath);
+            _ambiancePartiles = transform.Find(AmbianceParticlesPath).GetComponent<ParticleSystem>();
+            
+            if (_ambiancePartiles) {
+                ParticleSystem.ColorOverLifetimeModule color = _ambiancePartiles.colorOverLifetime;
+                
+                GradientColorKey[] colorCopy = color.color.gradient.colorKeys;
+                colorCopy[colorCopy.Length - 1].color =
+                    ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
+                
+                GradientAlphaKey[] alphaCopy = color.color.gradient.alphaKeys;
+                Gradient newGradient = new Gradient();
+                newGradient.SetKeys(colorCopy, alphaCopy);
+
+                color.color = newGradient;
+            }
+            else {
+                LogError($"Couldn't find particles for {name}, please group your visuals under an object called \"{AmbianceParticlesPath}\"");
+            }
         }
 
         public void ColorPortal() {
@@ -18,7 +41,11 @@ namespace UltraPortal.Colorizers {
                 return;
             }
 
-            Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
+            UnityEngine.Color color = ColorHelpers.GetPortalColor(associated.hostGun.variant, associated.side);
+
+            if (_ambiancePartiles) {
+                _ambiancePartiles.gameObject.SetActive(ModConfig.ShowPortalAmbianceParticles.GetValue());
+            }
             
             foreach (Renderer r in _renderers) {
                 r.enabled = ModConfig.CanSeePortalBorders.GetValue();

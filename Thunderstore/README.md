@@ -28,7 +28,8 @@ The Mirror Gun is the green variation, it allows you to shoot one big mirror por
 ![screenshot_1.jpg](https://raw.githubusercontent.com/averyocean65/UltraPortal/master/Thunderstore/media/screenshot_1.jpg)
 
 # Credits
-All art assets in the mod were either sourced from the ULTRAKILL game files or created by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).<br>
+Most art assets in the mod were either sourced from the ULTRAKILL game files or created by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).<br>
+Voronoi Shader for portal blockage taken from [ronja-tutorials](https://github.com/ronja-tutorials/ShaderTutorials/tree/master/Assets/028_Voronoi_Noise).<br>
 Most bug finds and ideas by: 
 - ballsoda
 - [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social)
