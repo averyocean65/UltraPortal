@@ -7,6 +7,7 @@ namespace UltraPortal.Shared {
 		public Renderer[] portalEdgeRenderers;
 		
 		public ParticleSystem spawnParticles;
+		public ParticleSystem ambianceParticles;
 		public Collider[] portalColliders;
 	}
 }

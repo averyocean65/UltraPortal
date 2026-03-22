@@ -6,8 +6,6 @@ using static UltraPortal.DebugUtils;
 
 namespace UltraPortal.Colorizers {
     public class PortalColorManager : MonoBehaviour {
-        private const string VisualsPath = "Visuals";
-        private const string AmbianceParticlesPath = "Portal Ambiance Particles";
         public DynamicPortalExit associated;
 
         private Renderer[] _renderers;
@@ -15,8 +13,7 @@ namespace UltraPortal.Colorizers {
         
         private void Start() {
             _renderers = associated.info.portalEdgeRenderers;
-            Transform visualsRoot = transform.Find(VisualsPath);
-            _ambiancePartiles = transform.Find(AmbianceParticlesPath).GetComponent<ParticleSystem>();
+            _ambiancePartiles = associated.info.ambianceParticles;
             
             if (_ambiancePartiles) {
                 ParticleSystem.ColorOverLifetimeModule color = _ambiancePartiles.colorOverLifetime;
@@ -30,9 +27,6 @@ namespace UltraPortal.Colorizers {
                 newGradient.SetKeys(colorCopy, alphaCopy);
 
                 color.color = newGradient;
-            }
-            else {
-                LogError($"Couldn't find particles for {name}, please group your visuals under an object called \"{AmbianceParticlesPath}\"");
             }
         }
 
