@@ -134,5 +134,17 @@ namespace UltraPortal {
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
+
+		[Configgable("Audio", "Hear Ambiance SFX")]
+		public static ConfigToggle CanHearAmbiance = new ConfigToggle(true);
+		
+		[Configgable("Audio", "Hear Portal SFX", description: "This means sound effects such as portals opening and closing.")]
+		public static ConfigToggle CanHearSFX = new ConfigToggle(true);
+		
+		[Configgable("Audio", "Portal Ambiance Minimum Distance", description: "The radius from the portal where the ambiance is loudest.")]
+		public static ConfigInputField<float> PortalAmbianceMinDistance = new ConfigInputField<float>(10.0f);
+		
+		[Configgable("Audio", "Portal Ambiance Maximum Distance", description: "The radius from the portal where the ambiance is no longer audible.")]
+		public static ConfigInputField<float> PortalAmbianceMaxDistance = new ConfigInputField<float>(30.0f);
 	}
 }

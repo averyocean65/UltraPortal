@@ -22,11 +22,19 @@
 - Changed categorization of config values
   - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
   - Moved portal color properties to `Visuals/Portals`.
-- Added `Debug` category to configuration.
 - Added individual colors for all portals.
 - Added setting to disable portal borders.
 - Added setting to change max recursions of portals.
 - Added setting to scale portals.
+- Added `Debug` category to configuration.
+- Added ability to hide portal borders.
+- Added `Audio` category to configuration.
+
+## Audio
+- Added sound effects for portal guns.
+  - Portal Open
+  - Portal Close
+- Added ambiance sound effect for (custom) portals.
 
 ### Visuals
 - Improved portal and portal gun designs by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).

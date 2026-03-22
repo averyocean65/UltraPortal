@@ -134,6 +134,9 @@ namespace UltraPortal {
 			
 			portal.canSeeItself = true;
 			portal.canSeePortalLayer = true;
+
+			portal.consumeAudio = false;
+			portal.canHearAudio = false;
 			
 			portal.entry = entry;
 			portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
