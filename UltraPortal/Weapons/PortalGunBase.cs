@@ -101,17 +101,16 @@ namespace UltraPortal {
 			if (wantsToClose) {
 				WantsToReset = !triggeredPortalReset;
 				if (!triggeredPortalReset) {
-					_animator.Play(_info.CloseAnimation);
 					triggeredPortalReset = true;
+					_animator.Play(_info.CloseAnimation);
 				}
 				
 				return;
 			}
-			else {
-				triggeredPortalReset = false;
-				WantsToReset = false;
-			}
-			
+
+			triggeredPortalReset = false;
+			WantsToReset = false;
+
 			HandleFiring();
 		}
 
