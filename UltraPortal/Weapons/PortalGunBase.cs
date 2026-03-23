@@ -2,20 +2,15 @@ using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
+using UltraPortal.Shared;
 using UnityEngine;
 using static UltraPortal.Constants;
-using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	public abstract class PortalGunBase : GunBase {
 		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
-		
-		protected static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
-        protected static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire");
+		protected PortalGunInfo _info;
         protected Animator _animator;
-		
-		// funny typo
-		private const string LastProjectileVisual = "UltraPortalGun/PoralGunRig/RootPortal/Last Projectile";
 
 		public bool WantsToReset { get; protected set; }
 
@@ -23,22 +18,14 @@ namespace UltraPortal {
 		
 		protected override void Start() {
 			base.Start();
-			
-			Transform projectilePreviewTransform = transform.Find(LastProjectileVisual);
-			if (projectilePreviewTransform) {
-				LastProjectileColors = projectilePreviewTransform.gameObject.AddComponent<ProjectileColorManager>();
-			}
-			else {
-				Plugin.LogSource.LogWarning($"{LastProjectileVisual} is not present on portal gun!");
-			}
 
+			_info = GetComponent<PortalGunInfo>();
+			LastProjectileColors = _info.lastProjectile.AddComponent<ProjectileColorManager>();
+			
 			OnPrimaryFire += UpdateUsedPortalGun;
 			OnSecondaryFire += UpdateUsedPortalGun;
-			
-			_animator = GetComponentInChildren<Animator>();
-			if (!_animator) {
-				LogError("Animator wasn't found in portal gun children!");
-			}
+
+			_animator = _info.animator;
 		}
 
 		private void UpdateUsedPortalGun() {
@@ -105,10 +92,16 @@ namespace UltraPortal {
 				return;
 			}
 
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.IsPressed &&
-			    MonoSingleton<InputManager>.Instance.InputSource.Fire2.IsPressed) {
+			bool wantsToClose = ModConfig.CloseWithMouse.GetValue()
+				? (MonoSingleton<InputManager>.Instance.InputSource.Fire1.IsPressed &&
+				   MonoSingleton<InputManager>.Instance.InputSource.Fire2.IsPressed)
+				: Input.GetKeyDown(ModConfig.AltCloseKeybind.GetValue());
+				
+				
+			if (wantsToClose) {
 				WantsToReset = !triggeredPortalReset;
 				if (!triggeredPortalReset) {
+					_animator.Play(_info.CloseAnimation);
 					triggeredPortalReset = true;
 				}
 				

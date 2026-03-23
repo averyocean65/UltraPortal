@@ -66,13 +66,13 @@ namespace UltraPortal {
             OnPrimaryFire += () => {
                 FireProjectile(TwistEntry, PrimaryPortal);
                 UpdateLastProjectile(PortalSide.Enter);
-                _animator.Play(PrimaryFireAnimHash);
+                _animator.Play(_info.PrimaryFireAnimation);
             };
             
             OnSecondaryFire += () => {
                 FireProjectile(TwistExit, PrimaryPortal);
                 UpdateLastProjectile(PortalSide.Exit);
-                _animator.Play(SecondaryFireAnimHash);
+                _animator.Play(_info.AltFireAnimation);
             };
             
             InitPortal();

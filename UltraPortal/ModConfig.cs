@@ -9,6 +9,12 @@ namespace UltraPortal {
 		
 		[Configgable("Controls", "Portal Gun Slot")] 
 		public static ConfigKeybind PortalGunKeybind = new ConfigKeybind(KeyCode.Alpha7);
+		
+		[Configgable("Controls", "Close Portals With Mouse", description: "By default, you can close portals by pressing the primary and alternative fire at once, toggling this option off changes it to a keybind on your keyboard.")] 
+		public static ConfigToggle CloseWithMouse = new ConfigToggle(true);
+
+		[Configgable("Controls")]
+		public static ConfigKeybind AltCloseKeybind = new ConfigKeybind(KeyCode.None); 
 
 		// note: i do not have a better name for this
 		
