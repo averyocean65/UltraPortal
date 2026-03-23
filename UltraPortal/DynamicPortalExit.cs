@@ -93,6 +93,10 @@ namespace UltraPortal {
 			
 			gameObject.layer = PortalLayer;
 			_particles = info.spawnParticles;
+			_particles.transform.localScale *= ModConfig.PortalScaleMod.GetValue();
+
+			info.ambianceParticles.transform.localScale *= ModConfig.PortalScaleMod.GetValue();
+			
 			_passableBlockage = info.passable;
 
 			_colorManager = gameObject.AddComponent<PortalColorManager>();
