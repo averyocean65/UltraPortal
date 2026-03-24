@@ -1,7 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Interop.std;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
@@ -11,7 +11,8 @@ using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
-	// i sincerely apologize for the code inside of this class, i will clean it up someday, i promise.
+	// "Come on down to the other side / Come with us through the gates of hell"
+	// - "The Other Side" (2008) by Pendulum.
 	public class DynamicPortalExit : MonoBehaviour {
 		private const string TooCloseTrigger = "Too Close Trigger";
 		
@@ -251,19 +252,23 @@ namespace UltraPortal {
 
 			if (!other.attachedRigidbody) {
 				if (!other.isTrigger) {
+					LogVerboseInfo($"ENTRY TRAVEL: Adding {other.name} as collider!");
 					AddCollider(other);
 				}
 				
 				return;
 			}
 			
-			if (other.attachedRigidbody.isKinematic ||
-			    other.attachedRigidbody.constraints == RigidbodyConstraints.FreezeAll) {
+			if ((other.attachedRigidbody.isKinematic ||
+			    other.attachedRigidbody.constraints == RigidbodyConstraints.FreezeAll)
+			    && !LayerMaskDefaults.IsMatchingLayer(other.attachedRigidbody.gameObject.layer, LMD.EnemiesAndPlayer)) {
+				LogVerboseError($"ENTRY TRAVEL: {other.name} has too many rigidbody constraints!");
 				return;
 			}
 
 			// it is 2AM and I am tired, so I'm just hardcoding this edge-case
 			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") || other.name.Contains("Ground Check")) {
+				LogVerboseError($"ENTRY TRAVEL: {other.name} is a ground check or projectile parry zone!");
 				return;
 			}
 			
@@ -287,10 +292,17 @@ namespace UltraPortal {
 					return;
 				}
 
-				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
+				if (attachedCollider.GetComponent<EnemyIdentifierIdentifier>()) {
+					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is EnemyIdentifierIdentifier");
 					_currentTravellers.SafeAdd(attachedCollider);
 				}
 				
+				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
+					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is EnemyIdentifier");
+					_currentTravellers.SafeAdd(attachedCollider);
+				}
+				
+				LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is traveller!");
 				_currentTravellers.SafeAdd(other);
 			}
 			
@@ -412,22 +424,37 @@ namespace UltraPortal {
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
 			}
 
-			EnemyIdentifier eid = other.GetComponent<EnemyIdentifier>();
+			EnemyIdentifierIdentifier eidid = other.GetComponent<EnemyIdentifierIdentifier>();
+			EnemyIdentifier eid;
+
+			LogVerboseInfo($"Has EIDID: {eidid}");
+			
+			if (eidid) {
+				eid = eidid.eid;
+			}
+			else {
+				eid = other.GetComponent<EnemyIdentifier>();
+			}
+
 			if (eid) {
 				if (!assisted) {
-					value = true;
+					value = false;
 				}
 				
 				LogInfo($"enabling enemy: {value}");
 
-				// literally just for debugging
 				if (value) {
-					eid.StartBurning(0.4f);
+					eid.gce.toIgnore.SafeAddRange(_colliders);
 				}
 				else {
-					eid.Sandify();
+					StartCoroutine(IClearEnemyGroundCheck(eid));
 				}
 			}
+		}
+
+		private IEnumerator IClearEnemyGroundCheck(EnemyIdentifier eid) {
+			yield return new WaitForSecondsRealtime(0.05f);
+			eid.gce.toIgnore.SafeRemoveRange(_colliders);
 		}
 		
 		private void ToggleColliders(bool value, Collider other, bool assisted, PortalSide inputSide) {

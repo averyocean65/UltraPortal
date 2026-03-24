@@ -20,6 +20,21 @@ namespace UltraPortal.Extensions {
 			list.Add(element);
 		}
 		
+		public static void SafeAddRange<T>(this List<T> list, IEnumerable<T> elements) {
+			if (elements == null) {
+				return;
+			}
+
+			if (list == null) {
+				LogError("List is null!");
+				return;
+			}
+
+			foreach (var element in elements) {
+				list.SafeAdd(element);
+			}
+		}
+		
 		public static void SafeRemove<T>(this List<T> list, T element) {
 			if (element == null) {
 				return;
@@ -35,6 +50,21 @@ namespace UltraPortal.Extensions {
 			}
 			
 			list.Remove(element);
+		}
+		
+		public static void SafeRemoveRange<T>(this List<T> list, IEnumerable<T> elements) {
+			if (elements == null) {
+				return;
+			}
+
+			if (list == null) {
+				LogError("List is null!");
+				return;
+			}
+
+			foreach (var element in elements) {
+				list.SafeRemove(element);
+			}
 		}
 	}
 }

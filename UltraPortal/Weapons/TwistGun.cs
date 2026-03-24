@@ -87,8 +87,7 @@ namespace UltraPortal {
             yield return new WaitForSecondsRealtime(0.05f);
             
             rb.SetCustomGravityMode(true);
-            rb.SetCustomGravity(-exit.transform.forward.normalized *
-                                                     Physics.gravity.magnitude);
+            rb.SetCustomGravity(-exit.transform.forward.normalized * Physics.gravity.magnitude);
         }
         
         private bool _travelEventLocked = false;
