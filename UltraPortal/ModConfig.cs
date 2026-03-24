@@ -12,7 +12,7 @@ namespace UltraPortal {
 		
 		[Configgable("Controls", "Close Portals With Mouse", description: "By default, you can close portals by pressing the primary and alternative fire at once, toggling this option off changes it to a keybind on your keyboard.")] 
 		public static ConfigToggle CloseWithMouse = new ConfigToggle(true);
-
+		
 		[Configgable("Controls")]
 		public static ConfigKeybind AltCloseKeybind = new ConfigKeybind(KeyCode.None); 
 

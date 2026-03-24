@@ -223,8 +223,8 @@ namespace UltraPortal {
 			
 			_colorManager.ColorPortal();
 			_keepActive.target = gameObject;
-      
-      ShowForwardArrow(transform.position, -transform.forward, 10f);
+			
+			ShowForwardArrow(transform.position, -transform.forward, 10f);
       
 			if (!AudioManager.Instance) {
 				LogError("Audio Manager is not present in scene!");
@@ -390,9 +390,9 @@ namespace UltraPortal {
 
 			if (otherExit) {
 				otherExit.CalculateAssistance();
-				otherExit._toggleColliderAction.Invoke(side, other, false, otherExit.AssistedPortalTravel);
+				otherExit._toggleColliderAction.Invoke(side, other, false, true);
 			}
-			_toggleColliderAction.Invoke(side, other, false, AssistedPortalTravel);
+			_toggleColliderAction.Invoke(side, other, false, true);
 			_currentTravellers.SafeRemove(other);
 		}
 
@@ -417,7 +417,16 @@ namespace UltraPortal {
 				if (!assisted) {
 					value = true;
 				}
-				other.attachedRigidbody.detectCollisions = value;
+				
+				LogInfo($"enabling enemy: {value}");
+
+				// literally just for debugging
+				if (value) {
+					eid.StartBurning(0.4f);
+				}
+				else {
+					eid.Sandify();
+				}
 			}
 		}
 		
