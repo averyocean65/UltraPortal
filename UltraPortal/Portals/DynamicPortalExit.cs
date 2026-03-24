@@ -14,12 +14,8 @@ namespace UltraPortal {
 	// "Come on down to the other side / Come with us through the gates of hell"
 	// - "The Other Side" (2008) by Pendulum.
 	public class DynamicPortalExit : MonoBehaviour {
-		private const string TooCloseTrigger = "Too Close Trigger";
-		
 		private static bool _playerNearEntry;
 		private static bool _playerNearExit;
-		
-		private const string ExpectedPassableName = "Passable";
 
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
@@ -291,16 +287,15 @@ namespace UltraPortal {
 				if (other.name.Contains("EnvironmentChunk")) {
 					return;
 				}
-
-				if (attachedCollider.GetComponent<EnemyIdentifierIdentifier>()) {
-					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is EnemyIdentifierIdentifier");
-					_currentTravellers.SafeAdd(attachedCollider);
-				}
 				
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
-					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is EnemyIdentifier");
+					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifier)}");
 					_currentTravellers.SafeAdd(attachedCollider);
 				}
+				// else if (attachedCollider.GetComponent<EnemyIdentifierIdentifier>()) {
+				// 	LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifierIdentifier)}");
+				// 	_currentTravellers.SafeAdd(attachedCollider);
+				// }
 				
 				LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is traveller!");
 				_currentTravellers.SafeAdd(other);
@@ -383,7 +378,7 @@ namespace UltraPortal {
 		public void SetPassable(bool canPass) {
 			if(!_passableBlockage) {
 				LogWarning(
-					$"{name} doesn't have a portal blockage defined! Ensure your blockage is called: \"{ExpectedPassableName}\"");
+					$"{name} doesn't have a portal blockage defined!");
 				return;
 			}
 			
@@ -426,8 +421,6 @@ namespace UltraPortal {
 
 			EnemyIdentifierIdentifier eidid = other.GetComponent<EnemyIdentifierIdentifier>();
 			EnemyIdentifier eid;
-
-			LogVerboseInfo($"Has EIDID: {eidid}");
 			
 			if (eidid) {
 				eid = eidid.eid;
@@ -441,10 +434,8 @@ namespace UltraPortal {
 					value = false;
 				}
 				
-				LogInfo($"enabling enemy: {value}");
-
 				if (value) {
-					eid.gce.toIgnore.SafeAddRange(_colliders);
+					eid.gce.toIgnore = _colliders;
 				}
 				else {
 					StartCoroutine(IClearEnemyGroundCheck(eid));
@@ -454,7 +445,7 @@ namespace UltraPortal {
 
 		private IEnumerator IClearEnemyGroundCheck(EnemyIdentifier eid) {
 			yield return new WaitForSecondsRealtime(0.05f);
-			eid.gce.toIgnore.SafeRemoveRange(_colliders);
+			eid.gce.toIgnore = new List<Collider>();
 		}
 		
 		private void ToggleColliders(bool value, Collider other, bool assisted, PortalSide inputSide) {
