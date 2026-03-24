@@ -113,7 +113,7 @@ namespace UltraPortal {
         }
 
         public void Reset() {
-            if (TwistEntry) {
+            if (TwistEntry) {   
                 TwistEntry.Reset();
                 TwistEntry.transform.position = DefaultPortalPosition;
             }
@@ -135,6 +135,20 @@ namespace UltraPortal {
             PrimaryPortal.onExitTravel = new UnityEventPortalTravel();
             PrimaryPortal.onExitTravel.AddListener((traveller, details) =>
                 OnObjectTravel(TwistEntry, traveller, details));
+        }
+        
+        private void OnDestroy() {
+            if (TwistEntry) {
+                Destroy(TwistEntry.gameObject);
+            }
+
+            if (TwistExit) {
+                Destroy(TwistExit.gameObject);
+            }
+			
+            if (PrimaryPortal) {
+                Destroy(PrimaryPortal.gameObject);
+            }
         }
     }
 }

@@ -108,5 +108,23 @@ namespace UltraPortal {
 			FlippedMirror.SetPassable(false);
 			FlippedMirror.transform.position = DefaultPortalPosition;
 		}
+		
+		private void OnDestroy() {
+			if (PrimaryMirror) {
+				Destroy(PrimaryMirror.gameObject);
+			}
+
+			if (FlippedMirror) {
+				Destroy(FlippedMirror.gameObject);
+			}
+			
+			if (_mirrorPortal) {
+				Destroy(_mirrorPortal.gameObject);
+			}
+			
+			if (_flippedMirrorPortal) {
+				Destroy(_flippedMirrorPortal.gameObject);
+			}
+		}
 	}
 }
