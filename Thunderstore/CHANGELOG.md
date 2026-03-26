@@ -17,6 +17,7 @@
 - *+USED PORTAL GUN* in the level end screen is only enabled when a portal gun was actually fired.
 - Buffed damage of portal projectile.
 - Portal projectiles only teleport light enemies now.
+- Portal guns can now be configured to instantly shoot portals instead of using projectiles. ([see issue](https://github.com/averyocean65/UltraPortal/issues/11))
 
 ### Audio
 - Added sound effects for portal guns.
@@ -36,8 +37,8 @@
   - Found at: `Visuals/Portals/Maximum Portal Recursions` and `Visuals/Portals/Infinite Portal Recursions`
 - Added setting to scale portals.
   - Found at: `Gameplay/Portals/Portal Scale Modifier`
-- Added setting to shoot portals instantaneously.
-  - Found at: `Gameplay/Projectiles/Experimental/Use Beam For Projectiles`
+- Added setting to shoot portals instantaneously. ([see issue](https://github.com/averyocean65/UltraPortal/issues/11))
+  - Found at: `Gameplay/Projectiles/Use Beam For Projectiles`
 - Added `Debug` category to configuration.
 - Added ability to hide portal borders.
 - Added `Audio` category to configuration.
