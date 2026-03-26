@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sandbox;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
@@ -82,13 +84,16 @@ namespace UltraPortal {
  
 		private AudioSource _ambianceSource;
 
+		private SandboxProp _sandbox;
+		
 		private void Awake() {
+			_sandbox = gameObject.AddComponent<SandboxProp>();
+			
 			info = GetComponent<PortalInfo>();
 			if (!info) {
 				LogError($"{nameof(PortalInfo)} not found on {name}!");
 			}
 			
-			gameObject.layer = PortalLayer;
 			_particles = info.spawnParticles;
 			_particles.transform.localScale *= ModConfig.PortalScaleMod.GetValue();
 
@@ -293,14 +298,15 @@ namespace UltraPortal {
 					return;
 				}
 				
+				// Vector3 dir = (transform.position - other.transform.position).normalized;
+				// dir.y = 0.0f;
+				// float dot = Vector3.Dot(transform.forward.normalized, dir);
+				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other.name}): {dot}");
+				
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
 					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifier)}");
 					_currentTravellers.SafeAdd(attachedCollider);
 				}
-				// else if (attachedCollider.GetComponent<EnemyIdentifierIdentifier>()) {
-				// 	LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifierIdentifier)}");
-				// 	_currentTravellers.SafeAdd(attachedCollider);
-				// }
 				
 				LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is traveller!");
 				_currentTravellers.SafeAdd(other);
