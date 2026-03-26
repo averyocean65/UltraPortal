@@ -193,36 +193,41 @@ namespace UltraPortal {
 			
 			_currentTravellers.Clear();
 		}
-
+		
 		public void Initialize(Portal portal, PortalSide portalSide, RaycastHit hit) {
+			Initialize(portal, portalSide, hit.point, hit.normal, hit.collider);
+		}
+
+		public void Initialize(Portal portal, PortalSide portalSide, Vector3 position, Vector3 forward,
+			Collider hitCollider = null) {
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
 			}
-			
+
 			Cleanup();
-			
-			if(ModConfig.ShowPortalSpawnParticles.GetValue() && _particles)
+
+			if (ModConfig.ShowPortalSpawnParticles.GetValue() && _particles)
 				_particles.Play();
 
-			transform.forward = -hit.normal;
-			transform.position = hit.point + hit.normal.normalized * ModConfig.PortalWallOffset.GetValue();
-			
+			transform.forward = forward;
+			transform.position = position + -forward.normalized * ModConfig.PortalWallOffset.GetValue();
+
 			hostPortal = portal;
 			side = portalSide;
 
-			AddCollider(hit.collider, true);
+			AddCollider(hitCollider, true);
 			GetNearbyCollider();
 
 			if (OnInitialized != null) {
 				OnInitialized.Invoke();
 			}
-			
+
 			_colorManager.ColorPortal();
 			_keepActive.target = gameObject;
-			
+
 			ShowForwardArrow(transform.position, -transform.forward, 10f);
-      
+
 			if (!AudioManager.Instance) {
 				LogError("Audio Manager is not present in scene!");
 				return;

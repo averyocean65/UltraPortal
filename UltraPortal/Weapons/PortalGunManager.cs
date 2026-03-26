@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
+using UltraPortal.Projectiles;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -22,6 +24,16 @@ namespace UltraPortal {
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
 		private TwistGun _twistGun;
+
+		public static void SummonPortalExit(DynamicPortalExit exit, Portal portal, Vector3 position, Vector3 forward,
+			Transform parent = null, Collider collider = null) {
+			exit.transform.parent = null;
+
+			Vector3 appliedScale = Vector3.one * PortalProjectileHelper.PortalScaleSceneStart;
+			exit.transform.localScale = new Vector3(appliedScale.x, appliedScale.y, 1.0f);
+			exit.transform.parent = parent;
+			exit.Initialize(portal, exit.side, position, forward, collider);
+		}
 
 		private GunBase SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, GunPosition defaultPos, GunPosition middlePos) {
 			if (!type.IsSubclassOf(typeof(GunBase))) {

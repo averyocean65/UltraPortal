@@ -18,23 +18,29 @@
 - Buffed damage of portal projectile.
 - Portal projectiles only teleport light enemies now.
 
+### Audio
+- Added sound effects for portal guns.
+  - Portal Open
+  - Portal Close
+- Added ambiance sound effect for (custom) portals.
+
 ### Config
 - Changed categorization of config values
   - Renamed `Advanced` sub-categories to `Experimental` to indicate that tweaking the values may cause significant bugs.
   - Moved portal color properties to `Visuals/Portals`.
 - Added individual colors for all portals.
+  - Found under: `Visuals/Portal Gun`, `Visuals/Mirror Gun` and `Visuals/Twist Gun`
 - Added setting to disable portal borders.
+  - Found at: `Visuals/Portals/Can See Portal Borders`
 - Added setting to change max recursions of portals.
+  - Found at: `Visuals/Portals/Maximum Portal Recursions` and `Visuals/Portals/Infinite Portal Recursions`
 - Added setting to scale portals.
+  - Found at: `Gameplay/Portals/Portal Scale Modifier`
+- Added setting to shoot portals instantaneously.
+  - Found at: `Gameplay/Projectiles/Experimental/Use Beam For Projectiles`
 - Added `Debug` category to configuration.
 - Added ability to hide portal borders.
 - Added `Audio` category to configuration.
-
-## Audio
-- Added sound effects for portal guns.
-  - Portal Open
-  - Portal Close
-- Added ambiance sound effect for (custom) portals.
 
 ### Visuals
 - Improved portal and portal gun designs by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).

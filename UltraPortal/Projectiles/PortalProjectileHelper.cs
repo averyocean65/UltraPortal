@@ -91,13 +91,7 @@ namespace UltraPortal.Projectiles {
 					return;
 				}
 
-				exit.transform.parent = null;
-
-				Vector3 appliedScale = Vector3.one * PortalScaleSceneStart;
-				exit.transform.localScale = new Vector3(appliedScale.x, appliedScale.y, 1.0f);
-				exit.transform.parent = hit.transform;
-				
-				exit.Initialize(portal, exit.side, hit);
+				PortalGunManager.SummonPortalExit(exit, portal, hit.point, -hit.normal, hit.transform, hit.collider);
 			}
 		}
 	}

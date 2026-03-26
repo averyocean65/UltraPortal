@@ -88,6 +88,9 @@ namespace UltraPortal {
 		[Configgable("Visuals")]
 		public static IntegerSlider ExplosionEmissionIntensity = new IntegerSlider(-1, -5, 5);
 		
+		[Configgable("Visuals/Portals", orderInList: 1)]
+		public static ConfigToggle CanSeePortalBorders = new ConfigToggle(true);
+		
 		[Configgable("Visuals/Portals", "Emission On Portal Border")]
 		public static ConfigToggle UseEmission = new ConfigToggle(true);
 		
@@ -108,13 +111,13 @@ namespace UltraPortal {
 		
 		[Configgable("Visuals/Style")]
 		public static ConfigColor ProjectileBonusColor = new ConfigColor(new Color(0, 1, 0));
-
-		[Configgable]
-		public static ConfigToggle CanSeePortalBorders = new ConfigToggle(true);
 		
 		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
 
+		[Configgable("Gameplay/Projectiles")]
+		public static ConfigToggle UseBeamForProjectiles = new ConfigToggle(false);
+		
 		[Configgable("Gameplay/Explosions")]
 		public static ConfigToggle AreExplosionsUltraboosters = new ConfigToggle(false);
 

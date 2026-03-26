@@ -74,17 +74,39 @@ namespace UltraPortal {
 			return exit;
 		}
 
-		private bool triggeredPortalReset = false;
-		protected virtual void FireProjectile(DynamicPortalExit exit, Portal portal) {
+		protected void FirePhysicsProjectile(DynamicPortalExit exit, Portal portal) {
 			Projectile projectile = SpawnProjectileFromAsset(AssetPaths.Projectile, ModConfig.PortalProjectileSpeed.GetValue());
 			PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 			helper.exit = exit;
 			helper.portal = portal;
-
+			
 			ProjectileColorManager colorManager = projectile.gameObject.AddComponent<ProjectileColorManager>();
 			colorManager.side = exit.side;
 			colorManager.variant = variant;
 			colorManager.ColorProjectile();
+		}
+
+		protected void FireBeamProjectile(DynamicPortalExit exit, Portal portal) {
+			bool success = PortalPhysicsV2.Raycast(MainCamera.transform.position, MainCamera.transform.forward,
+				out PhysicsCastResult result, Mathf.Infinity,
+				EnvironmentLayer, QueryTriggerInteraction.Ignore);
+
+			if (!success) {
+				return;
+			}
+
+			PortalGunManager.SummonPortalExit(exit, portal, result.point, -result.normal, result.transform,
+				result.collider);
+		}
+
+		private bool triggeredPortalReset = false;
+		protected virtual void FireProjectile(DynamicPortalExit exit, Portal portal) {
+			if (ModConfig.UseBeamForProjectiles.GetValue()) {
+				FireBeamProjectile(exit, portal);
+				return;
+			}
+			
+			FirePhysicsProjectile(exit, portal);
 		}
 
 		protected virtual void Update() {
