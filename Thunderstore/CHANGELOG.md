@@ -40,7 +40,6 @@
 - Added setting to shoot portals instantaneously. ([see issue](https://github.com/averyocean65/UltraPortal/issues/11))
   - Found at: `Gameplay/Projectiles/Use Beam For Projectiles`
 - Added `Debug` category to configuration.
-- Added ability to hide portal borders.
 - Added `Audio` category to configuration.
 
 ### Visuals
