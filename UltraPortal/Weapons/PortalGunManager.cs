@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
@@ -29,10 +30,12 @@ namespace UltraPortal {
 		public static void SummonPortalExit(DynamicPortalExit exit, Portal portal, Vector3 position, Vector3 forward,
 			Transform parent = null, Collider collider = null) {
 			exit.transform.parent = null;
-
+			
 			Vector3 appliedScale = Vector3.one * PortalProjectileHelper.PortalScaleSceneStart;
+			
 			exit.transform.localScale = new Vector3(appliedScale.x, appliedScale.y, 1.0f);
-			exit.transform.parent = parent;
+			exit.transform.SetParent(parent, true);
+			
 			exit.Initialize(portal, exit.side, position, forward, collider);
 		}
 
