@@ -122,6 +122,10 @@ namespace UltraPortal {
 			return PrimaryMirror.ShouldBeDisabled() &&
 			       FlippedMirror.ShouldBeDisabled();
 		}
+		
+		public override bool ShouldPlayReset() {
+			return ShouldBeReset() && (PrimaryMirror.IsInitialized || FlippedMirror.IsInitialized);
+		}
 
 		public void Reset() {
 			if (PrimaryMirror) {

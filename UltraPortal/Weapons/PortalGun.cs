@@ -68,7 +68,6 @@ namespace UltraPortal {
 				FireProjectile(PortalExit, _portal);
 				UpdateLastProjectile(PortalSide.Exit);
 				_animator.Play(_info.AltFireAnimation);
-				
 			};
 			
 			InitPortals();
@@ -82,6 +81,10 @@ namespace UltraPortal {
 			}
 
 			return PortalEntry.ShouldBeDisabled() && PortalExit.ShouldBeDisabled();
+		}
+
+		public override bool ShouldPlayReset() {
+			return ShouldBeReset() && (PortalEntry.IsInitialized || PortalExit.IsInitialized);
 		}
 
 		private void UpdatePortalPassable() {

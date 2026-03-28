@@ -111,6 +111,10 @@ namespace UltraPortal {
 
             return TwistEntry.ShouldBeDisabled() && TwistExit.ShouldBeDisabled();
         }
+        
+        public override bool ShouldPlayReset() {
+            return ShouldBeReset() && (TwistEntry.IsInitialized || TwistExit.IsInitialized);
+        }
 
         public void Reset() {
             if (TwistEntry) {   

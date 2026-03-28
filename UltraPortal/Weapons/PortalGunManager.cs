@@ -120,6 +120,11 @@ namespace UltraPortal {
 
 				yield return new WaitForSeconds(PortalGunResetWait);
 			}
+
+			if (gun.ShouldPlayReset()) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position,
+					spatialBlend: 0.0f);
+			}
 			
 			gun.Invoke("Reset", 0.0f);
 		}
@@ -162,11 +167,6 @@ namespace UltraPortal {
 					StartCoroutine(IDestroyPortals(_twistGun, _twistGun.TwistExit, _twistGun.TwistExit));
 					break;
 				}
-			}
-
-			if (useSfx) {
-				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position,
-					spatialBlend: 0.0f);
 			}
 		}
 		

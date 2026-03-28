@@ -43,6 +43,7 @@ namespace UltraPortal {
 		}
 
 		public abstract bool ShouldBeReset();
+		public abstract bool ShouldPlayReset();
 
 		protected virtual void OnEnable() {
 			if (LastProjectileColors && LastProjectileColors.FirstColorDone) {
@@ -124,7 +125,10 @@ namespace UltraPortal {
 				WantsToReset = !triggeredPortalReset;
 				if (!triggeredPortalReset) {
 					triggeredPortalReset = true;
-					_animator.Play(_info.CloseAnimation);
+
+					if (ShouldPlayReset()) {
+						_animator.Play(_info.CloseAnimation);
+					}
 				}
 				
 				return;
