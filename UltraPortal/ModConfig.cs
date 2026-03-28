@@ -41,44 +41,44 @@ namespace UltraPortal {
 		public static ConfigToggle UseOtherPortalForProjectileTeleport = new ConfigToggle(true);
 		
 		#region Portal Gun
-		[Configgable("Visuals/Portal Gun")]
+		[Configgable("Visuals/Guns/Portal Gun")]
 		public static ConfigColor PrimaryPortalColor = new ConfigColor(new Color(0.9882352941f, 0.0117647059f, 0.2705882353f));
 		
-		[Configgable("Visuals/Portal Gun/Particles")]
+		[Configgable("Visuals/Guns/Portal Gun/Particles")]
 		public static ConfigColor PrimaryPortalParticleColor = new ConfigColor(new Color(0.5803921569f, 0.0941176471f, 0.2235294118f));
 		
-		[Configgable("Visuals/Portal Gun")]
+		[Configgable("Visuals/Guns/Portal Gun")]
 		public static ConfigColor SecondaryPortalColor = new ConfigColor(new Color(0.1803921569f, 0.2352941176f, 1f));
 		
-		[Configgable("Visuals/Portal Gun/Particles")]
+		[Configgable("Visuals/Guns/Portal Gun/Particles")]
 		public static ConfigColor SecondaryPortalParticleColor = new ConfigColor(new Color(0.1019607843f, 0.1176470588f, 0.3607843137f));
 		#endregion
 		
 		#region Mirror Gun
-		[Configgable("Visuals/Mirror Gun")]
+		[Configgable("Visuals/Guns/Mirror Gun")]
 		public static ConfigColor PrimaryMirrorColor = new ConfigColor(new Color(0, 1, 0.369f));
 		
-		[Configgable("Visuals/Mirror Gun/Particles")]
+		[Configgable("Visuals/Guns/Mirror Gun/Particles")]
 		public static ConfigColor PrimaryMirrorParticleColor = new ConfigColor(new Color(0, 0.639f, 0.235f));
 		
-		[Configgable("Visuals/Mirror Gun")]
+		[Configgable("Visuals/Guns/Mirror Gun")]
 		public static ConfigColor FlippedMirrorColor = new ConfigColor(new Color(1, 0.78f, 0));
 		
-		[Configgable("Visuals/Mirror Gun/Particles")]
+		[Configgable("Visuals/Guns/Mirror Gun/Particles")]
 		public static ConfigColor FlippedMirrorParticleColor = new ConfigColor(new Color(0.741f, 0.58f, 0));
 		#endregion
 
 		#region Twist Gun
-		[Configgable("Visuals/Twist Gun")]
+		[Configgable("Visuals/Guns/Twist Gun")]
 		public static ConfigColor PrimaryTwistColor = new ConfigColor(new Color(1, 0, 0));
 		
-		[Configgable("Visuals/Twist Gun/Particles")]
+		[Configgable("Visuals/Guns/Twist Gun/Particles")]
 		public static ConfigColor PrimaryTwistParticleColor = new ConfigColor(new Color(0.8f, 0, 0));
 		
-		[Configgable("Visuals/Twist Gun")]
+		[Configgable("Visuals/Guns/Twist Gun")]
 		public static ConfigColor SecondaryTwistColor = new ConfigColor(new Color(1, 1, 1));
 		
-		[Configgable("Visuals/Twist Gun/Particles")]
+		[Configgable("Visuals/Guns/Twist Gun/Particles")]
 		public static ConfigColor SecondaryTwistParticleColor = new ConfigColor(new Color(0.8f, 0.8f, 0.8f));
 		#endregion
 		
@@ -112,13 +112,13 @@ namespace UltraPortal {
 		[Configgable("Visuals/Style")]
 		public static ConfigColor ProjectileBonusColor = new ConfigColor(new Color(0, 1, 0));
 		
-		[Configgable("Gameplay/Projectiles/Experimental", "Projectile Speed")]
+		[Configgable("Gameplay/Guns/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);
 
-		[Configgable("Gameplay/Projectiles")]
+		[Configgable("Gameplay/Guns")]
 		public static ConfigToggle UseBeamForProjectiles = new ConfigToggle(false);
 		
-		[Configgable("Gameplay/Explosions")]
+		[Configgable("Gameplay")]
 		public static ConfigToggle AreExplosionsUltraboosters = new ConfigToggle(false);
 
 		[Configgable(displayName: "Enabled")]
@@ -129,10 +129,10 @@ namespace UltraPortal {
 		[Configgable("Gameplay/Portals", "Portal Scale Modifier", description: RequiresLevelReload)]
 		public static ConfigInputField<float> PortalScaleMod = new ConfigInputField<float>(1.0f);
 		
-		[Configgable("Gameplay/Projectiles/Experimental")]
+		[Configgable("Gameplay/Guns/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyGroundPortalBoostMultiplier = new ConfigInputField<float>(0.5f);
 		
-		[Configgable("Gameplay/Projectiles/Experimental")]
+		[Configgable("Gameplay/Guns/Experimental")]
 		public static ConfigInputField<float> ProjectileEnemyNormalPortalBoostMultiplier = new ConfigInputField<float>(2f);
 
 		[Configgable("Gameplay/Portals/Experimental", "Minimum Entry/Exit Speed", description: RequiresLevelReload)]
