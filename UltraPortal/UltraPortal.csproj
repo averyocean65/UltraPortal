@@ -99,6 +99,7 @@
         <Compile Include="Patches\PlayerPatches.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Portals\DynamicPortalExit.cs" />
+        <Compile Include="Portals\PortalSandboxObject.cs" />
         <Compile Include="Projectiles\PortalProjectileHelper.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Utils\CollisionPrinter.cs" />

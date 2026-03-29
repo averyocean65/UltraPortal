@@ -85,10 +85,10 @@ namespace UltraPortal {
  
 		private AudioSource _ambianceSource;
 
-		private SandboxProp _sandbox;
+		private PortalSandboxObject _sandbox;
 		
 		private void Awake() {
-			_sandbox = gameObject.AddComponent<SandboxProp>();
+			_sandbox = gameObject.AddComponent<PortalSandboxObject>();
 			
 			info = GetComponent<PortalInfo>();
 			if (!info) {
