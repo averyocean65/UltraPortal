@@ -1,23 +1,26 @@
 using System;
 using Sandbox;
+using UnityEngine;
 
 namespace UltraPortal {
-	public class PortalSandboxObject : SandboxProp, IAlter, IAlterOptions<bool> {
-		public bool remain { get; private set; } = false;
+	public class PortalSandboxObject : SandboxProp, IAlter, IAlterOptions<Vector3> {
 		public string alterKey => "ultraportal_portals";
-		public string alterCategoryName => nameof(DynamicPortalExit);
+		public string alterCategoryName => "ULTRAPORTALS";
 
-		public AlterOption<bool>[] options {
+		AlterOption<Vector3>[] IAlterOptions<Vector3>.options {
 			get {
-				return new AlterOption<bool>[1] {
-					new AlterOption<bool>() {
-						key = "remain",
-						name = "Remain In Scene?",
-						value = remain,
-						callback = value => remain = value
-					}
+				return new[] {
+					new AlterOption<Vector3>() {
+						key = "rotation",
+						name = "Local Rotation",
+						value = transform.localEulerAngles,
+						callback = value => transform.localEulerAngles = value
+					},
+					
 				};
 			}
 		}
+
+		public override void SetSize(Vector3 size) { }
 	}
 }

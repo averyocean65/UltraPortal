@@ -132,12 +132,10 @@ namespace UltraPortal {
         public void Reset() {
             if (TwistEntry) {   
                 TwistEntry.Reset();
-                TwistEntry.transform.position = DefaultPortalPosition;
             }
 
             if (TwistExit) {
                 TwistExit.Reset();
-                TwistExit.transform.position = DefaultPortalPosition;
             }
 
             UpdatePortalPassable();

@@ -116,12 +116,10 @@ namespace UltraPortal {
 		public void Reset() {
 			if (PortalEntry) {
 				PortalEntry.Reset();
-				PortalEntry.transform.position = DefaultPortalPosition;
 			}
 
 			if (PortalExit) {
 				PortalExit.Reset();
-				PortalExit.transform.position = DefaultPortalPosition;
 			}
 
 			UpdatePortalPassable();

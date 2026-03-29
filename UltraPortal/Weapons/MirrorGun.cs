@@ -130,14 +130,10 @@ namespace UltraPortal {
 		public void Reset() {
 			if (PrimaryMirror) {
 				PrimaryMirror.Reset();
-				PrimaryMirror.SetPassable(false);
-				PrimaryMirror.transform.position = DefaultPortalPosition;
 			}
 
 			if (FlippedMirror) {
 				FlippedMirror.Reset();
-				FlippedMirror.SetPassable(false);
-				FlippedMirror.transform.position = DefaultPortalPosition;
 			}
 		}
 		

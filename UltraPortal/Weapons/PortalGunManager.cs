@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sandbox.Arm;
 using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
@@ -260,7 +261,7 @@ namespace UltraPortal {
 
 			_wasEnabledLastFrame = true;
 
-			if (OptionsManager.Instance.paused) {
+			if (OptionsManager.Instance.paused || GameStateManager.Instance.PlayerInputLocked || !GunControl.Instance.activated) {
 				return;
 			}
 

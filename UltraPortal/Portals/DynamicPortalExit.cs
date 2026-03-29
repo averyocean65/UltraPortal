@@ -206,6 +206,13 @@ namespace UltraPortal {
 
 		public void Initialize(Portal portal, PortalSide portalSide, Vector3 position, Vector3 forward,
 			Collider hitCollider = null) {
+			if (_sandbox) {
+				if (_sandbox.frozen) {
+					HudMessageReceiver.Instance.SendHudMessage("The portal you attempted to set is <color=#00FFFF>frozen</color>.");
+					return;
+				}
+			}
+			
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
@@ -425,6 +432,13 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
+			if (_sandbox) {
+				if (_sandbox.frozen) {
+					return;
+				}
+			}
+			
+			transform.position = PortalGunBase.DefaultPortalPosition;
 			Cleanup();
 		}
 
