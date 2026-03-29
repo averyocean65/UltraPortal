@@ -41,6 +41,9 @@ namespace UltraPortal {
 
 		public static bool UsedPortalGun = false;
 		private int _currentVariationIndex = -1;
+		
+		private bool _wasEnabledLastFrame = false;
+		private bool _showedWarning = false;
 
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
@@ -189,8 +192,6 @@ namespace UltraPortal {
 			}
 		}
 		
-		private bool _wasEnabledLastFrame = false;
-		private bool _showedWarning = false;
 		private void Update() {
 			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
 				_currentVariationIndex = -1;
