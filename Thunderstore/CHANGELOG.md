@@ -18,6 +18,7 @@
 - Buffed damage of portal projectile.
 - Portal projectiles only teleport light enemies now.
 - Portal guns can now be configured to instantly shoot portals instead of using projectiles. ([see issue](https://github.com/averyocean65/UltraPortal/issues/11))
+- Custom portals can now be modified in sandbox.
 
 ### Audio
 - Added sound effects for portal guns.
@@ -47,4 +48,5 @@
   - Voronoi Shader for portal blockage taken from [ronja-tutorials](https://github.com/ronja-tutorials/ShaderTutorials/tree/master/Assets/028_Voronoi_Noise).
 
 ## Known Bugs
-- It is possible to trigger a portal from behind, which causes things like wall andi floor collisions to disable prematurely.
+- It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable when they shouldn't.
+- You cannot save a sandbox level if it contains portals.
