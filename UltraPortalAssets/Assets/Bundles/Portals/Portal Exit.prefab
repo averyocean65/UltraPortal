@@ -561,7 +561,7 @@ GameObject:
   - component: {fileID: 8886598135973059516}
   - component: {fileID: 7746152099610641030}
   - component: {fileID: 8876712063942642953}
-  m_Layer: 22
+  m_Layer: 30
   m_Name: Portal Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,8 +607,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6.2, y: 8.2, z: 5.359396}
-  m_Center: {x: 0, y: 0, z: 0.8520068}
+  m_Size: {x: 6.2, y: 8.2, z: 5.970176}
+  m_Center: {x: 0, y: 0, z: 0.5466168}
 --- !u!114 &8876712063942642953
 MonoBehaviour:
   m_ObjectHideFlags: 0

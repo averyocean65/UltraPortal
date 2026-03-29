@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
+using Sandbox.Arm;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
@@ -324,6 +325,15 @@ namespace UltraPortal {
 			
 			CalculateAssistance();
 			_toggleColliderAction.Invoke(side, other, true, AssistedPortalTravel);
+		}
+
+		private void Update() {
+			if (!PortalGunManager.Instance) {
+				return;
+			}
+
+			int layer = PortalGunManager.Instance.IsUsingSpawnerArm ? ItemLayer : PortalLayer;
+			gameObject.layer = layer;
 		}
 
 		private void OnDestroy() {

@@ -13,13 +13,32 @@ using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
-	public class PortalGunManager : MonoBehaviour {
-		public static PortalGunManager Instance;
-
+	public class PortalGunManager : MonoSingleton<PortalGunManager> {
 		private static float PortalGunResetWait = 0.1f;
-		
 		private static int PortalGunSlot = -1;
+
+		public bool IsUsingSpawnerArm { get; private set; } = false;
 		
+		private bool AnyPortalsInit {
+			get {
+				bool output = false;
+
+				if (_portalGun) {
+					output |= _portalGun.BothPortalsInit;
+				}
+
+				if (_mirrorGun) {
+					output |= _mirrorGun.PrimaryMirror || _mirrorGun.FlippedMirror;
+				}
+
+				if (_twistGun) {
+					output |= _twistGun.BothPortalsInit;
+				}
+
+				return output;
+			}
+		}
+
 		public static bool UsedPortalGun = false;
 		private int _currentVariationIndex = -1;
 
@@ -171,9 +190,21 @@ namespace UltraPortal {
 		}
 		
 		private bool _wasEnabledLastFrame = false;
+		private bool _showedWarning = false;
 		private void Update() {
 			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
 				_currentVariationIndex = -1;
+			}
+
+			IsUsingSpawnerArm = GunControl.Instance.currentSlotIndex == 6; 
+			if (IsUsingSpawnerArm) {
+				if (AnyPortalsInit) {
+					if (!_showedWarning) {
+						HudMessageReceiver.Instance.SendHudMessage(
+							"Custom Portals may behave <color=red>differently</color> when the spawner arm is equipped.");
+						_showedWarning = true;
+					}
+				}
 			}
 
 			if (!ModConfig.IsEnabled.GetValue()) {

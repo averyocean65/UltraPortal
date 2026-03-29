@@ -133,7 +133,7 @@ namespace UltraPortal {
 				
 				return;
 			}
-
+	
 			triggeredPortalReset = false;
 			WantsToReset = false;
 
