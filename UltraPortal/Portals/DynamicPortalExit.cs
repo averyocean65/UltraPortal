@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
 using Sandbox.Arm;
+using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
@@ -446,6 +447,10 @@ namespace UltraPortal {
 
 		private void HandleSpecialTraveller(bool value, Collider other, bool assisted, PortalSide inputSide) {
 			if (other.GetComponent<NewMovement>()) {
+				if (MonoSingleton<CheatsManager>.Instance.GetCheatState("ultrakill.noclip")) {
+					return;
+				}
+				
 				if (assisted && inputSide == side) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
