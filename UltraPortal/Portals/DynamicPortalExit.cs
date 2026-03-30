@@ -437,6 +437,8 @@ namespace UltraPortal {
 					return;
 				}
 			}
+
+			transform.parent = null;
 			
 			transform.position = PortalGunBase.DefaultPortalPosition;
 			Cleanup();
