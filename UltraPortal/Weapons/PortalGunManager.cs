@@ -203,7 +203,7 @@ namespace UltraPortal {
 				if (AnyPortalsInit) {
 					if (!_showedWarning) {
 						HudMessageReceiver.Instance.SendHudMessage(
-							"Custom Portals may behave <color=red>differently</color> when the spawner arm is equipped.");
+							"Custom Portals may behave <color=red>differently</color> while the spawner arm is equipped.");
 						_showedWarning = true;
 					}
 				}
