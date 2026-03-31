@@ -82,7 +82,7 @@ namespace UltraPortal {
         }
 
         private IEnumerator ISwitchRigidbodyGravity(Rigidbody rb, DynamicPortalExit exit) {
-            LogInfo("Changing player gravity");
+            LogInfo("Changing rigidbody gravity");
             
             yield return new WaitForSecondsRealtime(0.05f);
             
@@ -112,8 +112,8 @@ namespace UltraPortal {
                     LogVerboseWarning($"{mono.name} doesn't have a rigidbody! Aborting gravity change!");
                 }
                 
-                StartCoroutine(ISwitchRigidbodyGravity(rb, exit));
-                StartCoroutine(ITravelLock());
+                exit.StartCoroutine(ISwitchRigidbodyGravity(rb, exit));
+                exit.StartCoroutine(ITravelLock());
             }
         }
 
