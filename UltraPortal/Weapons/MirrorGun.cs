@@ -78,33 +78,6 @@ namespace UltraPortal {
 			InitMirror();
 		}
 		
-		public static Texture2D FlipTexture(Texture2D original)
-		{
-			int textureWidth = original.width;
-			int textureHeight = original.height;
-    
-			Color[] colorArray = original.GetPixels();
-                   
-			for (int j = 0; j < textureHeight; j++)
-			{
-				int rowStart = 0;
-				int rowEnd = textureWidth - 1;
-    
-				while (rowStart < rowEnd)
-				{
-					(colorArray[(j * textureWidth) + (rowStart)], colorArray[(j * textureWidth) + (rowEnd)]) = (colorArray[(j * textureWidth) + (rowEnd)], colorArray[(j * textureWidth) + (rowStart)]);
-					rowStart++;
-					rowEnd--;
-				}
-			}
-                  
-			Texture2D finalFlippedTexture = new Texture2D(original.width, original.height);
-			finalFlippedTexture.SetPixels(colorArray);
-			finalFlippedTexture.Apply();
-    
-			return finalFlippedTexture;
-		}
-		
 		private void InitMirror() {
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
 			

@@ -138,7 +138,11 @@ namespace UltraPortal {
 			bool gunShouldReset = gun.ShouldBeReset();
 			if (!gunShouldReset) {
 				foreach (var exit in exits) {
-					SpawnPortalExplosion(exit.PortalCenter);
+					if (!exit) {
+						continue;
+					}
+
+					SpawnPortalExplosion(exit.transform.position);
 				}
 
 				yield return new WaitForSeconds(PortalGunResetWait);
@@ -266,15 +270,15 @@ namespace UltraPortal {
 			}
 
 			if (_portalGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.BlueVariant, true);
+				DestroyPortals(_portalGun.variant, true);
 			}
 			
 			if (_mirrorGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.GreenVariant, true);
+				DestroyPortals(_mirrorGun.variant, true);
 			}
 			
 			if (_twistGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.RedVariant, true);
+				DestroyPortals(_twistGun.variant, true);
 			}
 
 			int slotIndex = PortalGunSlot - 1;
