@@ -282,12 +282,11 @@ namespace UltraPortal {
 			}
 
 			// it is 2AM and I am tired, so I'm just hardcoding this edge-case
-			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") || other.name.Contains("Ground Check")) {
+			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") ||
+			    other.name.Contains("Ground Check")) {
 				LogVerboseError($"ENTRY TRAVEL: {other.name} is a ground check or projectile parry zone!");
 				return;
 			}
-			
-			Collider attachedCollider = other.attachedRigidbody.GetComponent<Collider>();
 
 			// if (_tooClose) {
 			// 	if (!_tooClose.travellers.Contains(other)) {
@@ -301,6 +300,8 @@ namespace UltraPortal {
 			// }
 
 			if (!_currentTravellers.Contains(other)) {
+				Collider attachedCollider = other.attachedRigidbody.GetComponent<Collider>();
+				
 				// i know hardcoding is bad, but i can't find anything else to identify environment chunks by.
 				// so until someone finds something noteworthy about these stupid little things, this will stay.
 				if (other.name.Contains("EnvironmentChunk")) {
@@ -310,14 +311,14 @@ namespace UltraPortal {
 				// Vector3 dir = (transform.position - other.transform.position).normalized;
 				// dir.y = 0.0f;
 				// float dot = Vector3.Dot(transform.forward.normalized, dir);
-				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other.name}): {dot}");
+				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other. name}): {dot}");
 				
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
 					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifier)}");
 					_currentTravellers.SafeAdd(attachedCollider);
 				}
 				
-				LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is traveller!");
+				LogVerboseInfo($"ENTRY TRAVEL: {other.name} is traveller!");
 				_currentTravellers.SafeAdd(other);
 			}
 			
@@ -394,10 +395,7 @@ namespace UltraPortal {
 					return true;
 				}
 			}
-			
-			// filter
-			_currentTravellers = _currentTravellers.Where(x => x != null && x.gameObject.activeInHierarchy).ToList();
-
+					
 			_currentTravellers.ForEach(c => {
 				LogVerboseInfo($"{name} has traveller: {c.name}");
 			});
@@ -473,11 +471,11 @@ namespace UltraPortal {
 
 			if (eid) {
 				if (!assisted) {
-					value = false;
+					return;
 				}
-				
+
 				if (value) {
-					eid.gce.toIgnore = _colliders;
+					eid.gce.ForceOff();
 				}
 				else {
 					StartCoroutine(IClearEnemyGroundCheck(eid));
@@ -486,8 +484,8 @@ namespace UltraPortal {
 		}
 
 		private IEnumerator IClearEnemyGroundCheck(EnemyIdentifier eid) {
-			yield return new WaitForSecondsRealtime(0.05f);
-			eid.gce.toIgnore = new List<Collider>();
+			yield return new WaitForSecondsRealtime(0.1f);
+			eid.gce.StopForceOff();
 		}
 		
 		private void ToggleColliders(bool value, Collider other, bool assisted, PortalSide inputSide) {
