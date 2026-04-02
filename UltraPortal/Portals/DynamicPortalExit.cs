@@ -474,12 +474,7 @@ namespace UltraPortal {
 					return;
 				}
 
-				if (value) {
-					eid.gce.ForceOff();
-				}
-				else {
-					StartCoroutine(IClearEnemyGroundCheck(eid));
-				}
+				other.attachedRigidbody.detectCollisions = value;
 			}
 		}
 
