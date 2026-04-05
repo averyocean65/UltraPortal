@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using Sandbox;
-using Sandbox.Arm;
-using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
@@ -84,9 +81,10 @@ namespace UltraPortal {
 
 		private KeepActive _keepActive;
  
-		private AudioSource _ambianceSource;
-
 		private PortalSandboxObject _sandbox;
+		private AudioSource _ambianceSource;
+		private Dictionary<EnemyIdentifier, Rigidbody> _eidRbMap = new Dictionary<EnemyIdentifier, Rigidbody>();
+
 		
 		private void Awake() {
 			_sandbox = gameObject.AddComponent<PortalSandboxObject>();
@@ -207,13 +205,6 @@ namespace UltraPortal {
 
 		public void Initialize(Portal portal, PortalSide portalSide, Vector3 position, Vector3 forward,
 			Collider hitCollider = null) {
-			if (_sandbox) {
-				if (_sandbox.frozen) {
-					HudMessageReceiver.Instance.SendHudMessage("The portal you attempted to set is <color=#00FFFF>frozen</color>.");
-					return;
-				}
-			}
-			
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
@@ -311,7 +302,7 @@ namespace UltraPortal {
 				// Vector3 dir = (transform.position - other.transform.position).normalized;
 				// dir.y = 0.0f;
 				// float dot = Vector3.Dot(transform.forward.normalized, dir);
-				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other. name}): {dot}");
+				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other.name}): {dot}");
 				
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
 					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifier)}");
@@ -395,7 +386,10 @@ namespace UltraPortal {
 					return true;
 				}
 			}
-					
+			
+			// filter
+			_currentTravellers = _currentTravellers.Where(x => x != null && x.gameObject.activeInHierarchy).ToList();
+
 			_currentTravellers.ForEach(c => {
 				LogVerboseInfo($"{name} has traveller: {c.name}");
 			});
@@ -471,15 +465,38 @@ namespace UltraPortal {
 
 			if (eid) {
 				if (!assisted) {
-					return;
+					value = false;
 				}
 
-				other.attachedRigidbody.detectCollisions = value;
+				Rigidbody rb = GetEnemyRigidbody(eid);
+				if (rb) {
+					float velocity = Mathf.Abs(rb.velocity.magnitude);
+					LogVerboseInfo(velocity.ToString(CultureInfo.InvariantCulture));
+					
+					if (velocity > ModConfig.EnemyMaxVelocity.GetValue()) {
+						rb.detectCollisions = false;
+					}
+				}
+				
+				if (value) {
+					eid.gce.ForceOff();
+				}
+				else {
+					StartCoroutine(IClearEnemyGroundCheck(eid));
+				}
 			}
 		}
 
+		private Rigidbody GetEnemyRigidbody(EnemyIdentifier eid) {
+			if (!_eidRbMap.TryGetValue(eid, out var rb)) {
+				eid.TryGetComponent(out rb);
+			}
+
+			return rb;
+		}
+
 		private IEnumerator IClearEnemyGroundCheck(EnemyIdentifier eid) {
-			yield return new WaitForSecondsRealtime(0.1f);
+			yield return new WaitForSecondsRealtime(0.05f);
 			eid.gce.StopForceOff();
 		}
 		
