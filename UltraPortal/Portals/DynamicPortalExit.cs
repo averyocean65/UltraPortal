@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Sandbox;
 using Sandbox.Arm;
@@ -80,12 +81,12 @@ namespace UltraPortal {
 		
 		private ParticleSystem _particles;
 		private PortalColorManager _colorManager;
-
 		private KeepActive _keepActive;
  
 		private AudioSource _ambianceSource;
-
 		private SandboxProp _sandbox;
+
+		private Dictionary<EnemyIdentifier, Rigidbody> _eidRbMap = new Dictionary<EnemyIdentifier, Rigidbody>();
 		
 		private void Awake() {
 			_sandbox = gameObject.AddComponent<SandboxProp>();
@@ -454,9 +455,19 @@ namespace UltraPortal {
 				if (!assisted) {
 					value = false;
 				}
+
+				Rigidbody rb = GetEnemyRigidbody(eid);
+				if (rb) {
+					float velocity = Mathf.Abs(rb.velocity.magnitude);
+					LogVerboseInfo(velocity.ToString(CultureInfo.InvariantCulture));
+					
+					if (velocity > ModConfig.EnemyMaxVelocity.GetValue()) {
+						rb.detectCollisions = false;
+					}
+				}
 				
 				if (value) {
-					eid.gce.toIgnore = _colliders;
+					eid.gce.ForceOff();
 				}
 				else {
 					StartCoroutine(IClearEnemyGroundCheck(eid));
@@ -464,9 +475,17 @@ namespace UltraPortal {
 			}
 		}
 
+		private Rigidbody GetEnemyRigidbody(EnemyIdentifier eid) {
+			if (!_eidRbMap.TryGetValue(eid, out var rb)) {
+				eid.TryGetComponent(out rb);
+			}
+
+			return rb;
+		}
+
 		private IEnumerator IClearEnemyGroundCheck(EnemyIdentifier eid) {
 			yield return new WaitForSecondsRealtime(0.05f);
-			eid.gce.toIgnore = new List<Collider>();
+			eid.gce.StopForceOff();
 		}
 		
 		private void ToggleColliders(bool value, Collider other, bool assisted, PortalSide inputSide) {
