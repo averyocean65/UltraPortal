@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sandbox.Arm;
 using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
@@ -41,6 +42,9 @@ namespace UltraPortal {
 
 		public static bool UsedPortalGun = false;
 		private int _currentVariationIndex = -1;
+		
+		private bool _wasEnabledLastFrame = false;
+		private bool _showedWarning = false;
 
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
@@ -134,7 +138,11 @@ namespace UltraPortal {
 			bool gunShouldReset = gun.ShouldBeReset();
 			if (!gunShouldReset) {
 				foreach (var exit in exits) {
-					SpawnPortalExplosion(exit.PortalCenter);
+					if (!exit) {
+						continue;
+					}
+
+					SpawnPortalExplosion(exit.transform.position);
 				}
 
 				yield return new WaitForSeconds(PortalGunResetWait);
@@ -189,8 +197,6 @@ namespace UltraPortal {
 			}
 		}
 		
-		private bool _wasEnabledLastFrame = false;
-		private bool _showedWarning = false;
 		private void Update() {
 			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
 				_currentVariationIndex = -1;
@@ -201,7 +207,7 @@ namespace UltraPortal {
 				if (AnyPortalsInit) {
 					if (!_showedWarning) {
 						HudMessageReceiver.Instance.SendHudMessage(
-							"Custom Portals may behave <color=red>differently</color> when the spawner arm is equipped.");
+							"Custom Portals may behave <color=red>differently</color> while the spawner arm is equipped.");
 						_showedWarning = true;
 					}
 				}
@@ -259,20 +265,20 @@ namespace UltraPortal {
 
 			_wasEnabledLastFrame = true;
 
-			if (OptionsManager.Instance.paused) {
+			if (OptionsManager.Instance.paused || GameStateManager.Instance.PlayerInputLocked || !GunControl.Instance.activated) {
 				return;
 			}
 
 			if (_portalGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.BlueVariant, true);
+				DestroyPortals(_portalGun.variant, true);
 			}
 			
 			if (_mirrorGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.GreenVariant, true);
+				DestroyPortals(_mirrorGun.variant, true);
 			}
 			
 			if (_twistGun.WantsToReset) {
-				DestroyPortals(WeaponVariant.RedVariant, true);
+				DestroyPortals(_twistGun.variant, true);
 			}
 
 			int slotIndex = PortalGunSlot - 1;

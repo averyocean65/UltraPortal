@@ -82,16 +82,28 @@ namespace UltraPortal {
         }
 
         private IEnumerator ISwitchRigidbodyGravity(Rigidbody rb, DynamicPortalExit exit) {
-            LogInfo("Changing player gravity");
-
+            LogInfo("Changing rigidbody gravity");
+            
             yield return new WaitForSecondsRealtime(0.05f);
             
             rb.SetCustomGravityMode(true);
             rb.SetCustomGravity(-exit.transform.forward.normalized * Physics.gravity.magnitude);
         }
+
+        private IEnumerator ITravelLock() {
+            _travelEventLocked = true;
+
+            yield return new WaitForSecondsRealtime(0.25f);
+
+            _travelEventLocked = false;
+        }
         
         private bool _travelEventLocked = false;
         private void OnObjectTravel(DynamicPortalExit exit, IPortalTraveller traveller, PortalTravelDetails details) {
+            if (_travelEventLocked) {
+                return;
+            }
+            
             LogVerboseInfo("Checking portal traveller");
             if (traveller is MonoBehaviour mono) {
                 LogVerboseInfo($"Found {nameof(MonoBehaviour)} on {mono.name}");
@@ -100,7 +112,8 @@ namespace UltraPortal {
                     LogVerboseWarning($"{mono.name} doesn't have a rigidbody! Aborting gravity change!");
                 }
                 
-                StartCoroutine(ISwitchRigidbodyGravity(rb, exit));
+                exit.StartCoroutine(ISwitchRigidbodyGravity(rb, exit));
+                exit.StartCoroutine(ITravelLock());
             }
         }
 
@@ -119,12 +132,10 @@ namespace UltraPortal {
         public void Reset() {
             if (TwistEntry) {   
                 TwistEntry.Reset();
-                TwistEntry.transform.position = DefaultPortalPosition;
             }
 
             if (TwistExit) {
                 TwistExit.Reset();
-                TwistExit.transform.position = DefaultPortalPosition;
             }
 
             UpdatePortalPassable();
@@ -132,9 +143,9 @@ namespace UltraPortal {
 
         private void InitPortal() {
             PrimaryPortal = CreatePortal("Twist Portal", TwistEntry.transform, TwistExit.transform, _portalSize);
-            // PrimaryPortal.onEntryTravel = new UnityEventPortalTravel();
-            // PrimaryPortal.onEntryTravel.AddListener((traveller, details) =>
-            //     OnObjectTravel(TwistExit, traveller, details));
+            PrimaryPortal.onEntryTravel = new UnityEventPortalTravel();
+            PrimaryPortal.onEntryTravel.AddListener((traveller, details) =>
+                OnObjectTravel(TwistExit, traveller, details));
             
             PrimaryPortal.onExitTravel = new UnityEventPortalTravel();
             PrimaryPortal.onExitTravel.AddListener((traveller, details) =>

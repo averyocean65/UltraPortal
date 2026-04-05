@@ -5,7 +5,28 @@ using UnityEngine;
 
 namespace UltraPortal {
     public static class Constants {
-        public static LayerMask EnvironmentLayer => LayerMaskDefaults.Get(LMD.Environment);
+        private static LayerMask _environmentLayer = -1;
+        private static LayerMask _travellerLayer = -1;
+
+        public static LayerMask EnvironmentLayer {
+            get {
+                if (_environmentLayer == -1) {
+                    _environmentLayer = LayerMaskDefaults.Get(LMD.Environment);
+                }
+
+                return _environmentLayer;
+            }
+        }
+        
+        public static LayerMask TravellerLayer {
+            get {
+                if (_travellerLayer == -1) {
+                    _travellerLayer = LayerMaskDefaults.Get(LMD.BigEnemiesEnvironmentAndPlayer);
+                }
+
+                return _travellerLayer;
+            }
+        }
         public static int PortalLayer => 30;
         public static int ItemLayer => 22;
 

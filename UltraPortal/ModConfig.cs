@@ -18,7 +18,7 @@ namespace UltraPortal {
 
 		// note: i do not have a better name for this
 		
-		[Configgable("Debugging", "Verbose Logging (may cause performance issues)")]
+		[Configgable("Debugging", "Verbose Logging", description: "Toggling this option allows the mod to log extra, often excessive, information to the BepInEx console. It may lead to severe performance issues. So only toggle it if you're debugging!")]
 		public static ConfigToggle VerboseLogging = new ConfigToggle(false);
 
 		[Configgable("Debugging", "Unload Asset Bundles",

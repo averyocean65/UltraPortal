@@ -3,10 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Sandbox;
-using Sandbox.Arm;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
@@ -81,15 +78,16 @@ namespace UltraPortal {
 		
 		private ParticleSystem _particles;
 		private PortalColorManager _colorManager;
+
 		private KeepActive _keepActive;
  
+		private PortalSandboxObject _sandbox;
 		private AudioSource _ambianceSource;
-		private SandboxProp _sandbox;
-
 		private Dictionary<EnemyIdentifier, Rigidbody> _eidRbMap = new Dictionary<EnemyIdentifier, Rigidbody>();
+
 		
 		private void Awake() {
-			_sandbox = gameObject.AddComponent<SandboxProp>();
+			_sandbox = gameObject.AddComponent<PortalSandboxObject>();
 			
 			info = GetComponent<PortalInfo>();
 			if (!info) {
@@ -275,12 +273,11 @@ namespace UltraPortal {
 			}
 
 			// it is 2AM and I am tired, so I'm just hardcoding this edge-case
-			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") || other.name.Contains("Ground Check")) {
+			if (other.name == "Projectile Parry Zone" || other.name.Contains("GroundCheck") ||
+			    other.name.Contains("Ground Check")) {
 				LogVerboseError($"ENTRY TRAVEL: {other.name} is a ground check or projectile parry zone!");
 				return;
 			}
-			
-			Collider attachedCollider = other.attachedRigidbody.GetComponent<Collider>();
 
 			// if (_tooClose) {
 			// 	if (!_tooClose.travellers.Contains(other)) {
@@ -294,6 +291,8 @@ namespace UltraPortal {
 			// }
 
 			if (!_currentTravellers.Contains(other)) {
+				Collider attachedCollider = other.attachedRigidbody.GetComponent<Collider>();
+				
 				// i know hardcoding is bad, but i can't find anything else to identify environment chunks by.
 				// so until someone finds something noteworthy about these stupid little things, this will stay.
 				if (other.name.Contains("EnvironmentChunk")) {
@@ -310,7 +309,7 @@ namespace UltraPortal {
 					_currentTravellers.SafeAdd(attachedCollider);
 				}
 				
-				LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is traveller!");
+				LogVerboseInfo($"ENTRY TRAVEL: {other.name} is traveller!");
 				_currentTravellers.SafeAdd(other);
 			}
 			
@@ -426,11 +425,24 @@ namespace UltraPortal {
 		}
 
 		public void Reset() {
+			if (_sandbox) {
+				if (_sandbox.frozen) {
+					return;
+				}
+			}
+
+			transform.parent = null;
+			
+			transform.position = PortalGunBase.DefaultPortalPosition;
 			Cleanup();
 		}
 
 		private void HandleSpecialTraveller(bool value, Collider other, bool assisted, PortalSide inputSide) {
 			if (other.GetComponent<NewMovement>()) {
+				if (MonoSingleton<CheatsManager>.Instance.GetCheatState("ultrakill.noclip")) {
+					return;
+				}
+				
 				if (assisted && inputSide == side) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
