@@ -1,16 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using Sandbox;
-using Sandbox.Arm;
-using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
 using UnityEngine;
+using UnityEngine.Events;
 using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
 
@@ -84,9 +82,10 @@ namespace UltraPortal {
 
 		private KeepActive _keepActive;
  
-		private AudioSource _ambianceSource;
-
 		private PortalSandboxObject _sandbox;
+		private AudioSource _ambianceSource;
+		private Dictionary<EnemyIdentifier, Rigidbody> _eidRbMap = new Dictionary<EnemyIdentifier, Rigidbody>();
+
 		
 		private void Awake() {
 			_sandbox = gameObject.AddComponent<PortalSandboxObject>();
@@ -114,6 +113,33 @@ namespace UltraPortal {
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				ToggleColliders(toggle, collider, assistance, portalSide);
 			};
+			
+			RegisterTriggers();
+		}
+
+		private void RegisterTriggers() {
+			void ColliderEventCaller(Collider collider, Action<Collider> action, PortalExitCollider exitCollider) {
+				if (exitCollider.detectsPlayer) {
+					if (LayerMaskDefaults.IsMatchingLayer(collider.gameObject.layer, LMD.Player)) {
+						action.Invoke(collider);
+					}
+				}
+				else {
+					action.Invoke(collider);
+				}
+			}
+			
+			info.playerDetectorTrigger.OnEnter.AddListener(c =>
+				ColliderEventCaller(c, TriggerEnterEvent, info.playerDetectorTrigger));
+			
+			info.playerDetectorTrigger.OnExit.AddListener(c =>
+				ColliderEventCaller(c, TriggerExitEvent, info.playerDetectorTrigger));
+			
+			info.otherDetectorTrigger.OnEnter.AddListener(c =>
+				ColliderEventCaller(c, TriggerEnterEvent, info.otherDetectorTrigger));
+			
+			info.otherDetectorTrigger.OnExit.AddListener(c =>
+				ColliderEventCaller(c, TriggerExitEvent, info.otherDetectorTrigger));
 		}
 
 		private void AddCollider(Collider c, bool checkChildren = true) {
@@ -260,7 +286,7 @@ namespace UltraPortal {
 			}
 		}
 
-		private void OnTriggerEnter(Collider other) {
+		private void TriggerEnterEvent(Collider other) {
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -311,7 +337,7 @@ namespace UltraPortal {
 				// Vector3 dir = (transform.position - other.transform.position).normalized;
 				// dir.y = 0.0f;
 				// float dot = Vector3.Dot(transform.forward.normalized, dir);
-				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other. name}): {dot}");
+				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other.name}): {dot}");
 				
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
 					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifier)}");
@@ -395,7 +421,10 @@ namespace UltraPortal {
 					return true;
 				}
 			}
-					
+			
+			// filter
+			_currentTravellers = _currentTravellers.Where(x => x != null && x.gameObject.activeInHierarchy).ToList();
+
 			_currentTravellers.ForEach(c => {
 				LogVerboseInfo($"{name} has traveller: {c.name}");
 			});
@@ -412,7 +441,7 @@ namespace UltraPortal {
 			_passableBlockage.SetActive(!canPass);
 		}
 
-		private void OnTriggerExit(Collider other) {
+		private void TriggerExitEvent(Collider other) {
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -471,15 +500,36 @@ namespace UltraPortal {
 
 			if (eid) {
 				if (!assisted) {
-					return;
+					value = false;
 				}
 
-				other.attachedRigidbody.detectCollisions = value;
+				Rigidbody rb = GetEnemyRigidbody(eid);
+				if (rb) {
+					float velocity = Mathf.Abs(rb.velocity.magnitude);
+					if (velocity > ModConfig.EnemyMaxVelocity.GetValue() && !eid.hooked) {
+						rb.detectCollisions = false;
+					}
+				}
+				
+				if (value) {
+					eid.gce.ForceOff();
+				}
+				else {
+					StartCoroutine(IClearEnemyGroundCheck(eid));
+				}
 			}
 		}
 
+		private Rigidbody GetEnemyRigidbody(EnemyIdentifier eid) {
+			if (!_eidRbMap.TryGetValue(eid, out var rb)) {
+				eid.TryGetComponent(out rb);
+			}
+
+			return rb;
+		}
+
 		private IEnumerator IClearEnemyGroundCheck(EnemyIdentifier eid) {
-			yield return new WaitForSecondsRealtime(0.1f);
+			yield return new WaitForSecondsRealtime(0.05f);
 			eid.gce.StopForceOff();
 		}
 		
