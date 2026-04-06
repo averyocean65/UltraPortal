@@ -1,17 +1,16 @@
-using System;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
+using UltraPortal.Shared;
 using UnityEngine;
 using static UltraPortal.Constants;
 
 namespace UltraPortal {
 	public abstract class PortalGunBase : GunBase {
 		public static readonly Vector3 DefaultPortalPosition = new Vector3(0, -1e6f, 0);
-		
-		// funny typo
-		private const string LastProjectileVisual = "UltraPortalGun/PoralGunRig/RootPortal/Last Projectile";
+		protected PortalGunInfo _info;
+        protected Animator _animator;
 
 		public bool WantsToReset { get; protected set; }
 
@@ -19,26 +18,32 @@ namespace UltraPortal {
 		
 		protected override void Start() {
 			base.Start();
+
+			_info = GetComponent<PortalGunInfo>();
+			LastProjectileColors = _info.lastProjectile.AddComponent<ProjectileColorManager>();
 			
-			Transform projectilePreviewTransform = transform.Find(LastProjectileVisual);
-			if (projectilePreviewTransform) {
-				LastProjectileColors = projectilePreviewTransform.gameObject.AddComponent<ProjectileColorManager>();
-			}
-			else {
-				Plugin.LogSource.LogWarning($"{LastProjectileVisual} is not present on portal gun!");
-			}
+			OnPrimaryFire += UpdateUsedPortalGun;
+			OnSecondaryFire += UpdateUsedPortalGun;
+
+			_animator = _info.animator;
 		}
-		
+
+		private void UpdateUsedPortalGun() {
+			PortalGunManager.UsedPortalGun = true;
+		}
+
 		protected virtual void UpdateLastProjectile(PortalSide side) {
 			if (!LastProjectileColors) {
 				return;
 			}
 
 			LastProjectileColors.side = side;
+			LastProjectileColors.variant = variant;
 			LastProjectileColors.ColorProjectile();
 		}
 
 		public abstract bool ShouldBeReset();
+		public abstract bool ShouldPlayReset();
 
 		protected virtual void OnEnable() {
 			if (LastProjectileColors && LastProjectileColors.FirstColorDone) {
@@ -60,6 +65,7 @@ namespace UltraPortal {
 			
 			GameObject portalEntryObject =
 				Instantiate(portalPrefab, spawnPos, Quaternion.identity);
+			
 			portalEntryObject.name = objectName;
 			DynamicPortalExit exit = portalEntryObject.AddComponent<DynamicPortalExit>();
 			exit.side = side;
@@ -69,16 +75,39 @@ namespace UltraPortal {
 			return exit;
 		}
 
-		private bool triggeredPortalReset = false;
-		protected virtual void FireProjectile(DynamicPortalExit exit, Portal portal) {
+		protected void FirePhysicsProjectile(DynamicPortalExit exit, Portal portal) {
 			Projectile projectile = SpawnProjectileFromAsset(AssetPaths.Projectile, ModConfig.PortalProjectileSpeed.GetValue());
 			PortalProjectileHelper helper = projectile.gameObject.AddComponent<PortalProjectileHelper>();
 			helper.exit = exit;
 			helper.portal = portal;
-
+			
 			ProjectileColorManager colorManager = projectile.gameObject.AddComponent<ProjectileColorManager>();
 			colorManager.side = exit.side;
+			colorManager.variant = variant;
 			colorManager.ColorProjectile();
+		}
+
+		protected void FireBeamProjectile(DynamicPortalExit exit, Portal portal) {
+			bool success = PortalPhysicsV2.Raycast(MainCamera.transform.position, MainCamera.transform.forward,
+				out PhysicsCastResult result, Mathf.Infinity,
+				EnvironmentLayer, QueryTriggerInteraction.Ignore);
+
+			if (!success) {
+				return;
+			}
+
+			PortalGunManager.SummonPortalExit(exit, portal, result.point, -result.normal, result.transform,
+				result.collider);
+		}
+
+		private bool triggeredPortalReset = false;
+		protected virtual void FireProjectile(DynamicPortalExit exit, Portal portal) {
+			if (ModConfig.UseBeamForProjectiles.GetValue()) {
+				FireBeamProjectile(exit, portal);
+				return;
+			}
+			
+			FirePhysicsProjectile(exit, portal);
 		}
 
 		protected virtual void Update() {
@@ -86,20 +115,28 @@ namespace UltraPortal {
 				return;
 			}
 
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire1.IsPressed &&
-			    MonoSingleton<InputManager>.Instance.InputSource.Fire2.IsPressed) {
+			bool wantsToClose = ModConfig.CloseWithMouse.GetValue()
+				? (MonoSingleton<InputManager>.Instance.InputSource.Fire1.IsPressed &&
+				   MonoSingleton<InputManager>.Instance.InputSource.Fire2.IsPressed)
+				: Input.GetKeyDown(ModConfig.AltCloseKeybind.GetValue());
+				
+				
+			if (wantsToClose) {
 				WantsToReset = !triggeredPortalReset;
 				if (!triggeredPortalReset) {
 					triggeredPortalReset = true;
+
+					if (ShouldPlayReset()) {
+						_animator.Play(_info.CloseAnimation);
+					}
 				}
 				
 				return;
 			}
-			else {
-				triggeredPortalReset = false;
-				WantsToReset = false;
-			}
-			
+	
+			triggeredPortalReset = false;
+			WantsToReset = false;
+
 			HandleFiring();
 		}
 
@@ -111,8 +148,14 @@ namespace UltraPortal {
 			Portal portal = portalObject.AddComponent<Portal>();
 			portal.allowCameraTraversals = true;
 			portal.appearsInRecursions = true;
+			portal.maxRecursions = ModConfig.MaxPortalRecursions.GetValue();
+			portal.supportInfiniteRecursion = ModConfig.InfiniteRecursions.GetValue();
+			
 			portal.canSeeItself = true;
 			portal.canSeePortalLayer = true;
+
+			portal.consumeAudio = false;
+			portal.canHearAudio = false;
 			
 			portal.entry = entry;
 			portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1091552195915551170}
+  - component: {fileID: 2555399372775400188}
   m_Layer: 13
   m_Name: Portal Gun
   m_TagString: Untagged
@@ -32,6 +33,23 @@ Transform:
   - {fileID: 7851722178239713918}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2555399372775400188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7664739437907150544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1515704410, guid: ca2d5bd750d053e45b3d553cad515952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 6261435121200923469}
+  primaryFireAnimationName: Primary Fire
+  altFireAnimationName: Secondary Fire
+  closeAnimationName: Close Portals
+  lastProjectile: {fileID: 8999781871564602794}
 --- !u!1001 &6080556941048407174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -153,6 +171,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9026370385979304389, guid: 2bf9c9f6ed1c7c242b54e9bbf7a9e06e, type: 3}
   m_PrefabInstance: {fileID: 6080556941048407174}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8999781871564602794 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2920548897977948460, guid: 2bf9c9f6ed1c7c242b54e9bbf7a9e06e, type: 3}
+  m_PrefabInstance: {fileID: 6080556941048407174}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7745156469321217429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,6 +250,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 38c9cd812a5b11942a981146f6c6aa43, type: 2}
     - target: {fileID: 2693593139753378127, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
       propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: -7397794647972524142, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
+    - target: {fileID: 2693593139753378127, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}
+      propertyPath: m_Materials.Array.data[3]
       value: 
       objectReference: {fileID: 2100000, guid: 5d30069527432a54d98a588473ac0f16, type: 2}
     - target: {fileID: 3402492661101668995, guid: 7cd3d6469adcbc1409b696c4c5db494a, type: 3}

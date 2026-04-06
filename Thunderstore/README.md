@@ -24,11 +24,17 @@ The Portal Gun is the blue variation, it allows you to shoot two portals using y
 ![screenshot_0.jpg](https://raw.githubusercontent.com/averyocean65/UltraPortal/master/Thunderstore/media/screenshot_0.jpg)
 
 ## The Mirror Gun
-The Mirror Gun is the green variation, it allows you to shoot one big mirror portal using your primary fire. As of now, the alternative fire doesn't do anything.
+The Mirror Gun is the green variation, it allows you to shoot one big mirror portal using your primary fire. With the alternative fire you can shoot a mirror that flips the world upside down, how whimsical!
 ![screenshot_1.jpg](https://raw.githubusercontent.com/averyocean65/UltraPortal/master/Thunderstore/media/screenshot_1.jpg)
 
+## The Twist Gun
+The Twist Gun is the red variation, it lets you shoot two portals that, upon entering them, rotate the world based on what way they face. It's confusing at first, but once you figure it out, it can be very fun to mess around with.
+![screenshot_4.jpg](https://raw.githubusercontent.com/averyocean65/UltraPortal/master/Thunderstore/media/screenshot_4.jpg)
+
 # Credits
-All art assets in the mod were either sourced from the ULTRAKILL game files or created by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).<br>
+## Please keep in mind that the mod has been programmed by one person, so please be nice about any bugs you may face.
+Most art assets in the mod were either sourced from the ULTRAKILL game files or created by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).<br>
+Voronoi Shader for portal blockage taken from [ronja-tutorials](https://github.com/ronja-tutorials/ShaderTutorials/tree/master/Assets/028_Voronoi_Noise).<br>
 Most bug finds and ideas by: 
 - ballsoda
 - [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social)

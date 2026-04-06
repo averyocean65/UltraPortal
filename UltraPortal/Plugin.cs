@@ -8,6 +8,8 @@ using BepInEx.Logging;
 using Configgy;
 using HarmonyLib;
 using ULTRAKILL.Portal.Geometry;
+using UltraPortal.Projectiles;
+using UltraPortal.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,7 +23,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.1.1";
+            public const string Version = "0.2.0";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -41,6 +43,8 @@ namespace UltraPortal {
                 AssetPaths.UseAltBundlePath = true; // why, r2modman, why??
             }
             
+            AssemblyHelpers.PreloadAssemblies();
+            
             SceneManager.sceneLoaded += OnSceneLoaded;
             ConfiggyConfig.OnConfigElementsChanged += elements => {
                 // configgy autosave no longer works, so this'll do.
@@ -49,7 +53,8 @@ namespace UltraPortal {
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
-            PortalGunManager.EquippedPortalGun = false;
+            PortalGunManager.UsedPortalGun = false;
+            PortalProjectileHelper.PortalScaleSceneStart = ModConfig.PortalScaleMod.GetValue();
             
             if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
                 return;
@@ -60,9 +65,13 @@ namespace UltraPortal {
                 
                 GameObject manager = new GameObject("Portal Gun Manager");
                 manager.AddComponent<PortalGunManager>();
+
+                GameObject audioManager = new GameObject("Audio Manager");
+                audioManager.AddComponent<AudioManager>();
                 
                 // Register styles
                 StyleHUD.Instance.RegisterStyleItem(StyleSafetyHazardId, StyleSafetyHazardName);
+                StyleHUD.Instance.RegisterStyleItem(StylePortalProjectileId, StylePortalProjectileName);
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

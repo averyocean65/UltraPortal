@@ -49,9 +49,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5628868919396160730, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 10bb757b00c40cf46a69cf3a47b78667, type: 2}
+      objectReference: {fileID: 2100000, guid: 86b48253f3af6609db17b29d2bbcc050, type: 2}
     - target: {fileID: 7664739437907150544, guid: 186ce279432ba4043905826dd36dc3f0, type: 3}
       propertyPath: m_Name
       value: Mirror Gun

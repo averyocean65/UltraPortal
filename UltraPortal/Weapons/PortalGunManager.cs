@@ -1,24 +1,66 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Sandbox.Arm;
+using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
+using UltraPortal.Projectiles;
 using UnityEngine;
 
 using static UltraPortal.Constants;
+using static UltraPortal.DebugUtils;
 
 namespace UltraPortal {
 	[DefaultExecutionOrder(-100000)]
-	public class PortalGunManager : MonoBehaviour {
-		public static PortalGunManager Instance;
-		
+	public class PortalGunManager : MonoSingleton<PortalGunManager> {
+		private static float PortalGunResetWait = 0.1f;
 		private static int PortalGunSlot = -1;
+
+		public bool IsUsingSpawnerArm { get; private set; } = false;
 		
-		public static bool EquippedPortalGun = false;
+		private bool AnyPortalsInit {
+			get {
+				bool output = false;
+
+				if (_portalGun) {
+					output |= _portalGun.BothPortalsInit;
+				}
+
+				if (_mirrorGun) {
+					output |= _mirrorGun.PrimaryMirror || _mirrorGun.FlippedMirror;
+				}
+
+				if (_twistGun) {
+					output |= _twistGun.BothPortalsInit;
+				}
+
+				return output;
+			}
+		}
+
+		public static bool UsedPortalGun = false;
 		private int _currentVariationIndex = -1;
+		
+		private bool _wasEnabledLastFrame = false;
+		private bool _showedWarning = false;
 
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
+		private TwistGun _twistGun;
+
+		public static void SummonPortalExit(DynamicPortalExit exit, Portal portal, Vector3 position, Vector3 forward,
+			Transform parent = null, Collider collider = null) {
+			exit.transform.parent = null;
+			
+			Vector3 appliedScale = Vector3.one * PortalProjectileHelper.PortalScaleSceneStart;
+			
+			exit.transform.localScale = new Vector3(appliedScale.x, appliedScale.y, 1.0f);
+			exit.transform.SetParent(parent, true);
+			
+			exit.Initialize(portal, exit.side, position, forward, collider);
+		}
 
 		private GunBase SpawnPortalGun(Type type, string assetPrefabPath, WeaponVariant variant, GunPosition defaultPos, GunPosition middlePos) {
 			if (!type.IsSubclassOf(typeof(GunBase))) {
@@ -64,8 +106,11 @@ namespace UltraPortal {
 			_mirrorGun = SpawnPortalGun(typeof(MirrorGun), AssetPaths.MirrorGun, WeaponVariant.GreenVariant,
 				defaultPos, middlePos) as MirrorGun;
 
-			if (!_portalGun || !_mirrorGun) {
-				Plugin.LogSource.LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}");
+			_twistGun = SpawnPortalGun(typeof(TwistGun), AssetPaths.TwistGun, WeaponVariant.RedVariant, defaultPos,
+				middlePos) as TwistGun;
+
+			if (!_portalGun || !_mirrorGun || !_twistGun) {
+				LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}, Twist Gun?: {_twistGun}");
 			}
 			
 			if(ModConfig.IsEnabled.GetValue())
@@ -73,99 +118,110 @@ namespace UltraPortal {
 		}
 
 		private void AddToSlots() {
-			GunControl.Instance.slots.Add(new List<GameObject>() { _portalGun.gameObject, _mirrorGun.gameObject });
+			if (!_portalGun || !_mirrorGun || !_twistGun) {
+				LogError($"Portal Gun: {_portalGun}; Mirror Gun: {_mirrorGun}; Twist Gun: {_twistGun}");
+				return;
+			}
+			
+			GunControl.Instance.slots.Add(new List<GameObject>()
+				{ _portalGun.gameObject, _mirrorGun.gameObject, _twistGun.gameObject });
 			PortalGunSlot = GunControl.Instance.slots.Count;
 			
 			GunControl.Instance.UpdateWeaponList();
 		}
 
-		private void Explode() {
+		private IEnumerator IDestroyPortals(PortalGunBase gun, params DynamicPortalExit[] exits) {
+			if (!gun) {
+				yield break;
+			}
+					
+			bool gunShouldReset = gun.ShouldBeReset();
+			if (!gunShouldReset) {
+				foreach (var exit in exits) {
+					if (!exit) {
+						continue;
+					}
+
+					SpawnPortalExplosion(exit.transform.position);
+				}
+
+				yield return new WaitForSeconds(PortalGunResetWait);
+			}
+
+			if (gun.ShouldPlayReset()) {
+				AudioManager.Instance.PlayAudioFromAsset(AssetPaths.Sfx.PortalClose, MainCamera.transform.position,
+					spatialBlend: 0.0f);
+			}
+			
+			gun.Invoke("Reset", 0.0f);
+		}
+		
+		private void SpawnPortalExplosion(Vector3 position) {
 			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
 			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
-
-			EnemyPatches.AlreadyDealtWith.Clear();
-				
-			Vector3 position = MainCamera.transform.position + MainCamera.transform.forward * 10f;
 				
 			GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
-			float maxSize = 10f;
+			float maxSize = 15f;
 
 			ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
 			colors.ColorExplosion();
 				
 			Explosion explosion = explosionObject.AddComponent<Explosion>();
+			explosion.enemyDamageMultiplier = 1.5f;
+			explosion.toIgnore = new List<EnemyType>();
+				
 			explosion.sourceWeapon = gameObject;
 			explosion.hitterWeapon = PortalExplosionWeapon;
-			explosion.damage = 50;
-			explosion.speed = 7.5f;
+			explosion.damage = 25;
+			explosion.speed = 15f;
 			explosion.maxSize = maxSize;
 				
 			explosion.harmless = false;
+			explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters.GetValue();
 		}
 
-		public void DestroyPortals(bool isMirrorGun) {
-			void Explode(Vector3 position) {
-				AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
-				GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
-				
-				GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
-				float maxSize = 15f;
-
-				ExplosionColorManager colors = explosionObject.AddComponent<ExplosionColorManager>();
-				colors.ColorExplosion();
-				
-				Explosion explosion = explosionObject.AddComponent<Explosion>();
-				explosion.enemyDamageMultiplier = 1.5f;
-				explosion.toIgnore = new List<EnemyType>();
-				
-				explosion.sourceWeapon = gameObject;
-				explosion.hitterWeapon = PortalExplosionWeapon;
-				explosion.damage = 25;
-				explosion.speed = 15f;
-				explosion.maxSize = maxSize;
-				
-				explosion.harmless = false;
-				explosion.ultrabooster = ModConfig.AreExplosionsUltraboosters.GetValue();
-			}
-			
-			bool gunShouldReset = true;
-
-			if (!isMirrorGun) {
-				if (_portalGun) {
-					gunShouldReset = _portalGun.ShouldBeReset();
-					if (!gunShouldReset) {
-						Explode(_portalGun.PortalEntry.PortalCenter);
-						Explode(_portalGun.PortalExit.PortalCenter);
-					}
-
-					_portalGun.Reset();
+		public void DestroyPortals(WeaponVariant variant, bool useSfx = false) {
+			switch (variant) {
+				case WeaponVariant.BlueVariant: {
+					StartCoroutine(IDestroyPortals(_portalGun, _portalGun.PortalEntry, _portalGun.PortalExit));
+					break;
 				}
-
-				return;
-			}
-
-			if (_mirrorGun) {
-				gunShouldReset = _mirrorGun.ShouldBeReset();
-				if (!gunShouldReset) {
-					Explode(_mirrorGun.PrimaryMirror.PortalCenter);
+				case WeaponVariant.GreenVariant: {
+					StartCoroutine(IDestroyPortals(_mirrorGun, _mirrorGun.PrimaryMirror, _mirrorGun.FlippedMirror));
+					break;
 				}
-				
-				_mirrorGun.Reset();
+				case WeaponVariant.RedVariant: {
+					StartCoroutine(IDestroyPortals(_twistGun, _twistGun.TwistExit, _twistGun.TwistExit));
+					break;
+				}
 			}
 		}
 		
-		private bool _wasEnabledLastFrame = false;
 		private void Update() {
 			if (GunControl.Instance.currentSlotIndex != PortalGunSlot) {
 				_currentVariationIndex = -1;
 			}
 
+			IsUsingSpawnerArm = GunControl.Instance.currentSlotIndex == 6; 
+			// if (IsUsingSpawnerArm) {
+			// 	if (AnyPortalsInit) {
+			// 		if (!_showedWarning) {
+			// 			HudMessageReceiver.Instance.SendHudMessage(
+			// 				"Custom Portals may behave <color=red>differently</color> while the spawner arm is equipped.");
+			// 			_showedWarning = true;
+			// 		}
+			// 	}
+			// }
+
 			if (!ModConfig.IsEnabled.GetValue()) {
 				if (_wasEnabledLastFrame) {
 					_wasEnabledLastFrame = false;
 					
-					DestroyPortals(false);
-					DestroyPortals(true);
+					DestroyPortals(WeaponVariant.BlueVariant);
+					DestroyPortals(WeaponVariant.GreenVariant);
+					DestroyPortals(WeaponVariant.RedVariant);
+					DestroyPortals(WeaponVariant.GoldVariant);
+					
 					int previousSlot = GunControl.Instance.currentSlotIndex;
 					
 					// take out of the slots
@@ -209,22 +265,25 @@ namespace UltraPortal {
 
 			_wasEnabledLastFrame = true;
 
-			if (OptionsManager.Instance.paused) {
+			if (OptionsManager.Instance.paused || GameStateManager.Instance.PlayerInputLocked || !GunControl.Instance.activated) {
 				return;
 			}
 
 			if (_portalGun.WantsToReset) {
-				DestroyPortals(false);
+				DestroyPortals(_portalGun.variant, true);
 			}
 			
 			if (_mirrorGun.WantsToReset) {
-				DestroyPortals(true);
+				DestroyPortals(_mirrorGun.variant, true);
+			}
+			
+			if (_twistGun.WantsToReset) {
+				DestroyPortals(_twistGun.variant, true);
 			}
 
 			int slotIndex = PortalGunSlot - 1;
 			if (Input.GetKeyDown(ModConfig.PortalGunKeybind.GetValue()) && GunControl.Instance &&
 			    GunControl.Instance.slots[slotIndex].Count > 0 && GunControl.Instance.slots[slotIndex][0]) {
-				EquippedPortalGun = true;
 				GunControl.Instance.SwitchWeapon(PortalGunSlot, targetVariationIndex: _currentVariationIndex + 1, cycleVariation: true);
 				_currentVariationIndex = GunControl.Instance.currentVariationIndex;
 			}

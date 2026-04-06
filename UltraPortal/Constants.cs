@@ -5,14 +5,41 @@ using UnityEngine;
 
 namespace UltraPortal {
     public static class Constants {
-        public static LayerMask EnvironmentLayer => LayerMaskDefaults.Get(LMD.Environment) | LayerMask.GetMask("PlayerOnly");
-        public static LayerMask PortalLayer => LayerMask.NameToLayer("Portal");
+        private static LayerMask _environmentLayer = -1;
+        private static LayerMask _travellerLayer = -1;
+
+        public static LayerMask EnvironmentLayer {
+            get {
+                if (_environmentLayer == -1) {
+                    _environmentLayer = LayerMaskDefaults.Get(LMD.Environment);
+                }
+
+                return _environmentLayer;
+            }
+        }
+        
+        public static LayerMask TravellerLayer {
+            get {
+                if (_travellerLayer == -1) {
+                    _travellerLayer = LayerMaskDefaults.Get(LMD.BigEnemiesEnvironmentAndPlayer);
+                }
+
+                return _travellerLayer;
+            }
+        }
+        public static int PortalLayer => 30;
+        public static int ItemLayer => 22;
 
         public const string PortalExplosionWeapon = "dynamicportal";
+        public const string PortalProjectileWeapon = "portalprojectile";
 
         public const string StyleSafetyHazardId = "style.ultraportal.safetyhazard";
         public const string StyleSafetyHazardName = "SAFETY HAZARD";
-        public const int StyleSafetyHazardPoints = 500;
+        public const int StyleSafetyHazardPoints = 100;
+        
+        public const string StylePortalProjectileId = "style.ultraportal.projectiled";
+        public const string StylePortalProjectileName = "DISPLACEMENT";
+        public const int StylePortalProjectilePoints = 25;
         
 
         private static Camera _mainCamera;
@@ -32,6 +59,13 @@ namespace UltraPortal {
             public static string AssemblyPath => Assembly.GetExecutingAssembly().Location;
             public static string AssemblyFolderPath => Path.GetDirectoryName(AssemblyPath);
 
+            public static class Sfx {
+                public const string BundleName = "audio";
+                public const string PortalOpen = "Portal Open";
+                public const string PortalClose = "Portal Close";
+                public const string PortalAmbiance = "Portal Ambiance";
+            }
+            
             public static string BundlePath {
                 get {
                     if (UseAltBundlePath) {
@@ -41,14 +75,17 @@ namespace UltraPortal {
                     return Path.Combine(AssemblyFolderPath, "Bundles");
                 }
             }
+            
             public const string  PortalBundle = "portals";
             public const string  WeaponBundle = "weapons";
+            public const string  DebugBundle = "debug";
 
-            public const string  PortalExit = "Portal Exit";
-            public const string  Mirror = "Mirror";
+            public const string PortalExit = "Portal Exit";
+            public const string Mirror = "Mirror";
 
             public const string PortalGun = "Portal Gun";
             public const string MirrorGun = "Mirror Gun";
+            public const string TwistGun = "Twist Gun Variant";
             
             public const string Projectile = "Projectile";
 
@@ -56,6 +93,10 @@ namespace UltraPortal {
             public const string PortalGunIconGlow = "UltraPortalGunIconGlow";
 
             public const string Explosion = "Explosion";
+
+            public const string DebugForwardArrow = "ForwardArrow";
+
+            public const string UltraPortalSharedAssembly = "UltraPortal.Shared";
         }
     }
 }

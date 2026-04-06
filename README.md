@@ -3,19 +3,6 @@ Adding portals to ULTRAKILL, because why not?
 
 # Development Setup
 
-## UltraPortalAssets
-### Credits
-All art assets were created by [Rose Warbug](https://bsky.app/profile/rosewarbug.bsky.social)
-
-### Requirements
-To use the UltraPortalAssets project, you will need Unity `2022.3.28f1` in order to open the project.
-
-### How to compile asset bundles
-After you're done creating assets, compile the asset bundles with the menu item: `Assets/Build Asset Bundles`.
-
-### Where to insert asset bundles?
-Right now we don't have a system to automatically bundle the asset bundles with ULTRAPORTAL, so you have to manually copy and paste the asset bundle and manifest files into the folder `<ULTRAKILL>/BepInEx/plugins/UltraPortal/Bundles`.
-
 ## UltraPortal
 ### Requirements
 In order for this mod to compile, you must have `Configgy` downloaded to your ULTRAKILL BepInEx plugins folder, with the specific path being: `ULTRAKILL/BepInEx/plugins/Configgy.dll`.
@@ -32,3 +19,17 @@ You need to create a file in the project root directory called `ULTRAKILLPATH.us
 ```
 
 Keep in mind that the path needs to be to the directory that contains your ULTRAKILL executable file. For example `D:/Steam/steamapps/common/ULTRAKILL`.
+
+## UltraPortalAssets
+### Requirements
+To use the UltraPortalAssets project, you will need Unity `2022.3.28f1` in order to open the project.
+
+### How to compile asset bundles
+After you're done creating assets, compile the asset bundles with the menu item: `Assets/Build Asset Bundles`.
+
+### Where to insert asset bundles?
+Right now we don't have a system to automatically bundle the asset bundles with ULTRAPORTAL, so you have to manually copy and paste the asset bundle and manifest files into the folder `<ULTRAKILL>/BepInEx/plugins/UltraPortal/Bundles`.
+
+### Credits
+- Most art assets were created by [RoseWarbug](https://bsky.app/profile/rosewarbug.bsky.social).
+- Voronoi Shader for portal blockage taken from [ronja-tutorials](https://github.com/ronja-tutorials/ShaderTutorials/tree/master/Assets/028_Voronoi_Noise).

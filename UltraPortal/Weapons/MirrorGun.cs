@@ -10,15 +10,12 @@ using static UltraPortal.Constants;
 namespace UltraPortal {
 	public sealed class MirrorGun : PortalGunBase {
 		private static ManualLogSource Logger => Plugin.LogSource;
-		
-		private static int PrimaryFireAnimHash => Animator.StringToHash("Base Layer.Primary Fire"); 
-		private static int SecondaryFireAnimHash => Animator.StringToHash("Base Layer.Secondary Fire"); 
-		
-		private Animator _animator;
 
-		private readonly Vector2 _portalSize = new Vector2(11f, 11f);
+		private readonly Vector2 _portalSize = new Vector2(11f, 11f) * ModConfig.PortalScaleMod.GetValue();
 		private Portal _mirrorPortal;
+		private Portal _flippedMirrorPortal;
 		public DynamicPortalExit PrimaryMirror { get; private set; }
+		public DynamicPortalExit FlippedMirror { get; private set; }
 		
 		public void SpawnPrimaryMirror(bool reinit = false) {
 			PrimaryMirror = SpawnPortalExit("Primary Mirror", PortalSide.Enter, _mirrorPortal, AssetPaths.Mirror);
@@ -31,7 +28,22 @@ namespace UltraPortal {
 			}
 		}
 		
-		
+		public void SpawnFlippedMirror(bool reinit = false) {
+			FlippedMirror = SpawnPortalExit("Flipped Mirror", PortalSide.Exit, _flippedMirrorPortal, AssetPaths.Mirror);
+			if (FlippedMirror) {
+				FlippedMirror.OnInitialized += () => {
+					FlippedMirror.SetPassable(true);
+
+					Vector3 eulerAngles = FlippedMirror.transform.localEulerAngles;
+					FlippedMirror.transform.localEulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, 90.0f);
+				};
+			}
+			
+			if (reinit) {
+				InitMirror();
+			}
+		}
+
 		protected override void Start() {
 			base.Start();
 			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
@@ -48,70 +60,72 @@ namespace UltraPortal {
 			}
 			
 			SpawnPrimaryMirror();
+			SpawnFlippedMirror();
 			
 			OnPrimaryFire += () => {
 				FireProjectile(PrimaryMirror, _mirrorPortal);
-				_animator.Play(PrimaryFireAnimHash);
+				UpdateLastProjectile(PortalSide.Enter);
+				_animator.Play(_info.PrimaryFireAnimation);
 			};
 
-			OnSecondaryFire += () => { };
+			OnSecondaryFire += () => {
+				UpdateLastProjectile(PortalSide.Exit);
+				FireProjectile(FlippedMirror, _flippedMirrorPortal);
+				_animator.Play(_info.AltFireAnimation);
+			};
 			
 			UpdateLastProjectile(PrimaryMirror.side);
 			InitMirror();
 		}
 		
 		private void InitMirror() {
-			// GameObject mirrorObject = new GameObject("Mirror Head") {
-			// 	layer = PortalLayer
-			// };
-			//
-			// _mirrorPortal = mirrorObject.AddComponent<Portal>();
-			//
-			// _mirrorPortal.additionalSampleThreshold = 0;
-			// _mirrorPortal.allowCameraTraversals = true;
-			// _mirrorPortal.appearsInRecursions = true;
-			// _mirrorPortal.canHearAudio = false;
-			// _mirrorPortal.canSeeItself = true;
-			// _mirrorPortal.canSeePortalLayer = true;
-			// _mirrorPortal.clippingMethod = PortalClippingMethod.Default;
-			// _mirrorPortal.consumeAudio = false;
-			// _mirrorPortal.disableRange = 0;
-			// _mirrorPortal.enableOverrideFog = false;
-			// _mirrorPortal.enterOffset = 1.5f;
-			// _mirrorPortal.entry = PrimaryMirror.transform;
-			// _mirrorPortal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed;
-   //          
-			// _mirrorPortal.exit = PrimaryMirror.transform;
-			// _mirrorPortal.exitOffset = 1.5f;
-			// _mirrorPortal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed;
-			//
-			// _mirrorPortal.renderSettings = PortalSideFlags.Enter | PortalSideFlags.Exit;
-			// _mirrorPortal.fakeVPMatrix = Matrix4x4.zero;
-			// _mirrorPortal.mirror = false; // stuff can't travel through it otherwise :/
-			//
-			// _mirrorPortal.shape = new PlaneShape {
-			// 	width = _portalSize.x,
-			// 	height = _portalSize.y
-			// };
-
 			_mirrorPortal = CreatePortal("Mirror Head", PrimaryMirror.transform, PrimaryMirror.transform, _portalSize);
+			
+			_flippedMirrorPortal = CreatePortal("Flipped Mirror Portal", FlippedMirror.transform, FlippedMirror.transform,
+				_portalSize);
+			_flippedMirrorPortal.usePerceivedGravityOnEnter = true;
+			_flippedMirrorPortal.usePerceivedGravityOnExit = true;
 		}
 
 		public override bool ShouldBeReset() {
-			if (!PrimaryMirror) {
+			if (!PrimaryMirror || !FlippedMirror) {
 				return true;
 			}
 
-			return PrimaryMirror.ShouldBeDisabled();
+			return PrimaryMirror.ShouldBeDisabled() &&
+			       FlippedMirror.ShouldBeDisabled();
+		}
+		
+		public override bool ShouldPlayReset() {
+			return ShouldBeReset() && (PrimaryMirror.IsInitialized || FlippedMirror.IsInitialized);
 		}
 
 		public void Reset() {
-			if (!PrimaryMirror)
-				return;
+			if (PrimaryMirror) {
+				PrimaryMirror.Reset();
+			}
+
+			if (FlippedMirror) {
+				FlippedMirror.Reset();
+			}
+		}
+		
+		private void OnDestroy() {
+			if (PrimaryMirror) {
+				Destroy(PrimaryMirror.gameObject);
+			}
+
+			if (FlippedMirror) {
+				Destroy(FlippedMirror.gameObject);
+			}
 			
-			PrimaryMirror.Reset();
-			PrimaryMirror.SetPassable(false);
-			PrimaryMirror.transform.position = DefaultPortalPosition;
+			if (_mirrorPortal) {
+				Destroy(_mirrorPortal.gameObject);
+			}
+			
+			if (_flippedMirrorPortal) {
+				Destroy(_flippedMirrorPortal.gameObject);
+			}
 		}
 	}
 }
