@@ -506,9 +506,7 @@ namespace UltraPortal {
 				Rigidbody rb = GetEnemyRigidbody(eid);
 				if (rb) {
 					float velocity = Mathf.Abs(rb.velocity.magnitude);
-					LogVerboseInfo(velocity.ToString(CultureInfo.InvariantCulture));
-					
-					if (velocity > ModConfig.EnemyMaxVelocity.GetValue()) {
+					if (velocity > ModConfig.EnemyMaxVelocity.GetValue() && !eid.hooked) {
 						rb.detectCollisions = false;
 					}
 				}
