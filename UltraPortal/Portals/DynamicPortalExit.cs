@@ -8,6 +8,7 @@ using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
 using UnityEngine;
+using UnityEngine.Events;
 using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
 
@@ -112,6 +113,33 @@ namespace UltraPortal {
 			_toggleColliderAction += (portalSide, collider, toggle, assistance) => {
 				ToggleColliders(toggle, collider, assistance, portalSide);
 			};
+			
+			RegisterTriggers();
+		}
+
+		private void RegisterTriggers() {
+			void ColliderEventCaller(Collider collider, Action<Collider> action, PortalExitCollider exitCollider) {
+				if (exitCollider.detectsPlayer) {
+					if (LayerMaskDefaults.IsMatchingLayer(collider.gameObject.layer, LMD.Player)) {
+						action.Invoke(collider);
+					}
+				}
+				else {
+					action.Invoke(collider);
+				}
+			}
+			
+			info.playerDetectorTrigger.OnEnter.AddListener(c =>
+				ColliderEventCaller(c, TriggerEnterEvent, info.playerDetectorTrigger));
+			
+			info.playerDetectorTrigger.OnExit.AddListener(c =>
+				ColliderEventCaller(c, TriggerExitEvent, info.playerDetectorTrigger));
+			
+			info.otherDetectorTrigger.OnEnter.AddListener(c =>
+				ColliderEventCaller(c, TriggerEnterEvent, info.otherDetectorTrigger));
+			
+			info.otherDetectorTrigger.OnExit.AddListener(c =>
+				ColliderEventCaller(c, TriggerExitEvent, info.otherDetectorTrigger));
 		}
 
 		private void AddCollider(Collider c, bool checkChildren = true) {
@@ -205,6 +233,13 @@ namespace UltraPortal {
 
 		public void Initialize(Portal portal, PortalSide portalSide, Vector3 position, Vector3 forward,
 			Collider hitCollider = null) {
+			if (_sandbox) {
+				if (_sandbox.frozen) {
+					HudMessageReceiver.Instance.SendHudMessage("The portal you attempted to set is <color=#00FFFF>frozen</color>.");
+					return;
+				}
+			}
+			
 			if (!portal) {
 				Plugin.LogSource.LogError("Portal is invalid!");
 				return;
@@ -251,7 +286,7 @@ namespace UltraPortal {
 			}
 		}
 
-		private void OnTriggerEnter(Collider other) {
+		private void TriggerEnterEvent(Collider other) {
 			if (_colliders.Contains(other)) {
 				return;
 			}
@@ -406,7 +441,7 @@ namespace UltraPortal {
 			_passableBlockage.SetActive(!canPass);
 		}
 
-		private void OnTriggerExit(Collider other) {
+		private void TriggerExitEvent(Collider other) {
 			if (_colliders.Contains(other)) {
 				return;
 			}
