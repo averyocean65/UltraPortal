@@ -55,6 +55,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="PortalExitCollider.cs" />
         <Compile Include="PortalGunInfo.cs" />
         <Compile Include="PortalInfo.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>

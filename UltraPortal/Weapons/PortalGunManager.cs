@@ -203,15 +203,15 @@ namespace UltraPortal {
 			}
 
 			IsUsingSpawnerArm = GunControl.Instance.currentSlotIndex == 6; 
-			if (IsUsingSpawnerArm) {
-				if (AnyPortalsInit) {
-					if (!_showedWarning) {
-						HudMessageReceiver.Instance.SendHudMessage(
-							"Custom Portals may behave <color=red>differently</color> while the spawner arm is equipped.");
-						_showedWarning = true;
-					}
-				}
-			}
+			// if (IsUsingSpawnerArm) {
+			// 	if (AnyPortalsInit) {
+			// 		if (!_showedWarning) {
+			// 			HudMessageReceiver.Instance.SendHudMessage(
+			// 				"Custom Portals may behave <color=red>differently</color> while the spawner arm is equipped.");
+			// 			_showedWarning = true;
+			// 		}
+			// 	}
+			// }
 
 			if (!ModConfig.IsEnabled.GetValue()) {
 				if (_wasEnabledLastFrame) {

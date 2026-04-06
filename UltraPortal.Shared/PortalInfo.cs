@@ -9,5 +9,9 @@ namespace UltraPortal.Shared {
 		public ParticleSystem spawnParticles;
 		public ParticleSystem ambianceParticles;
 		public Collider[] portalColliders;
+		
+		[Header("Portal Colliders")]
+		public PortalExitCollider playerDetectorTrigger;
+		public PortalExitCollider otherDetectorTrigger;
 	}
 }
