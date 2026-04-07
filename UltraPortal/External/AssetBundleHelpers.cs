@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-
 using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
 
-namespace UltraPortal {
+namespace UltraPortal.External {
 	public static class AssetBundleHelpers {
 		private static Dictionary<string, AssetBundle> LoadedBundles = new Dictionary<string, AssetBundle>();
 

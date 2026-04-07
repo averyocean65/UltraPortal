@@ -6,6 +6,7 @@ using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
+using UltraPortal.External;
 using UltraPortal.Projectiles;
 using UnityEngine;
 

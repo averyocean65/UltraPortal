@@ -1,4 +1,11 @@
-# ULTRAPORTAL 0.2.0
+# ULTRAPORTAL 0.2.1
+
+## Changes
+### 
+
+<details>
+<summary>0.2.0 Changelog</summary>
+
 ## Changes
 ### Bugfixes
 - Fixed mirror portal projectile from teleporting enemies if portal was despawned.
@@ -52,3 +59,4 @@
   - Chance of bug occuring has been reduced with 0.2.0, although it is not impossible.
 - You cannot save a sandbox level if it contains portals.
 - Enemies may phase through the floor sometimes if teleported after surpassing a certain velocity.
+</details>

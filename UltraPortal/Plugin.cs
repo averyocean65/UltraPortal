@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using Configgy;
 using HarmonyLib;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Projectiles;
-using UltraPortal.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,7 +17,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.2.0";
+            public const string Version = "0.2.1";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -42,8 +36,6 @@ namespace UltraPortal {
                 Logger.LogError($"Path for ULTRAPORTAL bundles does not exist! Looked for: {AssetPaths.BundlePath}; Trying other bundle path.");
                 AssetPaths.UseAltBundlePath = true; // why, r2modman, why??
             }
-            
-            AssemblyHelpers.PreloadAssemblies();
             
             SceneManager.sceneLoaded += OnSceneLoaded;
             ConfiggyConfig.OnConfigElementsChanged += elements => {

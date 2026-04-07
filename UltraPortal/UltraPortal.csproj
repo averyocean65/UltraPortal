@@ -91,7 +91,6 @@
         <Compile Include="Constants.cs" />
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="Extensions\ListExtensions.cs" />
-        <Compile Include="External\AssemblyHelpers.cs" />
         <Compile Include="External\AssetBundleHelpers.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\EnemyPatches.cs" />
