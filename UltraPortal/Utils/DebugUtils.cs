@@ -1,5 +1,5 @@
+using AUU;
 using BepInEx.Logging;
-using UltraPortal.External;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -35,7 +35,7 @@ namespace UltraPortal {
                 return;
             }
             
-            AssetBundle debug = AssetBundleHelpers.LoadAssetBundle(AssetPaths.DebugBundle);
+            AssetBundle debug = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.DebugBundle);
             GameObject arrowPrefab = debug.LoadAsset<GameObject>(AssetPaths.DebugForwardArrow);
             
             GameObject arrow = Object.Instantiate(arrowPrefab, position, Quaternion.identity);

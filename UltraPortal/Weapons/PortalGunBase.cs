@@ -1,7 +1,7 @@
+using AUU;
+using AUU.Portals;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
-using UltraPortal.External;
 using UltraPortal.Projectiles;
 using UltraPortal.Shared;
 using UnityEngine;
@@ -54,7 +54,7 @@ namespace UltraPortal {
 
 		protected DynamicPortalExit SpawnPortalExit(string objectName, PortalSide side, Portal hostPortal,
 			string prefabName = AssetPaths.PortalExit) {
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
+			AssetBundle portals = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.PortalBundle);
 			GameObject portalPrefab = portals.LoadAsset<GameObject>(prefabName);
 			
 			if (!portalPrefab) {
@@ -141,35 +141,24 @@ namespace UltraPortal {
 			HandleFiring();
 		}
 
-		protected virtual Portal CreatePortal(string objectName, Transform entry, Transform exit, Vector2 size) {
-			GameObject portalObject = new GameObject(objectName) {
-				layer = PortalLayer
-			};
-
-			Portal portal = portalObject.AddComponent<Portal>();
-			portal.allowCameraTraversals = true;
-			portal.appearsInRecursions = true;
-			portal.maxRecursions = ModConfig.MaxPortalRecursions.GetValue();
-			portal.supportInfiniteRecursion = ModConfig.InfiniteRecursions.GetValue();
-			
-			portal.canSeeItself = true;
-			portal.canSeePortalLayer = true;
-
-			portal.consumeAudio = false;
-			portal.canHearAudio = false;
-			
-			portal.entry = entry;
-			portal.minimumEntrySideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
-			
-			portal.exit = exit;
-			portal.minimumExitSideSpeed = ModConfig.MinimumEntryExitSpeed.GetValue();
-
-			portal.shape = new PlaneShape {
-				width = size.x,
-				height = size.y
-			};
-
-			return portal;
+		protected Portal CreatePortal(string objectName, Transform entry, Transform exit, Vector2 size) {
+			return PortalSpawner.CreatePortal(objectName, entry, exit, new PortalParameters() {
+				AllowCameraTraversals = true,
+				AppearsInRecursions = true,
+				MaxRecursionCount = ModConfig.MaxPortalRecursions.GetValue(),
+				InfiniteRecursions = ModConfig.InfiniteRecursions.GetValue(),
+				
+				CanSeeItself = true,
+				CanSeePortals = true,
+				
+				ConsumeAudio = false,
+				CanHearAudio = false,
+				
+				MinimumEntrySpeed = ModConfig.MinimumEntryExitSpeed.GetValue(),
+				MinimumExitSpeed = ModConfig.MinimumEntryExitSpeed.GetValue(),
+				
+				Size = size
+			});
 		}
 	}
 }

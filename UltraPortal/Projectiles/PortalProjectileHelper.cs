@@ -1,4 +1,5 @@
 using System;
+using AUU;
 using ULTRAKILL.Portal;
 using UltraPortal.Extensions;
 using UnityEngine;
@@ -51,7 +52,7 @@ namespace UltraPortal.Projectiles {
 					return;
 				}
 				
-				if (!EnemyHelpers.IsLightEnemy(eid.enemyType)) {
+				if (!EnemyUtils.IsLightEnemy(eid.enemyType)) {
 					LogVerboseWarning("Enemy is not a light enemy! Not teleporting!");
 					DamageEnemy(eid, false);
 					return;

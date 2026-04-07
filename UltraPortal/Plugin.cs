@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using AUU;
 using BepInEx;
 using BepInEx.Logging;
 using Configgy;
@@ -47,8 +48,8 @@ namespace UltraPortal {
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
             PortalGunManager.UsedPortalGun = false;
             PortalProjectileHelper.PortalScaleSceneStart = ModConfig.PortalScaleMod.GetValue();
-            
-            if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
+
+            if (!SceneUtils.IsInLevel()) {
                 return;
             }
 

@@ -1,4 +1,4 @@
-using UltraPortal.External;
+using AUU;
 using UnityEngine;
 using static UltraPortal.Constants;
 
@@ -6,7 +6,7 @@ namespace UltraPortal {
 	public class AudioManager : MonoSingleton<AudioManager> {
 		public AudioSource PlayAudioFromAsset(string assetName, Vector3 emitterPositon, bool loop = false,
 			float minDistance = 1.0f, float maxDistance = 100.0f, float spatialBlend = 1.0f) {
-			AssetBundle bundle = AssetBundleHelpers.LoadAssetBundle(AssetPaths.Sfx.BundleName);
+			AssetBundle bundle = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.Sfx.BundleName);
 			AudioClip clip = bundle.LoadAsset<AudioClip>(assetName);
 
 			if (!clip) {

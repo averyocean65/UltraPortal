@@ -1,7 +1,5 @@
-using System;
-using System.Security.Permissions;
+using AUU;
 using Configgy;
-using UltraPortal.External;
 using UnityEngine;
 
 namespace UltraPortal {
@@ -24,7 +22,7 @@ namespace UltraPortal {
 
 		[Configgable("Debugging", "Unload Asset Bundles",
 			description: "Only use if you intend to swap out asset bundles in real time!")]
-		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleHelpers.UnloadAllAssetBundles);
+		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleUtils.UnloadAllAssetBundles);
     
 		[Configgable("Debugging", "New Gravity")]
 		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);

@@ -333,6 +333,7 @@ namespace UltraPortal {
 					return;
 				}
 
+				// TODO: figure out fix for ceiling/floor portals
 				if (!other.transform.position.IsInFrontOfPortal(PortalTransform) && !AssistedPortalTravel) {
 					return;
 				}

@@ -95,7 +95,6 @@
         <Compile Include="Constants.cs" />
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="Extensions\ListExtensions.cs" />
-        <Compile Include="External\AssetBundleHelpers.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\EnemyPatches.cs" />
         <Compile Include="Patches\LevelPatches.cs" />
@@ -108,7 +107,6 @@
         <Compile Include="Utils\CollisionPrinter.cs" />
         <Compile Include="Utils\ColorHelpers.cs" />
         <Compile Include="Utils\DebugUtils.cs" />
-        <Compile Include="Utils\EnemyHelpers.cs" />
         <Compile Include="Utils\KeepActive.cs" />
         <Compile Include="Utils\LayerPrinter.cs" />
         <Compile Include="Weapons\GunBase.cs" />

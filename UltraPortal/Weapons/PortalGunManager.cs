@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sandbox.Arm;
-using ULTRAKILL.Cheats;
+using AUU;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
-using UltraPortal.External;
 using UltraPortal.Projectiles;
 using UnityEngine;
 
@@ -69,7 +66,7 @@ namespace UltraPortal {
 				return null;
 			}
 			
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+			AssetBundle weapons = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.WeaponBundle);
 			GameObject prefab = weapons.LoadAsset<GameObject>(assetPrefabPath);
 
 			GameObject gun = Instantiate(prefab, Vector3.zero, Quaternion.identity, GunControl.Instance.transform);
@@ -158,7 +155,7 @@ namespace UltraPortal {
 		}
 		
 		private void SpawnPortalExplosion(Vector3 position) {
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+			AssetBundle weapons = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.WeaponBundle);
 			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
 				
 			GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);

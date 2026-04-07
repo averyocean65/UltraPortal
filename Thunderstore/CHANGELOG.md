@@ -7,6 +7,10 @@
 ### Backend
 - Mod now relies on `FixPluginTypesSerialization` by xiaoxiao921 to load assemblies. ([see package for ULTRAKILL](https://thunderstore.io/c/ultrakill/p/averyocean65/FixPluginTypesSerialization/))
 - Changed a logger call in `DynamicPortalExit.cs` to verbose to prevent lag.
+- Swapped several functions with functions from [Avery's ULTRAKILL Utilities](https://github.com/averyocean65/auu).
+
+### Bugfixes
+- Fix bug where secondary fire cooldown was linked to primary fire cooldown
 
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable when they shouldn't.
