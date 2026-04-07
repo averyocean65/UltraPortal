@@ -146,7 +146,7 @@ namespace UltraPortal {
 		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.6f);
 		
 		[Configgable("Gameplay/Portals/Experimental", description: "The size of a sphere, which checks colliders around a portal")]
-		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(0.5f);
+		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(1.5f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);

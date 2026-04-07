@@ -1,8 +1,12 @@
 # ULTRAPORTAL 0.2.1
 
 ## Changes
+## Config
+- Increased default value of `Gameplay/Portals/Experimental/Portal Sphere Check Radius`.
+
 ### Backend
 - Mod now relies on `FixPluginTypesSerialization` by xiaoxiao921 to load assemblies. ([see package for ULTRAKILL](https://thunderstore.io/c/ultrakill/p/averyocean65/FixPluginTypesSerialization/))
+- Changed a logger call in `DynamicPortalExit.cs` to verbose to prevent lag.
 
 ## Known Bugs
 - It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable when they shouldn't.

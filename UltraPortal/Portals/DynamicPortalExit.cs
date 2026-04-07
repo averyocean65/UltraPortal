@@ -164,7 +164,7 @@ namespace UltraPortal {
 				return;
 			}
 
-			LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
+			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.SafeAdd(c);
 
