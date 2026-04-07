@@ -38,7 +38,19 @@ namespace UltraPortal {
 			}
 		}
 
-		public static bool UsedPortalGun = false;
+		private static bool _UsedPortalGun = false;
+		public static bool UsedPortalGun {
+			get {
+				return _UsedPortalGun;
+			}
+			set {
+				if (value) {
+					BalancingManager.DisableRankSubmission("USED PORTAL GUN", new Color(0.98f, 0.039f, 0.337f));
+				}
+
+				_UsedPortalGun = value;
+			}
+		}
 		private int _currentVariationIndex = -1;
 		
 		private bool _wasEnabledLastFrame = false;

@@ -97,7 +97,6 @@
         <Compile Include="Extensions\ListExtensions.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\EnemyPatches.cs" />
-        <Compile Include="Patches\LevelPatches.cs" />
         <Compile Include="Patches\PlayerPatches.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Portals\DynamicPortalExit.cs" />
