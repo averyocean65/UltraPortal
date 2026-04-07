@@ -5,7 +5,12 @@ Adding portals to ULTRAKILL, because why not?
 
 ## UltraPortal
 ### Requirements
-In order for this mod to compile, you must have `Configgy` downloaded to your ULTRAKILL BepInEx plugins folder, with the specific path being: `ULTRAKILL/BepInEx/plugins/Configgy.dll`.
+In order for this mod to compile, you must have BepInEx installed, as well as the following mods:
+- Configgy, `ULTRAKILL/BepInEx/plugins/Configgy.dll`
+- [Avery's ULTRAKILL Utilities](https://github.com/averyocean65/auu), `ULTRAKILL/BepInEx/plugins/AUU.dll`
+
+To run the mod you also need to have the following patchers installed:
+- [FixPluginTypesSerialization](https://thunderstore.io/c/ultrakill/p/averyocean65/FixPluginTypesSerialization/), anywhere in `BepInEx/patchers`
 
 ### Using a custom ULTRAKILL path?
 If you're using a custom ULTRAKILL path, for example to preserve hard drive space on your OS partition, or for other reasons, ULTRAPORTAL will not compile out of the box.

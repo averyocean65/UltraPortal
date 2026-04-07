@@ -72,6 +72,10 @@
         <Reference Include="Configgy">
             <HintPath>$(BepInExPlugins)/Configgy.dll</HintPath>
         </Reference>
+        <Reference Include="AUU">
+            <HintPath>$(BepInExPlugins)/AUU.dll</HintPath>
+        </Reference>
+        
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
