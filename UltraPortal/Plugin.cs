@@ -12,6 +12,9 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
     [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
+    [BepInDependency("com.averyocean65.utils", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("Hydraxous.ULTRAKILL.Configgy", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInProcess("ULTRAKILL.exe")]
     public class Plugin : BaseUnityPlugin {
         public static ConfigBuilder ConfiggyConfig;
         
