@@ -72,6 +72,10 @@
         <Reference Include="Configgy">
             <HintPath>$(BepInExPlugins)/Configgy.dll</HintPath>
         </Reference>
+        <Reference Include="AUU">
+            <HintPath>$(BepInExPlugins)/AUU.dll</HintPath>
+        </Reference>
+        
         <Reference Include="System"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Data"/>
@@ -91,11 +95,8 @@
         <Compile Include="Constants.cs" />
         <Compile Include="Extensions\LayerMaskExtensions.cs" />
         <Compile Include="Extensions\ListExtensions.cs" />
-        <Compile Include="External\AssemblyHelpers.cs" />
-        <Compile Include="External\AssetBundleHelpers.cs" />
         <Compile Include="ModConfig.cs" />
         <Compile Include="Patches\EnemyPatches.cs" />
-        <Compile Include="Patches\LevelPatches.cs" />
         <Compile Include="Patches\PlayerPatches.cs" />
         <Compile Include="Plugin.cs" />
         <Compile Include="Portals\DynamicPortalExit.cs" />
@@ -105,7 +106,6 @@
         <Compile Include="Utils\CollisionPrinter.cs" />
         <Compile Include="Utils\ColorHelpers.cs" />
         <Compile Include="Utils\DebugUtils.cs" />
-        <Compile Include="Utils\EnemyHelpers.cs" />
         <Compile Include="Utils\KeepActive.cs" />
         <Compile Include="Utils\LayerPrinter.cs" />
         <Compile Include="Weapons\GunBase.cs" />

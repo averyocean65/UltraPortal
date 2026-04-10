@@ -1,5 +1,4 @@
-using System;
-using System.Security.Permissions;
+using AUU;
 using Configgy;
 using UnityEngine;
 
@@ -23,7 +22,7 @@ namespace UltraPortal {
 
 		[Configgable("Debugging", "Unload Asset Bundles",
 			description: "Only use if you intend to swap out asset bundles in real time!")]
-		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleHelpers.UnloadAllAssetBundles);
+		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleUtils.UnloadAllAssetBundles);
     
 		[Configgable("Debugging", "New Gravity")]
 		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);
@@ -145,7 +144,7 @@ namespace UltraPortal {
 		public static ConfigInputField<float> AssistedPortalThreshold = new ConfigInputField<float>(0.6f);
 		
 		[Configgable("Gameplay/Portals/Experimental", description: "The size of a sphere, which checks colliders around a portal")]
-		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(0.5f);
+		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(1.5f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
 		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);

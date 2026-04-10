@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO;
+using AUU;
 using BepInEx;
 using BepInEx.Logging;
 using Configgy;
 using HarmonyLib;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Projectiles;
-using UltraPortal.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,13 +12,16 @@ using static UltraPortal.Constants;
 
 namespace UltraPortal {
     [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
+    [BepInDependency("com.averyocean65.utils", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("Hydraxous.ULTRAKILL.Configgy", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInProcess("ULTRAKILL.exe")]
     public class Plugin : BaseUnityPlugin {
         public static ConfigBuilder ConfiggyConfig;
         
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.2.0";
+            public const string Version = "0.2.1";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -43,8 +41,6 @@ namespace UltraPortal {
                 AssetPaths.UseAltBundlePath = true; // why, r2modman, why??
             }
             
-            AssemblyHelpers.PreloadAssemblies();
-            
             SceneManager.sceneLoaded += OnSceneLoaded;
             ConfiggyConfig.OnConfigElementsChanged += elements => {
                 // configgy autosave no longer works, so this'll do.
@@ -55,8 +51,8 @@ namespace UltraPortal {
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
             PortalGunManager.UsedPortalGun = false;
             PortalProjectileHelper.PortalScaleSceneStart = ModConfig.PortalScaleMod.GetValue();
-            
-            if (loadMode != LoadSceneMode.Single || SceneHelper.CurrentScene == "Intro" || SceneHelper.CurrentScene == "Main Menu") {
+
+            if (!SceneUtils.IsInLevel()) {
                 return;
             }
 

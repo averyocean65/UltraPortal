@@ -1,8 +1,6 @@
+using AUU;
 using BepInEx.Logging;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
-using UltraPortal.Colorizers;
-using UltraPortal.Projectiles;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -46,7 +44,7 @@ namespace UltraPortal {
 
 		protected override void Start() {
 			base.Start();
-			AssetBundle portals = AssetBundleHelpers.LoadAssetBundle(AssetPaths.PortalBundle);
+			AssetBundle portals = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.PortalBundle);
 			GameObject portalPrefab = portals.LoadAsset<GameObject>(AssetPaths.Mirror);
 
 			if (!portalPrefab) {

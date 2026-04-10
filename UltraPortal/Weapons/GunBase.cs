@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using UltraPortal.Projectiles;
+using AUU;
 using UnityEngine;
 
 using static UltraPortal.Constants;
@@ -46,7 +46,7 @@ namespace UltraPortal {
 				CanPrimaryFire = value;
 			}
 			else {
-				CanSecondaryFire = false;
+				CanSecondaryFire = value;
 			}
 		}
 		
@@ -64,25 +64,16 @@ namespace UltraPortal {
 				StartCoroutine(IFireCooldown(true));
 			}
 			
-			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame && CanPrimaryFire) {
+			if (MonoSingleton<InputManager>.Instance.InputSource.Fire2.WasPerformedThisFrame && CanSecondaryFire) {
 				if(OnSecondaryFire != null)
 					OnSecondaryFire.Invoke();
 				
-				StartCoroutine(IFireCooldown(true));
+				StartCoroutine(IFireCooldown(false));
 			}
 		}
 
-		protected void PlayerHeadRaycast(out bool success, out RaycastHit hit) {
-			success = Physics.Raycast(MainCamera.transform.position,
-				MainCamera.transform.forward,
-				out hit,
-				float.PositiveInfinity,
-				EnvironmentLayer,
-				QueryTriggerInteraction.Ignore);
-		}
-
 		protected Projectile SpawnProjectileFromAsset(string assetName, float speed) {
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+			AssetBundle weapons = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.WeaponBundle);
 			return SpawnProjectileFromPrefab(weapons.LoadAsset<GameObject>(assetName), speed);
 		}
 		

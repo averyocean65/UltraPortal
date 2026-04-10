@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using ULTRAKILL.Portal;
+using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
 using UnityEngine;
-using UnityEngine.Events;
 using static UltraPortal.Constants;
 using static UltraPortal.DebugUtils;
 
@@ -54,13 +53,13 @@ namespace UltraPortal {
 		
 		private GameObject _passableBlockage;
 		
-		public Vector3 PortalCenter {
+		public PortalTransform PortalTransform {
 			get {
 				if (side == PortalSide.Enter) {
-					return hostPortal.entryCenter;
+					return hostPortal.entryTransform;
 				}
 
-				return hostPortal.exitCenter;
+				return hostPortal.exitTransform;
 			}
 		}
 
@@ -164,7 +163,7 @@ namespace UltraPortal {
 				return;
 			}
 
-			LogInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
+			LogVerboseInfo($"Adding collider: {c.name}; Checking children: {checkChildren}");
 			
 			_colliders.SafeAdd(c);
 
@@ -333,11 +332,11 @@ namespace UltraPortal {
 				if (other.name.Contains("EnvironmentChunk")) {
 					return;
 				}
-				
-				// Vector3 dir = (transform.position - other.transform.position).normalized;
-				// dir.y = 0.0f;
-				// float dot = Vector3.Dot(transform.forward.normalized, dir);
-				// HudMessageReceiver.Instance.SendHudMessage($"DOT ({name} & {other.name}): {dot}");
+
+				// TODO: figure out fix for ceiling/floor portals
+				if (!other.transform.position.IsInFrontOfPortal(PortalTransform) && !AssistedPortalTravel) {
+					return;
+				}
 				
 				if (attachedCollider.GetComponent<EnemyIdentifier>()) {
 					LogVerboseInfo($"ENTRY TRAVEL: {attachedCollider.name} is {nameof(EnemyIdentifier)}");

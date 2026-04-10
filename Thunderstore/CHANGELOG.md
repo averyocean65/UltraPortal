@@ -1,4 +1,26 @@
-# ULTRAPORTAL 0.2.0
+# ULTRAPORTAL 0.2.1
+
+## Changes
+## Config
+- Increased default value of `Gameplay/Portals/Experimental/Portal Sphere Check Radius`.
+
+### Backend
+- Mod now relies on `FixPluginTypesSerialization` by xiaoxiao921 to load assemblies. ([see package for ULTRAKILL](https://thunderstore.io/c/ultrakill/p/averyocean65/FixPluginTypesSerialization/))
+- Changed a logger call in `DynamicPortalExit.cs` to verbose to prevent lag.
+- Swapped several functions with functions from [Avery's ULTRAKILL Utilities](https://github.com/averyocean65/auu).
+
+### Bugfixes
+- Fix bug where secondary fire cooldown was linked to primary fire cooldown
+
+## Known Bugs
+- It is possible to trigger a portal from behind, which causes things like wall and floor collisions to disable when they shouldn't.
+  - Bug can only occur with floor/ceiling portals as of 0.2.1.
+- You cannot save a sandbox level if it contains portals.
+- Enemies may phase through the floor sometimes if teleported after surpassing a certain velocity.
+
+<details>
+<summary>0.2.0 Changelog</summary>
+
 ## Changes
 ### Bugfixes
 - Fixed mirror portal projectile from teleporting enemies if portal was despawned.
@@ -52,3 +74,4 @@
   - Chance of bug occuring has been reduced with 0.2.0, although it is not impossible.
 - You cannot save a sandbox level if it contains portals.
 - Enemies may phase through the floor sometimes if teleported after surpassing a certain velocity.
+</details>

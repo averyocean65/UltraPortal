@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sandbox.Arm;
-using ULTRAKILL.Cheats;
+using AUU;
 using ULTRAKILL.Portal;
-using ULTRAKILL.Portal.Geometry;
 using UltraPortal.Colorizers;
 using UltraPortal.Projectiles;
 using UnityEngine;
@@ -40,7 +38,19 @@ namespace UltraPortal {
 			}
 		}
 
-		public static bool UsedPortalGun = false;
+		private static bool _UsedPortalGun = false;
+		public static bool UsedPortalGun {
+			get {
+				return _UsedPortalGun;
+			}
+			set {
+				if (value) {
+					BalancingManager.DisableRankSubmission("USED PORTAL GUN", new Color(0.98f, 0.039f, 0.337f));
+				}
+
+				_UsedPortalGun = value;
+			}
+		}
 		private int _currentVariationIndex = -1;
 		
 		private bool _wasEnabledLastFrame = false;
@@ -68,7 +78,7 @@ namespace UltraPortal {
 				return null;
 			}
 			
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+			AssetBundle weapons = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.WeaponBundle);
 			GameObject prefab = weapons.LoadAsset<GameObject>(assetPrefabPath);
 
 			GameObject gun = Instantiate(prefab, Vector3.zero, Quaternion.identity, GunControl.Instance.transform);
@@ -157,7 +167,7 @@ namespace UltraPortal {
 		}
 		
 		private void SpawnPortalExplosion(Vector3 position) {
-			AssetBundle weapons = AssetBundleHelpers.LoadAssetBundle(AssetPaths.WeaponBundle);
+			AssetBundle weapons = AssetBundleUtils.LoadAssetBundle(AssetPaths.BundlePath, AssetPaths.WeaponBundle);
 			GameObject explosionPrefab = weapons.LoadAsset<GameObject>(AssetPaths.Explosion);
 				
 			GameObject explosionObject = Instantiate(explosionPrefab, position, Quaternion.identity);
