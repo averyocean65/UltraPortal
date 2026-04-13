@@ -44,17 +44,9 @@ namespace UltraPortal {
 				else {
 					SceneHelper.RestartScene();
 				}
-			}
+			}	
 			else {
 				RespawnFlag = false;
-			}
-		}
-
-		[HarmonyPrefix]
-		[HarmonyPatch(typeof(NewMovement), nameof(NewMovement.OnTeleportBlocked))]
-		static void TeleportBlockedPatch(PortalTravelDetails details, ref bool __runOriginal) {
-			if (details.enterHandle.IsUltraPortal()) {
-				__runOriginal = false;
 			}
 		}
 	}

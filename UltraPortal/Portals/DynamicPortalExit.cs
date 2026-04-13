@@ -25,34 +25,6 @@ namespace UltraPortal {
 		public Action OnInitialized;
 		public DynamicPortalExit otherExit;
 		public PortalInfo info;
-		
-		public bool IsPlayerNear {
-			get {
-				if (side == PortalSide.Enter) {
-					return _playerNearEntry;
-				}
-
-				return _playerNearExit;
-			}
-			set {
-				if (side == PortalSide.Enter) {
-					_playerNearEntry = value;
-					return;
-				}
-
-				_playerNearExit = value;
-			}
-		}
-		
-		public bool IsPlayerNearOther {
-			get {
-				if (side == PortalSide.Enter) {
-					return _playerNearExit;
-				}
-
-				return _playerNearEntry;
-			}
-		}
 
 		public bool IsInitialized => (transform.position - PortalGunBase.DefaultPortalPosition).sqrMagnitude > 1;
 
@@ -488,8 +460,6 @@ namespace UltraPortal {
 				if (MonoSingleton<CheatsManager>.Instance.GetCheatState("ultrakill.noclip")) {
 					return;
 				}
-				
-				IsPlayerNear = value;
 				
 				if (assisted && inputSide == side) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
