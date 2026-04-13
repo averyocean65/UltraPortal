@@ -1,7 +1,14 @@
-# ULTRAPORTAL 0.2.1
+# ULTRAPORTAL 0.2.2
 
 ## Changes
-## Config
+### Backend
+- Changed `PortalTransform` property of `DynamicPortalExit.cs` to `NativePortalTransform` to adopt changes made by the ULTRAKILL developers in Patch 17c.
+
+<details>
+<summary>0.2.1 Changelog</summary>
+
+## Changes
+### Config
 - Increased default value of `Gameplay/Portals/Experimental/Portal Sphere Check Radius`.
 
 ### Backend
@@ -17,6 +24,7 @@
   - Bug can only occur with floor/ceiling portals as of 0.2.1.
 - You cannot save a sandbox level if it contains portals.
 - Enemies may phase through the floor sometimes if teleported after surpassing a certain velocity.
+</details>
 
 <details>
 <summary>0.2.0 Changelog</summary>

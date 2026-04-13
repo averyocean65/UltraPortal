@@ -1,4 +1,6 @@
 using HarmonyLib;
+using ULTRAKILL.Portal;
+using UltraPortal.Extensions;
 using UnityEngine;
 
 namespace UltraPortal {
@@ -45,6 +47,14 @@ namespace UltraPortal {
 			}
 			else {
 				RespawnFlag = false;
+			}
+		}
+
+		[HarmonyPrefix]
+		[HarmonyPatch(typeof(NewMovement), nameof(NewMovement.OnTeleportBlocked))]
+		static void TeleportBlockedPatch(PortalTravelDetails details, ref bool __runOriginal) {
+			if (details.enterHandle.IsUltraPortal()) {
+				__runOriginal = false;
 			}
 		}
 	}

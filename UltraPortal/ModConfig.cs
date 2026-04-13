@@ -147,7 +147,7 @@ namespace UltraPortal {
 		public static ConfigInputField<float> PortalSphereCheckRadius = new ConfigInputField<float>(1.5f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Portal Wall Offset")]
-		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.45f);
+		public static ConfigInputField<float> PortalWallOffset = new ConfigInputField<float>(0.75f);
 		
 		[Configgable("Gameplay/Portals/Experimental", "Enemy Velocity Threshold", description: "The threshold an enemy's velocity has to cross for the portals to disable the associated rigidbody. To be fully transparent: this is a temporary solution to make +TERMINAL VELOCITY function reliably for this update. We are working on fixing it in future versions of ULTRAPORTAL.")]
 		public static ConfigInputField<float> EnemyMaxVelocity = new ConfigInputField<float>(80.0f);

@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using ULTRAKILL.Portal.Native;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
@@ -24,7 +26,7 @@ namespace UltraPortal {
 		public DynamicPortalExit otherExit;
 		public PortalInfo info;
 		
-		public bool IsEntityNear {
+		public bool IsPlayerNear {
 			get {
 				if (side == PortalSide.Enter) {
 					return _playerNearEntry;
@@ -41,6 +43,16 @@ namespace UltraPortal {
 				_playerNearExit = value;
 			}
 		}
+		
+		public bool IsPlayerNearOther {
+			get {
+				if (side == PortalSide.Enter) {
+					return _playerNearExit;
+				}
+
+				return _playerNearEntry;
+			}
+		}
 
 		public bool IsInitialized => (transform.position - PortalGunBase.DefaultPortalPosition).sqrMagnitude > 1;
 
@@ -53,7 +65,7 @@ namespace UltraPortal {
 		
 		private GameObject _passableBlockage;
 		
-		public PortalTransform PortalTransform {
+		public NativePortalTransform PortalTransform {
 			get {
 				if (side == PortalSide.Enter) {
 					return hostPortal.entryTransform;
@@ -477,12 +489,15 @@ namespace UltraPortal {
 					return;
 				}
 				
+				IsPlayerNear = value;
+				
 				if (assisted && inputSide == side) {
 					NewMovement.Instance.GetComponent<VerticalClippingBlocker>().enabled = !value;
 					NewMovement.Instance.transform.Find("GroundCheck").gameObject.SetActive(!value);
 					NewMovement.Instance.enabled = !value;
 				}
 				
+				NewMovement.Instance.GetComponent<PortalAwarePlayerCollider>().enabled = !value;
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
 			}
