@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using ULTRAKILL.Cheats;
 using ULTRAKILL.Portal;
 using ULTRAKILL.Portal.Geometry;
+using ULTRAKILL.Portal.Native;
 using UltraPortal.Colorizers;
 using UltraPortal.Extensions;
 using UltraPortal.Shared;
@@ -23,24 +25,6 @@ namespace UltraPortal {
 		public Action OnInitialized;
 		public DynamicPortalExit otherExit;
 		public PortalInfo info;
-		
-		public bool IsEntityNear {
-			get {
-				if (side == PortalSide.Enter) {
-					return _playerNearEntry;
-				}
-
-				return _playerNearExit;
-			}
-			set {
-				if (side == PortalSide.Enter) {
-					_playerNearEntry = value;
-					return;
-				}
-
-				_playerNearExit = value;
-			}
-		}
 
 		public bool IsInitialized => (transform.position - PortalGunBase.DefaultPortalPosition).sqrMagnitude > 1;
 
@@ -53,7 +37,7 @@ namespace UltraPortal {
 		
 		private GameObject _passableBlockage;
 		
-		public PortalTransform PortalTransform {
+		public NativePortalTransform PortalTransform {
 			get {
 				if (side == PortalSide.Enter) {
 					return hostPortal.entryTransform;
@@ -483,6 +467,7 @@ namespace UltraPortal {
 					NewMovement.Instance.enabled = !value;
 				}
 				
+				NewMovement.Instance.GetComponent<PortalAwarePlayerCollider>().enabled = !value;
 				NewMovement.Instance.GetComponent<KeepInBounds>().enabled = !value;
 				NewMovement.Instance.GetComponent<WallCheckGroup>().enabled = !value;
 			}

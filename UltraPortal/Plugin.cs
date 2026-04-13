@@ -21,7 +21,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.2.1";
+            public const string Version = "0.2.2";
         }
         
         public static ManualLogSource LogSource { get; private set; }

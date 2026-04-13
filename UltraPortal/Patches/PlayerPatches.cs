@@ -1,4 +1,6 @@
 using HarmonyLib;
+using ULTRAKILL.Portal;
+using UltraPortal.Extensions;
 using UnityEngine;
 
 namespace UltraPortal {
@@ -42,7 +44,7 @@ namespace UltraPortal {
 				else {
 					SceneHelper.RestartScene();
 				}
-			}
+			}	
 			else {
 				RespawnFlag = false;
 			}
