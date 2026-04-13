@@ -2,8 +2,11 @@
 
 ## Changes
 ### Backend
-- Changed `PortalTransform` property of `DynamicPortalExit.cs` to `NativePortalTransform` to adopt changes made by the ULTRAKILL developers in Patch 17c.
-- `PortalAwareCollider` now gets disabled on player when passing through a portal, fixing ground portal issues introduced in patch 17c.
+- Changed `PortalTransform` property of `DynamicPortalExit.cs` to `NativePortalTransform` to adopt changes made by the ULTRAKILL developers in [Patch 17c](https://store.steampowered.com/news/app/1229490/view/498351387739950730).
+- `PortalAwareCollider` now gets disabled on player when passing through a portal, fixing ground portal issues introduced in [Patch 17c](https://store.steampowered.com/news/app/1229490/view/498351387739950730).
+
+### Bugfixes
+- Portals can now be travelled through in ULTRAKILL [Patch 17c](https://store.steampowered.com/news/app/1229490/view/498351387739950730).
 
 <details>
 <summary>0.2.1 Changelog</summary>
