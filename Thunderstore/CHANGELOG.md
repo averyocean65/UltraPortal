@@ -1,5 +1,10 @@
-# ULTRAPORTAL 0.2.2
+# ULTRAPORTAL 0.2.3
+## Changes
+### Formalities
+- Updated README to fix errors and update installation instructions.
 
+<details>
+<summary>0.2.2 Changelog</summary>
 ## Changes
 ### Backend
 - Changed `PortalTransform` property of `DynamicPortalExit.cs` to `NativePortalTransform` to adopt changes made by the ULTRAKILL developers in [Patch 17c](https://store.steampowered.com/news/app/1229490/view/498351387739950730).
@@ -7,6 +12,7 @@
 
 ### Bugfixes
 - Portals can now be travelled through in ULTRAKILL [Patch 17c](https://store.steampowered.com/news/app/1229490/view/498351387739950730).
+</details>
 
 <details>
 <summary>0.2.1 Changelog</summary>
