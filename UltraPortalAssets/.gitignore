@@ -102,5 +102,5 @@ InitTestScene*.unity*
 /[Aa]ssets/[Cc]ompiled [Bb]undles/
 
 # ULTRAKILL Assets
-/[Aa]ssets/ULTRAKILLAssets/
+/[Aa]ssets/ULTRAKILLAssets/*
 ![Aa]ssets/ULTRAKILLAssets/README.txt
