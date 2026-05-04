@@ -100,3 +100,7 @@ InitTestScene*.unity*
 
 # Compiled Assets
 /[Aa]ssets/[Cc]ompiled [Bb]undles/
+
+# ULTRAKILL Assets
+/[Aa]ssets/ULTRAKILLAssets/
+![Aa]ssets/ULTRAKILLAssets/README.txt
