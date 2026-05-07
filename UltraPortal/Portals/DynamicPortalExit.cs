@@ -17,9 +17,6 @@ namespace UltraPortal {
 	// "Come on down to the other side / Come with us through the gates of hell"
 	// - "The Other Side" (2008) by Pendulum.
 	public class DynamicPortalExit : MonoBehaviour {
-		private static bool _playerNearEntry;
-		private static bool _playerNearExit;
-
 		private Action<PortalSide, Collider, bool, bool> _toggleColliderAction;
 
 		public Action OnInitialized;

@@ -23,6 +23,9 @@ namespace UltraPortal {
 		[Configgable("Debugging", "Unload Asset Bundles",
 			description: "Only use if you intend to swap out asset bundles in real time!")]
 		public static ConfigButton UnloadAssetBundles = new ConfigButton(AssetBundleUtils.UnloadAllAssetBundles);
+		
+		[Configgable("Debugging", "Use Development Guns")]
+		public static ConfigToggle UseDevelopmentGuns = new ConfigToggle(false);
     
 		[Configgable("Debugging", "New Gravity")]
 		private static ConfigVector3 _newGravity = new ConfigVector3(Vector3.down * -40);

@@ -108,6 +108,7 @@
         <Compile Include="Utils\DebugUtils.cs" />
         <Compile Include="Utils\KeepActive.cs" />
         <Compile Include="Utils\LayerPrinter.cs" />
+        <Compile Include="Weapons\Development\PathGun.cs" />
         <Compile Include="Weapons\GunBase.cs" />
         <Compile Include="Weapons\GunPosition.cs" />
         <Compile Include="Weapons\MirrorGun.cs" />

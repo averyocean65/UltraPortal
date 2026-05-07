@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AUU;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
+using UltraPortal.Development;
 using UltraPortal.Projectiles;
 using UnityEngine;
 
@@ -54,11 +55,13 @@ namespace UltraPortal {
 		private int _currentVariationIndex = -1;
 		
 		private bool _wasEnabledLastFrame = false;
-		private bool _showedWarning = false;
 
 		private PortalGun _portalGun;
 		private MirrorGun _mirrorGun;
 		private TwistGun _twistGun;
+		
+		// debug guns
+		private PathGun _devPathGun;
 
 		public static void SummonPortalExit(DynamicPortalExit exit, Portal portal, Vector3 position, Vector3 forward,
 			Transform parent = null, Collider collider = null) {
@@ -119,6 +122,11 @@ namespace UltraPortal {
 			_twistGun = SpawnPortalGun(typeof(TwistGun), AssetPaths.TwistGun, WeaponVariant.RedVariant, defaultPos,
 				middlePos) as TwistGun;
 
+			if (ModConfig.UseDevelopmentGuns.GetValue()) {
+				_devPathGun = SpawnPortalGun(typeof(PathGun), AssetPaths.MirrorGun, WeaponVariant.GoldVariant,
+					defaultPos, middlePos) as PathGun;
+			}
+
 			if (!_portalGun || !_mirrorGun || !_twistGun) {
 				LogError($"Portal Gun?: {_portalGun}, Mirror Gun?: {_mirrorGun}, Twist Gun?: {_twistGun}");
 			}
@@ -136,6 +144,17 @@ namespace UltraPortal {
 			GunControl.Instance.slots.Add(new List<GameObject>()
 				{ _portalGun.gameObject, _mirrorGun.gameObject, _twistGun.gameObject });
 			PortalGunSlot = GunControl.Instance.slots.Count;
+
+			if (ModConfig.UseDevelopmentGuns.GetValue()) {
+				if (!_devPathGun) {
+					LogError($"Path Gun: {_devPathGun}");
+					return;
+				}
+				
+				GunControl.Instance.slots[PortalGunSlot - 1].AddRange(new List<GameObject>() {
+					_devPathGun.gameObject
+				});
+			}
 			
 			GunControl.Instance.UpdateWeaponList();
 		}
@@ -213,15 +232,6 @@ namespace UltraPortal {
 			}
 
 			IsUsingSpawnerArm = GunControl.Instance.currentSlotIndex == 6; 
-			// if (IsUsingSpawnerArm) {
-			// 	if (AnyPortalsInit) {
-			// 		if (!_showedWarning) {
-			// 			HudMessageReceiver.Instance.SendHudMessage(
-			// 				"Custom Portals may behave <color=red>differently</color> while the spawner arm is equipped.");
-			// 			_showedWarning = true;
-			// 		}
-			// 	}
-			// }
 
 			if (!ModConfig.IsEnabled.GetValue()) {
 				if (_wasEnabledLastFrame) {
