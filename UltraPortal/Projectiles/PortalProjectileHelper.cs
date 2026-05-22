@@ -10,7 +10,7 @@ using static UltraPortal.DebugUtils;
 namespace UltraPortal.Projectiles {
 	public class PortalProjectileHelper : MonoBehaviour {
 		public static float PortalScaleSceneStart = 1.0f;
-		public static float ProjectileDamage = 0.49f; // almost filth health
+		public static float ProjectileDamage = 5f;
 		
 		private Transform OtherExitTransform {
 			get {
@@ -25,10 +25,8 @@ namespace UltraPortal.Projectiles {
 		public DynamicPortalExit exit;
 		public Portal portal;
 
-		private void DamageEnemy(EnemyIdentifier eid, bool wasTeleported = true) {
-			if (wasTeleported) {
-				eid.hitterWeapons.Add(PortalProjectileWeapon);
-			}
+		private void DamageEnemy(EnemyIdentifier eid) {
+			eid.hitterWeapons.Add(PortalProjectileWeapon);
 			eid.SimpleDamage(ProjectileDamage);
 		}
 		
@@ -53,8 +51,8 @@ namespace UltraPortal.Projectiles {
 				}
 				
 				if (!EnemyUtils.IsLightEnemy(eid.enemyType)) {
-					LogVerboseWarning("Enemy is not a light enemy! Not teleporting!");
-					DamageEnemy(eid, false);
+					// only damage non-light enemies!
+					DamageEnemy(eid);
 					return;
 				}
 				
@@ -74,7 +72,12 @@ namespace UltraPortal.Projectiles {
 					: ModConfig.ProjectileEnemyNormalPortalBoostMultiplier.GetValue();
 				
 				rb.velocity = -desiredExitTransform.forward * 100.0f * multiplier;
-				DamageEnemy(eid);
+
+				if (eid.Dead) {
+					EnemyPatches.ApplyStyleBonus(StylePortalProjectileId, StylePortalProjectilePoints,
+						ModConfig.DisplacementBonusColor.GetValue());
+				}
+
 				return;
 			}
 

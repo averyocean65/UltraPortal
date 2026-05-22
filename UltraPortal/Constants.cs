@@ -37,9 +37,13 @@ namespace UltraPortal {
         public const string StyleSafetyHazardName = "SAFETY HAZARD";
         public const int StyleSafetyHazardPoints = 100;
         
-        public const string StylePortalProjectileId = "style.ultraportal.projectiled";
+        public const string StylePortalProjectileId = "style.ultraportal.displacement";
         public const string StylePortalProjectileName = "DISPLACEMENT";
         public const int StylePortalProjectilePoints = 25;
+        
+        public const string StylePortalHitId = "style.ultraportal.projectiled";
+        public const string StylePortalHitName = "QUANTUM DAMAGE";
+        public const int StylePortalHitPoints = 10;
         
 
         private static Camera _mainCamera;

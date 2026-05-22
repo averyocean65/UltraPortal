@@ -112,7 +112,10 @@ namespace UltraPortal {
 		public static ConfigColor SafetyHazardColor = new ConfigColor(new Color(1, 0, 0));
 		
 		[Configgable("Visuals/Style")]
-		public static ConfigColor ProjectileBonusColor = new ConfigColor(new Color(0, 1, 0));
+		public static ConfigColor DisplacementBonusColor = new ConfigColor(new Color(0, 1, 0));
+		
+		[Configgable("Visuals/Style")]
+		public static ConfigColor HitBonusColor = new ConfigColor(new Color(1, 0, 1));
 		
 		[Configgable("Gameplay/Guns/Experimental", "Projectile Speed")]
 		public static ConfigInputField<float> PortalProjectileSpeed = new ConfigInputField<float>(95.0f);

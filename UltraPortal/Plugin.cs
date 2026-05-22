@@ -21,7 +21,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.2.2";
+            public const string Version = "0.2.4";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -68,6 +68,7 @@ namespace UltraPortal {
                 // Register styles
                 StyleHUD.Instance.RegisterStyleItem(StyleSafetyHazardId, StyleSafetyHazardName);
                 StyleHUD.Instance.RegisterStyleItem(StylePortalProjectileId, StylePortalProjectileName);
+                StyleHUD.Instance.RegisterStyleItem(StylePortalHitId, StylePortalHitName);
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

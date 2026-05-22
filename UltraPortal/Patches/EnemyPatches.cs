@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
@@ -9,13 +10,21 @@ namespace UltraPortal {
 	public static class EnemyPatches {
 		public static List<EnemyIdentifier> AlreadyAppliedStyle = new List<EnemyIdentifier>();
 
-		private static void ApplyStyleBonus(EnemyIdentifier eid, string id, int points, Color color) {
+		public static void ApplyStyleBonus(EnemyIdentifier eid, string id, int points, Color color) {
+			ApplyStyleBonus(id, points, color);
+			AlreadyAppliedStyle.Add(eid);
+		}
+		
+		public static void ApplyStyleBonus(string id, int points, Color color) {
 			LogVerboseInfo($"using style: {id}");
 			StyleHUD.Instance.AddPoints(points, id,
 				prefix: $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>",
-				postfix: "</color>");	
-			
-			AlreadyAppliedStyle.Add(eid);
+				postfix: "</color>");
+		}
+
+		private static IEnumerator IStyleCooldown(EnemyIdentifier eid, float cooldown) {
+			yield return new WaitForSecondsRealtime(cooldown);
+			AlreadyAppliedStyle.Remove(eid);
 		}
 		
 		[HarmonyPostfix]
@@ -32,8 +41,10 @@ namespace UltraPortal {
 			}
 
 			if (__instance.hitterWeapons.Contains(PortalProjectileWeapon)) {
-				ApplyStyleBonus(__instance, StylePortalProjectileId, StylePortalProjectilePoints,
-					ModConfig.ProjectileBonusColor.GetValue());
+				ApplyStyleBonus(__instance, StylePortalHitId, StylePortalHitPoints,
+					ModConfig.HitBonusColor.GetValue());
+
+				__instance.StartCoroutine(IStyleCooldown(__instance, 0.1f));
 			}
 		}
 	}

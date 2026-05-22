@@ -1,10 +1,23 @@
-# ULTRAPORTAL 0.2.3
+# ULTRAPORTAL 0.2.4
+## Changes
+### Gameplay
+- Changed logic of damaging enemies
+  - +DISPLACEMENT no longer damages enemies
+  - Heavy Enemies now get damaged with style bonus +QUANTUM DAMAGE.
+- Added **Development Guns**
+
+<details>
+<summary>0.2.3 Changelog</summary>
+
 ## Changes
 ### Formalities
 - Updated README to fix errors and update installation instructions.
 
+</details>
+
 <details>
 <summary>0.2.2 Changelog</summary>
+
 ## Changes
 ### Backend
 - Changed `PortalTransform` property of `DynamicPortalExit.cs` to `NativePortalTransform` to adopt changes made by the ULTRAKILL developers in [Patch 17c](https://store.steampowered.com/news/app/1229490/view/498351387739950730).
