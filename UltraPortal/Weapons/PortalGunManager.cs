@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using AUU;
 using ULTRAKILL.Portal;
 using UltraPortal.Colorizers;
@@ -123,7 +124,7 @@ namespace UltraPortal {
 				middlePos) as TwistGun;
 
 			if (ModConfig.UseDevelopmentGuns.GetValue()) {
-				_devPathGun = SpawnPortalGun(typeof(PathGun), AssetPaths.MirrorGun, WeaponVariant.GoldVariant,
+				_devPathGun = SpawnPortalGun(typeof(PathGun), AssetPaths.DevPathGun, WeaponVariant.GoldVariant,
 					defaultPos, middlePos) as PathGun;
 			}
 
@@ -223,6 +224,13 @@ namespace UltraPortal {
 					StartCoroutine(IDestroyPortals(_twistGun, _twistGun.TwistExit, _twistGun.TwistExit));
 					break;
 				}
+				case WeaponVariant.GoldVariant: {
+					StartCoroutine(IDestroyPortals(_devPathGun));
+					break;
+				}
+				default:
+					LogError($"Variant {variant} does not have an implementation in {nameof(DestroyPortals)}.");
+					return;
 			}
 		}
 		

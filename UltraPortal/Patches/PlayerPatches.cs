@@ -1,5 +1,6 @@
 using HarmonyLib;
 using ULTRAKILL.Portal;
+using UltraPortal.Development;
 using UltraPortal.Extensions;
 using UnityEngine;
 
@@ -20,6 +21,10 @@ namespace UltraPortal {
 			TwistGun twistGun = GameObject.FindObjectOfType<TwistGun>(true);
 			if(twistGun)
 				twistGun.Reset();
+			
+			PathGun pathGun = GameObject.FindObjectOfType<PathGun>(true);
+			if(pathGun)
+				pathGun.Reset();
 		}
 
 		public static bool RespawnFlag { get; private set; } = false;

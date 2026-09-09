@@ -21,7 +21,7 @@ namespace UltraPortal {
         private static class PluginInfo {
             public const string Name = "ULTRAPORTAL";
             public const string Guid = "com.ultraportal";
-            public const string Version = "0.2.4";
+            public const string Version = "1.0.0";
         }
         
         public static ManualLogSource LogSource { get; private set; }
@@ -52,7 +52,7 @@ namespace UltraPortal {
             PortalGunManager.UsedPortalGun = false;
             PortalProjectileHelper.PortalScaleSceneStart = ModConfig.PortalScaleMod.GetValue();
 
-            if (!SceneUtils.IsInLevel()) {
+            if (!SceneUtils.IsInLevel() || !ModConfig.IsEnabled.GetValue()) {
                 return;
             }
 
@@ -69,6 +69,12 @@ namespace UltraPortal {
                 StyleHUD.Instance.RegisterStyleItem(StyleSafetyHazardId, StyleSafetyHazardName);
                 StyleHUD.Instance.RegisterStyleItem(StylePortalProjectileId, StylePortalProjectileName);
                 StyleHUD.Instance.RegisterStyleItem(StylePortalHitId, StylePortalHitName);
+
+                if (!ModConfig.ShowHint.GetValue()) {
+                    return;
+                }
+                
+                HudMessageReceiver.Instance.SendHudMessage("Remember: ULTRAPORTAL can be configured via Configgy! (for example: disabling this message!)", silent: true);
             }
             catch {
                 Logger.LogError("Scene is not compatible! Failed to spawn portal spawner!");

@@ -90,6 +90,7 @@ namespace UltraPortal {
             public const string PortalGun = "Portal Gun";
             public const string MirrorGun = "Mirror Gun";
             public const string TwistGun = "Twist Gun Variant";
+            public const string DevPathGun = "Path Gun (dev)";
             
             public const string Projectile = "Projectile";
 

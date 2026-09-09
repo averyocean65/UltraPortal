@@ -128,6 +128,9 @@ namespace UltraPortal {
 
 		[Configgable(displayName: "Enabled")]
 		public static ConfigToggle IsEnabled = new ConfigToggle(true);
+		
+		[Configgable(displayName: "Show Configuration Hint")]
+		public static ConfigToggle ShowHint = new ConfigToggle(true);
 
 		// note: i also do not have a better name for these
 
